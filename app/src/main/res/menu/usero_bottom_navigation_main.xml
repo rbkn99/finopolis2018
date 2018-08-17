@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/Balance"
+        android:enabled="true"
+
+        android:title="@string/Balance" />
+    <item
+        android:id="@+id/Transaction"
+        android:enabled="true"
+        android:title="@string/Transaction"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/YE"
+        android:enabled="true"
+
+        android:title="@string/Shieet"
+        app:showAsAction="ifRoom" />
+</menu>
+    <!--android:icon="@drawable/ic_favorite_white_24dp"
+    android:icon="@drawable/ic_access_time_white_24dp"
+    android:icon="@drawable/ic_audiotrack_white_24dp"-->
