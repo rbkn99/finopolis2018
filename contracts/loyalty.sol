@@ -10,26 +10,63 @@ contract Loyalty {
         mapping (uint => bool) tokens;
     }
     
-    struct Company {
-        bool exists;
-        address[] tokens;
-        string name;
-        mapping (address => bool) coalitions;
-    }
     
     mapping (address => Customer) private customers;
-    mapping (address => Company) public companies;
+    mapping (address => Coalition.Company) public companies;
     mapping (address => Token) public allTokens;
     
-    function addCustomer() public {
-        require(!customers[msg.sender].exists, "Customer already exists.");
+    event AddCompany(address companyAddress, string name, uint phoneNumber);
+    event AddCustomer(address customerAddress, uint number);
+    event LoggedIn(address _address, uint number);
+    
+    function addCustomer(uint _phoneNumber) public
+                customerNotExists(msg.sender)
+                companyNotExists(msg.sender) {
         customers[msg.sender].exists = true;
+        customers[msg.sender].phoneNumber = _phoneNumber;
+        emit AddCustomer(msg.sender, customers[msg.sender].phoneNumber);
     }
     
-    function chargeBonuses(address customer, Token token) public {
+    function addCompany(string _name, uint _phoneNumber) public
+                companyNotExists(msg.sender)
+                customerNotExists(msg.sender) {
+        companies[msg.sender].exists = true;
+        companies[msg.sender].name = _name;
+        companies[msg.sender].phoneNumber = _phoneNumber;
+        emit AddCompany(msg.sender, companies[msg.sender].name,
+                                    customers[msg.sender].phoneNumber);
+    }
+    
+    function logIn(uint phoneNumber) public {
+        require(customers[msg.sender].phoneNumber == phoneNumber ||
+                companies[msg.sender].phoneNumber == phoneNumber);
+        emit LoggedIn(msg.sender, phoneNumber);
+    }
+    
+    function chargeBonuses(address customer, uint amount) public 
+                                customerExists(customer) 
+                                companyExists(msg.sender) {
+        companies[msg.sender].token.transfer(msg.sender, customer, amount);
+    }
+    
+    
+    modifier customerExists(address customer) {
         require(customers[customer].exists, "Customer doesn't exist.");
-        require(companies[msg.sender].exists, "Company doesn't exist");
-        
+        _;
+    }
+    
+    modifier companyExists(address company) {
+        require(customers[company].exists, "Company doesn't exist.");
+        _;
+    }
+    
+    modifier customerNotExists(address customer) {
+        require(!customers[customer].exists, "Customer already exists.");
+        _;
+    }
+    
+    modifier companyNotExists(address company) {
+        require(!companies[company].exists, "Company already exists.");
+        _;
     }
 }
- 

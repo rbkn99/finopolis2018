@@ -1,22 +1,20 @@
 pragma solidity ^0.4.0;
 
-import "./coalition.sol";
-
 library SafeMath {
     function add(uint a, uint b) internal pure returns (uint c) {
         c = a + b;
-        require(c >= a);
+        require(c >= a, "Invalid addition");
     }
     function sub(uint a, uint b) internal pure returns (uint c) {
-        require(b <= a);
+        require(b <= a, "Invalid subtraction");
         c = a - b;
     }
     function mul(uint a, uint b) internal pure returns (uint c) {
         c = a * b;
-        require(a == 0 || c / a == b);
+        require(a == 0 || c / a == b, "Invalid multiplication");
     }
     function div(uint a, uint b) internal pure returns (uint c) {
-        require(b > 0);
+        require(b > 0, "Invalid division");
         c = a / b;
     }
 }
@@ -26,7 +24,6 @@ contract Token {
     mapping (address => uint) balances;
     string name;
     address owner;
-    Coalition coalitions;
     
     event Transfer(address indexed from, address indexed to, uint tokens);
     
@@ -41,8 +38,12 @@ contract Token {
         emit Transfer(from, to, amount);
     }
     
+    function balanceOf(address _address) public view returns (uint) {
+        return balances[_address];
+    }
+    
     modifier onlyOwner() {
         require(msg.sender == owner);
         _;
     }
-} 
+}
