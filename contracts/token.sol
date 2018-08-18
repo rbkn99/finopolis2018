@@ -25,11 +25,14 @@ contract Token {
     string name;
     address owner;
     
+    mapping (address => uint) policies;
+    
     event Transfer(address indexed from, address indexed to, uint tokens);
     
-    constructor(string _name) public {
+    constructor(string _name, uint policy) public {
         owner = msg.sender;
         name = _name;
+        policies[owner] = policy;
     }
     
     function transfer(address from, address to, uint amount) public onlyOwner {

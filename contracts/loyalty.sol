@@ -7,34 +7,41 @@ contract Loyalty {
     struct Customer {
         bool exists;
         uint phoneNumber;
-        mapping (uint => bool) tokens;
+        mapping (address => bool) tokens;
     }
     
+    // bank address
+    address owner;
     
     mapping (address => Customer) private customers;
     mapping (address => Coalition.Company) public companies;
-    mapping (address => Token) public allTokens;
+    //mapping (address => Token) public allTokens;
     
     event AddCompany(address companyAddress, string name, uint phoneNumber);
     event AddCustomer(address customerAddress, uint number);
     event LoggedIn(address _address, uint number);
     
-    function addCustomer(uint _phoneNumber) public
-                customerNotExists(msg.sender)
-                companyNotExists(msg.sender) {
-        customers[msg.sender].exists = true;
-        customers[msg.sender].phoneNumber = _phoneNumber;
-        emit AddCustomer(msg.sender, customers[msg.sender].phoneNumber);
+    constructor() public {
+        owner = msg.sender;
     }
     
-    function addCompany(string _name, uint _phoneNumber) public
-                companyNotExists(msg.sender)
-                customerNotExists(msg.sender) {
-        companies[msg.sender].exists = true;
-        companies[msg.sender].name = _name;
-        companies[msg.sender].phoneNumber = _phoneNumber;
-        emit AddCompany(msg.sender, companies[msg.sender].name,
-                                    customers[msg.sender].phoneNumber);
+    function addCustomer(address customer, uint _phoneNumber) public
+                onlyOwner
+                customerNotExists(customer)
+                companyNotExists(customer) {
+        customers[customer].exists = true;
+        customers[customer].phoneNumber = _phoneNumber;
+        emit AddCustomer(customer, customers[customer].phoneNumber);
+    }
+    
+    function addCompany(address company, string _name, uint _phoneNumber) public
+                onlyOwner
+                companyNotExists(company)
+                customerNotExists(company) {
+        companies[company].exists = true;
+        companies[company].name = _name;
+        companies[company].phoneNumber = _phoneNumber;
+        emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
     
     function logIn(uint phoneNumber) public {
@@ -43,12 +50,22 @@ contract Loyalty {
         emit LoggedIn(msg.sender, phoneNumber);
     }
     
-    function chargeBonuses(address customer, uint amount) public 
-                                customerExists(customer) 
-                                companyExists(msg.sender) {
-        companies[msg.sender].token.transfer(msg.sender, customer, amount);
+    function chargeBonuses(address company, address customer, uint amount) public
+                                onlyOwner
+                                customerExists(customer)
+                                companyExists(company) {
+        companies[msg.sender].token.transfer(company, customer, amount);
+        customers[customer].tokens[companies[company].token] = true;
     }
     
+    function createToken(string _name, uint ownerPolicy) public companyExists(msg.sender) {
+        companies[msg.sender].token = new Token(_name, ownerPolicy);
+    }
+    
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
     
     modifier customerExists(address customer) {
         require(customers[customer].exists, "Customer doesn't exist.");
