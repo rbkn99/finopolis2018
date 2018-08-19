@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#2F2FA2"
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
@@ -15,20 +16,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
-        <Button
-            android:id="@+id/sendEth"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
-            android:layout_marginLeft="278dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginStart="278dp"
-            android:layout_marginTop="25dp"
-            android:text="Перевести"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/targetSum" />
+            android:background="#F64C72"
+            android:padding="3sp"
+            tools:layout_editor_absoluteX="274dp"
+            tools:layout_editor_absoluteY="109dp">
+
+            <Button
+                android:id="@+id/sendEth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#2F2FA2"
+                android:padding="10sp"
+                android:text="Перевести"
+
+                android:textColor="#F64C72"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/targetSum" />
+        </FrameLayout>
 
         <EditText
             android:id="@+id/targetAddress"
@@ -41,6 +50,7 @@
             android:layout_marginTop="54dp"
             android:ems="10"
             android:hint="address"
+            android:textColor="#F64C72"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +67,7 @@
             android:layout_marginStart="98dp"
             android:layout_marginTop="8dp"
             android:ems="10"
+            android:textColor="#F64C72"
             android:inputType="numberDecimal"
             app:layout_constraintBottom_toTopOf="@+id/sendEth"
             app:layout_constraintEnd_toEndOf="parent"
@@ -72,21 +83,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/addEth"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="22dp"
-            android:layout_marginLeft="278dp"
-            android:layout_marginRight="22dp"
-            android:layout_marginStart="278dp"
-            android:layout_marginTop="15dp"
-            android:text="Пополнить"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/balanceCheater" />
+            android:background="#F64C72"
+            android:padding="3sp"
+            tools:layout_editor_absoluteX="270dp"
+            tools:layout_editor_absoluteY="145dp">
+
+            <Button
+                android:id="@+id/addEth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#2F2FA2"
+                android:padding="10sp"
+                android:text="Пополнить"
+
+                android:textColor="#F64C72"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/balanceCheater" />
+        </FrameLayout>
 
         <EditText
             android:id="@+id/balanceCheater"
@@ -99,7 +117,9 @@
             android:layout_marginStart="99dp"
             android:layout_marginTop="84dp"
             android:ems="10"
+            android:textColor="#F64C72"
             android:inputType="numberDecimal"
+
             app:layout_constraintBottom_toTopOf="@+id/addEth"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

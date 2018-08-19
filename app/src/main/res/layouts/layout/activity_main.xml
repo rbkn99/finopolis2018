@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2F2FA2"
     tools:context=".MainActivity">
 
     <TextView
+
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +18,9 @@
         android:layout_marginStart="105dp"
         android:layout_marginTop="27dp"
         android:text="Страница Регистрации"
-        android:textColor="#000"
+        android:textColor="#FFF"
+        android:textSize="25dp"
+        app:fontFamily="monospace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,12 +35,13 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="22dp"
-        android:background="#d0d0e1"
+        android:background="#242582"
         android:spinnerMode="dropdown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/TCP"
@@ -48,8 +53,8 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="77dp"
-        android:background="#AAA"
-        android:visibility="visible"
+        android:background="#2F2FA2"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,21 +82,30 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.238" />
 
-        <Button
-            android:id="@+id/tcpRegisterButton"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="19dp"
-            android:layout_marginEnd="39dp"
-            android:layout_marginLeft="217dp"
-            android:layout_marginRight="39dp"
-            android:layout_marginStart="217dp"
-            android:layout_marginTop="205dp"
-            android:text="Register"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="212dp"
+            android:layout_marginStart="212dp"
+            android:layout_marginTop="202dp"
+            android:background="#F64C72"
+            android:padding="3sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText3" />
+            app:layout_constraintTop_toBottomOf="@+id/editText3">
+
+            <Button
+                android:id="@+id/tcpRegisterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#2F2FA2"
+                android:padding="10sp"
+                android:text="Register"
+                android:textColor="#F64C72"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        </FrameLayout>
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -104,29 +118,38 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="77dp"
-        android:background="#AAA"
-        android:visibility="invisible"
+        android:background="#2F2FA2"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
-        <Button
-            android:id="@+id/userRegisterButton"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="19dp"
-            android:layout_marginEnd="39dp"
-            android:layout_marginLeft="217dp"
-            android:layout_marginRight="39dp"
-            android:layout_marginStart="217dp"
-            android:layout_marginTop="205dp"
-            android:text="Register"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="212dp"
+            android:layout_marginStart="212dp"
+            android:layout_marginTop="202dp"
+            android:background="#F64C72"
+            android:padding="3sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText3" />
+            app:layout_constraintTop_toBottomOf="@+id/editText2">
 
+            <Button
+                android:id="@+id/userRegisterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:background="#2F2FA2"
+                android:padding="10sp"
+
+                android:textColor="#F64C72"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        </FrameLayout>
         <EditText
             android:id="@+id/editText2"
             android:layout_width="wrap_content"

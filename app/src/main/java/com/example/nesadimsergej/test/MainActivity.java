@@ -2,10 +2,12 @@ package com.example.nesadimsergej.test;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.AdapterView;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
+import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.methods.response.NetListening;
@@ -93,104 +96,39 @@ public class MainActivity extends AppCompatActivity {
 
     }
     void RegisterUser(){
-        Web3j web3 = Web3jFactory.build(new HttpService(Config.web3Address));
+        userRegisterButton.setEnabled(false);
+        new Handler().post(new Runnable() {
+            public void run() {
 
-/*
+                Web3j web3 = Web3jFactory.build(new HttpService(Config.web3Address));
 
-try {
-            String s = "";
-            EthGetBalance ethGetBalance = web3
-                    .ethGetBalance("0xffCEF01631268eBc760eB3343372048f6c36122c", DefaultBlockParameterName.LATEST)
-                    .sendAsync()
-                    .get();
-            BigInteger wei = ethGetBalance.getBalance();
-            //Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().sendAsync().get();
-            //String clientVersion = web3ClientVersion.getWeb3ClientVersion();
-            ((TextView)(findViewById(R.id.textView2))).setText(wei.toString());
-            Credentials credentials = Credentials.create("0xffCEF01631268eBc760eB3343372048f6c36122c");
-            TransactionReceipt transactionReceipt =
-            Transfer.sendFunds(web3,Credentials.create("6b194546eef8f3f84deae03e7806dadcd981ebb6164f853e4a090fcaf36809ce"),"0x317824924838C556BE89749f1feCa932Bf52FF13",
-                    BigDecimal.valueOf(1.0), Convert.Unit.ETHER).sendAsync().get();
+                try {
 
- */
+                    File f = new File(getApplicationContext().getFilesDir(),"");
 
-        try {
-            /*EthGetBalance ethGetBalance = web3
-                    .ethGetBalance("0xffCEF01631268eBc760eB3343372048f6c36122c", DefaultBlockParameterName.LATEST)
-                    .sendAsync()
-                    .get();
-            BigInteger wei = ethGetBalance.getBalance();
+                    String str = WalletUtils.generateLightNewWalletFile(" ", f);
+                    System.out.println(str);
 
-            ((TextView)(findViewById(R.id.textView2))).setText(wei.toString());
+                    // Сохраняем всю интересующую нас информацию
+                    SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
 
-            web3.ethAccounts();*/
-            // create new private/public key pair
-            // Создаем нового пользователя
-            ECKeyPair keyPair = Keys.createEcKeyPair();
+                    editor.putString("NAME", str);
+                    editor.putString("PATH",f.getAbsolutePath());
 
-            BigInteger publicKey = keyPair.getPublicKey();
-            String publicKeyHex = Numeric.toHexStringWithPrefix(publicKey);
+                    editor.putBoolean(Config.IS_TCP,false);
+                    editor.apply();
 
-            BigInteger privateKey = keyPair.getPrivateKey();
-            String privateKeyHex = Numeric.toHexStringWithPrefix(privateKey);
-
-            // create credentials + address from private/public key pair
-            Credentials credentials = Credentials.create(new ECKeyPair(privateKey, publicKey));
-            String address = credentials.getAddress();
-
-            // print resulting data of new account
-
-            System.out.println("private key: '" + privateKeyHex + "'");
-            System.out.println("public key: '" + publicKeyHex + "'");
-            System.out.println("address: '" + address + "'\n");
-
-
-            /*
-            ethGetBalance = web3
-                    .ethGetBalance(address, DefaultBlockParameterName.LATEST)
-                    .sendAsync()
-                    .get();
-            wei = ethGetBalance.getBalance();
-            System.out.println(wei);
-            */
-
-            /*
-            String sk1 = "6b194546eef8f3f84deae03e7806dadcd981ebb6164f853e4a090fcaf36809ce";
-
-            TransactionReceipt transactionReceipt =
-                    Transfer.sendFunds(web3,Credentials.create(sk1),address,
-                            BigDecimal.valueOf(10.0), Convert.Unit.ETHER).sendAsync().get();
-
-            ethGetBalance = web3
-                    .ethGetBalance(address, DefaultBlockParameterName.LATEST)
-                    .sendAsync()
-                    .get();
-
-            wei = ethGetBalance.getBalance();
-            System.out.println(wei);
-            */
-
-
-            // Сохраняем всю интересующую нас информацию
-            SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-
-            editor.putString(Config.ADDRESS, address);
-            editor.putString(Config.PRIVATE_KEY, privateKeyHex);
-            editor.putString(Config.PUBLIC_KEY, publicKeyHex);
-            editor.putBoolean(Config.IS_TCP,false);
-            editor.apply();
-
-            // Переходим на следующую сцену
-            Intent intent = new Intent(this, infoAfterRegistration.class);
-            startActivity(intent);
-
-
-        }catch(Exception e){
-
-            ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
-        }
-
+                    // Переходим на следующую сцену
+                    Intent intent = new Intent(getBaseContext(), Office_User.class);
+                    startActivity(intent);
+                    //userRegisterButton.setEnabled(true);
+                }catch(Exception e){
+                    userRegisterButton.setEnabled(true);
+                    ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
+                }
+            }
+        });
     }
 
     void RegisterTCP(){
