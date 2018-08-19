@@ -4,10 +4,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#2F2FA2"
+    android:background="@color/backgrnd"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/addEth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="252dp"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/buttonBckgrnd"
+        android:padding="10sp"
+        android:text="Пополнить"
+        android:textColor="@color/backgrnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+    <Button
+        android:id="@+id/sendEth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="252dp"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/buttonBckgrnd"
+        android:padding="10sp"
+        android:text="Перевести"
+        android:textColor="@color/backgrnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
@@ -15,29 +46,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#F64C72"
-            android:padding="3sp"
-            tools:layout_editor_absoluteX="274dp"
-            tools:layout_editor_absoluteY="109dp">
-
-            <Button
-                android:id="@+id/sendEth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2F2FA2"
-                android:padding="10sp"
-                android:text="Перевести"
-
-                android:textColor="#F64C72"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/targetSum" />
-        </FrameLayout>
 
         <EditText
             android:id="@+id/targetAddress"
@@ -50,8 +58,8 @@
             android:layout_marginTop="54dp"
             android:ems="10"
             android:hint="address"
-            android:textColor="#F64C72"
             android:inputType="textPersonName"
+            android:textColor="@color/textColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addEth" />
@@ -67,8 +75,8 @@
             android:layout_marginStart="98dp"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:textColor="#F64C72"
             android:inputType="numberDecimal"
+            android:textColor="@color/textColor"
             app:layout_constraintBottom_toTopOf="@+id/sendEth"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,29 +91,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#F64C72"
-            android:padding="3sp"
-            tools:layout_editor_absoluteX="270dp"
-            tools:layout_editor_absoluteY="145dp">
-
-            <Button
-                android:id="@+id/addEth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2F2FA2"
-                android:padding="10sp"
-                android:text="Пополнить"
-
-                android:textColor="#F64C72"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/balanceCheater" />
-        </FrameLayout>
-
         <EditText
             android:id="@+id/balanceCheater"
             android:layout_width="wrap_content"
@@ -117,7 +102,7 @@
             android:layout_marginStart="99dp"
             android:layout_marginTop="84dp"
             android:ems="10"
-            android:textColor="#F64C72"
+            android:textColor="@color/textColor"
             android:inputType="numberDecimal"
 
             app:layout_constraintBottom_toTopOf="@+id/addEth"

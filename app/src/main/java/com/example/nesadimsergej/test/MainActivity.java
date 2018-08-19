@@ -13,6 +13,7 @@ import java.math.BigInteger;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.AdapterView;
 import org.web3j.crypto.Credentials;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner dropdown;
     Button userRegisterButton;
     Button tcpRegisterButton;
-
+    EditText phone;
     String[] items = new String[]{"Клиент-покупатель","ТСП"};
 
     @Override
@@ -101,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
                 Web3j web3 = Web3jFactory.build(new HttpService(Config.web3Address));
-
                 try {
 
                     File f = new File(getApplicationContext().getFilesDir(),"");
@@ -112,12 +112,18 @@ public class MainActivity extends AppCompatActivity {
                     // Сохраняем всю интересующую нас информацию
                     SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
-
                     editor.putString("NAME", str);
                     editor.putString("PATH",f.getAbsolutePath());
-
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
+
+                    Credentials credentials = WalletUtils.loadCredentials(" ",f.getAbsolutePath() + "/" +str);
+
+
+                    Loyalty_sol_Loyalty contract = Loyalty_sol_Loyalty.load(Config.contractAdress,web3,credentials,Loyalty_sol_Loyalty.GAS_PRICE,
+                            Loyalty_sol_Loyalty.GAS_LIMIT);
+
+                    //contract.addCustomer(credentials.getAddress().substring(2),new BigInteger("1312124")).sendAsync().get();
 
                     // Переходим на следующую сцену
                     Intent intent = new Intent(getBaseContext(), Office_User.class);
@@ -126,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 }catch(Exception e){
                     userRegisterButton.setEnabled(true);
                     ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
+                    e.printStackTrace();
                 }
             }
         });
@@ -175,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     void LoadAll(){
+        phone = findViewById(R.id.phone);
         dropdown = findViewById(R.id.userSelector);
         TCPLayout = findViewById(R.id.TCP);
         UserLayout = findViewById(R.id.User);

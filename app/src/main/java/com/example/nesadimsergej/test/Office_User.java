@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.web3j.abi.datatypes.Uint;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.WalletUtils;
@@ -188,9 +189,6 @@ public class Office_User extends AppCompatActivity {
 
     void LoadAll(){
         deployContractBtn = findViewById(R.id.deployContractBtn);
-        //privateKeyInfo = findViewById(R.id.PrKUO);
-        //publicKeyInfo = findViewById(R.id.PuKUO);
-        //addressInfo = findViewById(R.id.AdUO);
         contractTest = findViewById(R.id.contractBtn);
         infoBtn = findViewById(R.id.infoBtn);
         targetAddress = findViewById(R.id.targetAddress);
@@ -220,11 +218,21 @@ public class Office_User extends AppCompatActivity {
     void Contract(){
         try {
 
-            Loyalty_sol_Loyalty contract = Loyalty_sol_Loyalty
-                    .load(contractAddress.substring(2),web3,credentials,Loyalty_sol_Loyalty.GAS_PRICE,Loyalty_sol_Loyalty.GAS_LIMIT);
-
+            Greeter_sol_greeter contract = Greeter_sol_greeter
+                    .load(Config.contractAdress,web3,credentials,Loyalty_sol_Loyalty.GAS_PRICE,Loyalty_sol_Loyalty.GAS_LIMIT);
+            System.out.println(contract.getContractAddress());
             try {
-                contract.addCustomer(credentials.getAddress().substring(2),new BigInteger("25423")).sendAsync().get();
+                BigInteger i = new BigInteger("12345");
+                System.out.println(i.bitCount());
+
+                //contract.addCustomer(credentials.getAddress(),new BigInteger("123")).sendAsync().get();
+                //Greeter_sol_greeter a = contract.addCompany(credentials.getAddress(),"PidorasCo",i).sendAsync().get();
+                //contract.greeter()
+                String a = contract.greet().sendAsync().get();
+
+
+                Toast.makeText(getApplicationContext(),  a,
+                      Toast.LENGTH_SHORT).show();
 
             }catch (Exception e){
                 Toast.makeText(getApplicationContext(), "Pizdec!",
@@ -239,13 +247,14 @@ public class Office_User extends AppCompatActivity {
     }
     String contractAddress = "";
     void UploadContract(){
-        new Handler().post(new Runnable() {
+        new Thread(new Runnable() {
             public void run() {
                 deployContractBtn.setEnabled(false);
                 try {
 
-                    Loyalty_sol_Loyalty contract = Loyalty_sol_Loyalty
-                            .deploy(web3,credentials,Loyalty_sol_Loyalty.GAS_PRICE,Loyalty_sol_Loyalty.GAS_LIMIT).sendAsync().get();
+                    Greeter_sol_greeter contract = Greeter_sol_greeter
+                            .deploy(web3,credentials,Greeter_sol_greeter.GAS_PRICE,Greeter_sol_greeter.GAS_LIMIT,credentials.getAddress()).sendAsync().get();
+
                     contractAddress = contract.getContractAddress();
                     deployContractBtn.setEnabled(true);
                     System.out.println(contractAddress);
@@ -256,12 +265,12 @@ public class Office_User extends AppCompatActivity {
                     deployContractBtn.setEnabled(true);
                 }
             }
-        });
+        }).run();
     }
 
     //
     void SendEth(){
-        new Handler().post(new Runnable() {
+        new Thread(new Runnable() {
             public void run() {
                 String address = targetAddress.getText().toString();
                 float v = Float.parseFloat(targetSum.getText().toString());
@@ -278,7 +287,7 @@ public class Office_User extends AppCompatActivity {
                 }
                 UpdateBalance();
             }
-        });
+        }).run();
     }
 
     void HideAllPgs(){
@@ -295,7 +304,7 @@ public class Office_User extends AppCompatActivity {
 
     // Функция обновляющая баланс пользователя
     void UpdateBalance(){
-        new Handler().post(new Runnable() {
+        new Thread(new Runnable() {
                 public void run() {
                     updateBalanceBtn.setEnabled(false);
                     try {
@@ -326,10 +335,10 @@ public class Office_User extends AppCompatActivity {
                         updateBalanceBtn.setEnabled(true);
                     }
                 }
-            });
+            }).run();
     }
 
-    // Пополнить счет
+
     void AddEth(){
 
         new Thread(new Runnable() {
@@ -347,7 +356,7 @@ public class Office_User extends AppCompatActivity {
                     System.out.println(e);
                 }
             }
-        }).start();
+        }).run();
     }
 
 

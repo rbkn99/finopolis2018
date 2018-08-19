@@ -4,8 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#2F2FA2"
+    android:background="@color/backgrnd"
     android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/updateBalanceBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="258dp"
+        android:layout_marginStart="258dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/buttonBckgrnd"
+        android:padding="10sp"
+        android:text="Обновить"
+        android:textColor="@color/backgrnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -35,7 +50,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Баланс:"
-                android:textColor="#F64C72"
+                android:textColor="@color/textColor"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="90dp" />
 
@@ -51,38 +66,11 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="00"
-                android:textColor="#F64C72"
+                android:textColor="@color/textColor"
                 tools:layout_editor_absoluteX="40dp"
                 tools:layout_editor_absoluteY="90dp" />
 
         </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="261dp"
-            android:layout_marginStart="261dp"
-            android:layout_marginTop="43dp"
-            android:background="#F64C72"
-            android:padding="3sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-            <Button
-                android:id="@+id/updateBalanceBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2F2FA2"
-                android:padding="10sp"
-                android:textColor="#F64C72"
-                android:text="Обновить"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-        </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>
 

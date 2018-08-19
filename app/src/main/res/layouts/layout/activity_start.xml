@@ -4,54 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2F2FA2"
+    android:background="@color/backgrnd"
     tools:context=".start">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <Button
+        android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="111dp"
-        android:layout_marginStart="111dp"
-        android:layout_marginTop="168dp"
-        android:background="#F64C72"
-        android:padding="3sp"
+        android:layout_marginLeft="114dp"
+        android:layout_marginStart="114dp"
+        android:layout_marginTop="170dp"
+        android:background="@color/buttonBckgrnd"
+        android:padding="10sp"
+        android:shadowRadius="5000"
+        android:text="Зарегистрироваться"
+        android:textColor="#dadee5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/registerBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#2F2FA2"
-            android:padding="10sp"
-            android:text="Зарегистрироваться"
-            android:textColor="#F64C72" />
-    </FrameLayout>
-
-    <FrameLayout
+    <Button
+        android:id="@+id/loginBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="158dp"
-        android:layout_marginStart="158dp"
-        android:layout_marginTop="139dp"
-        android:background="#F64C72"
-        android:padding="3sp"
+        android:layout_marginLeft="160dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="59dp"
+
+        android:background="@color/buttonBckgrnd"
+        android:padding="10sp"
+        android:text="Войти"
+        android:textColor="#dadee5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout">
-
-        <Button
-            android:id="@+id/loginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#2F2FA2"
-            android:padding="10sp"
-            android:textColor="#F64C72"
-            android:text="Войти"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/registerBtn" />
 
 </android.support.constraint.ConstraintLayout>
