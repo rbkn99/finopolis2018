@@ -5,7 +5,7 @@ import "./token.sol";
 contract Coalition {
     struct Company {
         bool exists;
-        Token token;
+        Token ownToken;
         string name;
         uint phoneNumber;
         mapping (address => bool) coalitions;

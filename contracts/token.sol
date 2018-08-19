@@ -19,26 +19,43 @@ library SafeMath {
     }
 }
 
+
 contract Token {
     using SafeMath for uint;
     mapping (address => uint) balances;
     string name;
-    address owner;
+    address public owner;
+    
+    // tokens per rouble
+    uint public inPrice;
+    uint public outPrice;
     
     mapping (address => uint) policies;
     
+    // where address belongs to an owner
+    mapping (address => bool) acceptableTokens;
+    
     event Transfer(address indexed from, address indexed to, uint tokens);
     
-    constructor(string _name, uint policy) public {
+    constructor(string _name, uint _inPrice, uint _outPrice) public {
         owner = msg.sender;
         name = _name;
-        policies[owner] = policy;
+        inPrice = _inPrice;
+        outPrice = _outPrice;
     }
     
     function transfer(address from, address to, uint amount) public onlyOwner {
+        // fuck economic laws
+        if (from == owner && balances[owner] < amount) {
+            emitToken(amount);
+        }
         balances[from] = balances[from].sub(amount);
         balances[to] = balances[to].add(amount);
         emit Transfer(from, to, amount);
+    }
+    
+    function emitToken(uint amount) public onlyOwner {
+        balances[owner] = balances[owner].add(amount);
     }
     
     function balanceOf(address _address) public view returns (uint) {
