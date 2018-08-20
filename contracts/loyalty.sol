@@ -179,4 +179,14 @@ contract Loyalty {
         require(!companies[company].exists, "Company already exists.");
         _;
     }
+    
+    modifier coalitionExists(address coalition) { 
+        require(coalitions[coalition].exists, "Coalition doesn't exist."); 
+        _; 
+    } 
+
+    modifier coalitionNotExists(address coalition) { 
+        require(!coalitions[coalition].exists, "Coalition already exists."); 
+        _; 
+    }
 }
