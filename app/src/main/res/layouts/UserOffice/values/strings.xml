@@ -1,1 +1,6 @@
-<resources></resources>
+<resources>
+    <string name="token_settings">Натройка токена</string>
+    <string name="create_coalition">Создать коалицию</string>
+    <string name="queries">Запросы</string>
+    <string name="coalitions">Мои коалиции</string>
+</resources>

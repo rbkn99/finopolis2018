@@ -6,69 +6,116 @@
     android:layout_height="match_parent"
     tools:context=".Office_TCP">
 
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+    <FrameLayout
+        android:id="@+id/cf"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="543dp"
-        app:itemBackground="@color/colorPrimary"
-        app:itemIconTint="@drawable/nav_item_color_state"
-        app:itemTextColor="@drawable/nav_item_color_state"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/tcpo_bottom_navigation_main" />
+        android:layout_height="match_parent"
+        tools:ignore="DuplicateIds">
 
-    <include
-        android:id="@+id/balanceP"
-        layout="@layout/tcpo_balance"
-        android:layout_width="400dp"
-        android:layout_height="535dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/bottom_navigation"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-    <include
-        android:id="@+id/transactionP"
-        layout="@layout/tcpo_transactions"
-        android:layout_width="400dp"
-        android:layout_height="535dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="16dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toStartOf="@+id/bottom_navigation"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </FrameLayout>
 
-    <include
-        android:id="@+id/eP"
-        layout="@layout/tcpo_e"
-        android:layout_width="400dp"
-        android:layout_height="535dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="16dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toStartOf="@+id/bottom_navigation"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <include
+                android:id="@+id/eP"
+                layout="@layout/tcpo_e"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/balanceP"
+                layout="@layout/tcpo_balance"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toStartOf="@+id/transactionP"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/transactionP"
+                layout="@layout/tcpo_transactions"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/coalitionsP"
+                layout="@layout/coalitions"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/create_coalitionP"
+                layout="@layout/create_coalition"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toStartOf="@+id/transactionP"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/queriesP"
+                layout="@layout/queries"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/token_settingsP"
+                layout="@layout/token_settings"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="invisible" />
+
+        </FrameLayout>
+
+        <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/tcp_drawer_view"
+            app:headerLayout="@layout/nav_header"/>
+
+    </android.support.v4.widget.DrawerLayout>
 
 
 </android.support.constraint.ConstraintLayout>

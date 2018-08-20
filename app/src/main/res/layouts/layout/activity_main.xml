@@ -45,132 +45,98 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/TCP"
-        android:layout_width="344dp"
+        android:layout_width="fill_parent"
         android:layout_height="380dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="77dp"
         android:background="@color/backgrnd"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:layout_editor_absoluteX="78dp">
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/phoneTCP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="255dp"
-            android:layout_marginEnd="64dp"
-            android:layout_marginLeft="63dp"
-            android:layout_marginRight="64dp"
-            android:layout_marginStart="63dp"
-            android:layout_marginTop="79dp"
+            android:layout_marginLeft="99dp"
+            android:layout_marginStart="99dp"
+            android:layout_marginTop="32dp"
+            android:background="#EEE"
+            android:ems="10"
+            android:hint="Phone"
+            android:inputType="phone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/nameTCP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="99dp"
+            android:layout_marginStart="99dp"
+            android:layout_marginTop="43dp"
             android:background="#EEE"
             android:ems="10"
             android:hint="Name"
             android:inputType="textPersonName"
             android:text=""
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.238" />
+            app:layout_constraintTop_toBottomOf="@+id/phoneTCP" />
 
         <Button
             android:id="@+id/tcpRegisterButton"
-            android:layout_width="wrap_content"
+            android:layout_width="256dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="59dp"
-            android:layout_marginEnd="29dp"
-            android:layout_marginLeft="227dp"
-            android:layout_marginRight="29dp"
-            android:layout_marginStart="227dp"
-            android:layout_marginTop="165dp"
+
+            android:layout_marginLeft="77dp"
+            android:layout_marginStart="77dp"
+            android:layout_marginTop="149dp"
             android:background="@color/buttonBckgrnd"
             android:padding="10sp"
             android:text="Register"
             android:textColor="@color/backgrnd"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText3" />
+            app:layout_constraintTop_toBottomOf="@+id/nameTCP" />
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/User"
-        android:layout_width="344dp"
+        android:layout_width="fill_parent"
         android:layout_height="380dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="77dp"
         android:background="@color/backgrnd"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
-
-        <Button
-            android:id="@+id/userRegisterButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="58dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginLeft="229dp"
-
-            android:layout_marginRight="28dp"
-            android:layout_marginStart="229dp"
-            android:layout_marginTop="166dp"
-            android:background="@color/buttonBckgrnd"
-            android:padding="10sp"
-            android:text="Register"
-            android:textColor="@color/backgrnd"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phone" />
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:layout_editor_absoluteX="78dp">
 
         <EditText
-            android:id="@+id/phone"
+            android:id="@+id/phoneUSER"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="255dp"
-            android:layout_marginEnd="64dp"
-            android:layout_marginLeft="63dp"
-            android:layout_marginRight="64dp"
-            android:layout_marginStart="63dp"
-            android:layout_marginTop="79dp"
+            android:layout_marginLeft="99dp"
+            android:layout_marginStart="99dp"
+            android:layout_marginTop="32dp"
             android:background="#EEE"
             android:ems="10"
             android:hint="Phone"
             android:inputType="phone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.238" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/userRegisterButton"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/black"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000"
-        android:visibility="invisible"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+            android:layout_marginLeft="77dp"
+            android:layout_marginStart="77dp"
+            android:layout_marginTop="218dp"
+            android:background="@color/buttonBckgrnd"
+            android:padding="10sp"
+            android:text="Register"
+            android:textColor="@color/backgrnd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneUSER" />
 
     </android.support.constraint.ConstraintLayout>
 

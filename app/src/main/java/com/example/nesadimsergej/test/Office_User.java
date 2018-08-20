@@ -5,13 +5,15 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Debug;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +22,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.web3j.abi.datatypes.Uint;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.WalletUtils;
@@ -32,17 +33,14 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
-import org.web3j.utils.Numeric;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
-import static org.web3j.tx.ManagedTransaction.GAS_PRICE;
-import static org.web3j.tx.Transfer.GAS_LIMIT;
-
 public class Office_User extends AppCompatActivity {
 
+    private DrawerLayout mDrawerLayout;
     View balanceP,transactionP,eP;
     Credentials credentials;
 
@@ -61,12 +59,20 @@ public class Office_User extends AppCompatActivity {
     Button contractTest;
     Button deployContractBtn;
 
+
+    private ClipData myClip;
+    private ClipboardManager myClipboard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office_user);
-
         LoadAll();
+        HideAllPgs();
+        SetUpDrawerLayout();
+
+
+
 
         updateBalanceBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -92,7 +98,7 @@ public class Office_User extends AppCompatActivity {
             }
         });
         // тут все круто
-        bottomNavigationView.setOnNavigationItemSelectedListener(
+        /*bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -112,14 +118,16 @@ public class Office_User extends AppCompatActivity {
                         return true;
                     }
                 });
-
+*/
         // Обработчик для кнопки выхода
         // Стирает всю информацию о пользователе и переходит на стартовую сцену
         exitOfficeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences.Editor e = sharedPref.edit();
-                e.clear();
+                //e.clear();
+                //e.remove("PATH");
+                //e.remove("NAME");
                 e.apply();
                 Intent intent = new Intent(v.getContext(), start.class);
                 startActivity(intent);
@@ -140,14 +148,13 @@ public class Office_User extends AppCompatActivity {
         });
 
         // Выбираем вкладку с балансом
-        Menu bottomNavigationMenu = bottomNavigationView.getMenu();
-        bottomNavigationMenu.performIdentifierAction(R.id.Balance, 0);
+        //Menu bottomNavigationMenu = bottomNavigationView.getMenu();
+        //bottomNavigationMenu.performIdentifierAction(R.id.Balance, 0);
         UpdateBalance();
 
-
+        //mDrawerLayout.getHea
     }
-    private ClipData myClip;
-    private ClipboardManager myClipboard;
+
 
     void InfoPopUP(){
         myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
@@ -158,6 +165,9 @@ public class Office_User extends AppCompatActivity {
         TextView privateKeyInfo = dialog.findViewById(R.id.PrKUO);
         TextView publicKeyInfo = dialog.findViewById(R.id.PuKUO);
         TextView addressInfo = dialog.findViewById(R.id.AdUO);
+        TextView pathTV = dialog.findViewById(R.id.pathTV);
+        TextView nameTV = dialog.findViewById(R.id.nameTV);
+
 
         addressInfo.setText(
                 credentials.getAddress());
@@ -168,6 +178,9 @@ public class Office_User extends AppCompatActivity {
                 p.getPublicKey().toString(16));
         privateKeyInfo.setText(
                 p.getPrivateKey().toString(16));
+
+        pathTV.setText(sharedPref.getString("PATH", "NA"));
+        nameTV.setText(sharedPref.getString("NAME", "NA"));
 
         View.OnClickListener o = new View.OnClickListener() {
             @Override
@@ -183,7 +196,8 @@ public class Office_User extends AppCompatActivity {
         addressInfo.setOnClickListener(o);
         publicKeyInfo.setOnClickListener(o);
         privateKeyInfo.setOnClickListener(o);
-
+        pathTV.setOnClickListener(o);
+        nameTV.setOnClickListener(o);
         dialog.show();
     }
 
@@ -214,25 +228,24 @@ public class Office_User extends AppCompatActivity {
         }
     }
 
-
     void Contract(){
+
         try {
 
-            Greeter_sol_greeter contract = Greeter_sol_greeter
-                    .load(Config.contractAdress,web3,credentials,Loyalty_sol_Loyalty.GAS_PRICE,Loyalty_sol_Loyalty.GAS_LIMIT);
+            Loyalty contract = Loyalty
+                    .load(Config.contractAdress,web3,Credentials.create(Config.prk
+                            ,Config.puk),Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+            //contract.
             System.out.println(contract.getContractAddress());
             try {
                 BigInteger i = new BigInteger("12345");
                 System.out.println(i.bitCount());
 
-                //contract.addCustomer(credentials.getAddress(),new BigInteger("123")).sendAsync().get();
-                //Greeter_sol_greeter a = contract.addCompany(credentials.getAddress(),"PidorasCo",i).sendAsync().get();
-                //contract.greeter()
-                String a = contract.greet().sendAsync().get();
+                TransactionReceipt a = contract.addCompany(credentials.getAddress(),"PidorasCo",i).sendAsync().get();
 
-
-                Toast.makeText(getApplicationContext(),  a,
-                      Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),  a.getBlockNumber().toString(),
+                        Toast.LENGTH_SHORT).show();
 
             }catch (Exception e){
                 Toast.makeText(getApplicationContext(), "Pizdec!",
@@ -244,6 +257,7 @@ public class Office_User extends AppCompatActivity {
             e.printStackTrace();
             System.out.println("error1");
         }
+
     }
     String contractAddress = "";
     void UploadContract(){
@@ -252,8 +266,8 @@ public class Office_User extends AppCompatActivity {
                 deployContractBtn.setEnabled(false);
                 try {
 
-                    Greeter_sol_greeter contract = Greeter_sol_greeter
-                            .deploy(web3,credentials,Greeter_sol_greeter.GAS_PRICE,Greeter_sol_greeter.GAS_LIMIT,credentials.getAddress()).sendAsync().get();
+                    Loyalty contract = Loyalty
+                            .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT).sendAsync().get();
 
                     contractAddress = contract.getContractAddress();
                     deployContractBtn.setEnabled(true);
@@ -290,11 +304,6 @@ public class Office_User extends AppCompatActivity {
         }).run();
     }
 
-    void HideAllPgs(){
-        balanceP.setVisibility(View.GONE);
-        transactionP.setVisibility(View.GONE);
-        eP.setVisibility(View.GONE);
-    }
 
     int max(int a, int b){
         if(a>= b)
@@ -305,37 +314,37 @@ public class Office_User extends AppCompatActivity {
     // Функция обновляющая баланс пользователя
     void UpdateBalance(){
         new Thread(new Runnable() {
-                public void run() {
-                    updateBalanceBtn.setEnabled(false);
-                    try {
-                        EthGetBalance ethGetBalance = web3
-                                .ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST)
-                                .sendAsync().get(20, TimeUnit.SECONDS);
-                        // Еще что-то делаем
-                        BigInteger wei = ethGetBalance.getBalance();
-                        //System.out.println(wei);
-                        String result = wei.toString();
+            public void run() {
+                updateBalanceBtn.setEnabled(false);
+                try {
+                    EthGetBalance ethGetBalance = web3
+                            .ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST)
+                            .sendAsync().get(20, TimeUnit.SECONDS);
+                    // Еще что-то делаем
+                    BigInteger wei = ethGetBalance.getBalance();
+                    //System.out.println(wei);
+                    String result = wei.toString();
 
-                        int l = result.length();
-                        for(int i = l; i<18;i++)
-                            result = "0"+result;
+                    int l = result.length();
+                    for(int i = l; i<18;i++)
+                        result = "0"+result;
 
-                        String a = result.substring(max( result.length() - 18,0));
-                        String b = result.substring(0,max( result.length() - 18,0));
-                        if( b.equals( "") || b.equals(" "))
-                            b = "0";
-                        result = b+"."+a;
+                    String a = result.substring(max( result.length() - 18,0));
+                    String b = result.substring(0,max( result.length() - 18,0));
+                    if( b.equals( "") || b.equals(" "))
+                        b = "0";
+                    result = b+"."+a;
 
-                        money.setText(result);
-                        updateBalanceBtn.setEnabled(true);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Error!",
-                                Toast.LENGTH_SHORT).show();
-                        updateBalanceBtn.setEnabled(true);
-                    }
+                    money.setText(result);
+                    updateBalanceBtn.setEnabled(true);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Error!",
+                            Toast.LENGTH_SHORT).show();
+                    updateBalanceBtn.setEnabled(true);
                 }
-            }).run();
+            }
+        }).run();
     }
 
 
@@ -357,6 +366,92 @@ public class Office_User extends AppCompatActivity {
                 }
             }
         }).run();
+    }
+
+    void HideAllPgs(){
+        balanceP.setVisibility(View.GONE);
+        transactionP.setVisibility(View.GONE);
+        eP.setVisibility(View.GONE);
+    }
+
+
+    boolean opened = false;
+    void SetUpDrawerLayout(){
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.Balance);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem item) {
+                        HideAllPgs();
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
+                        switch (item.getItemId()) {
+
+                            case R.id.Balance:
+                                //System.out.println();
+                                balanceP.setVisibility(View.VISIBLE);
+                                break;
+                            case R.id.Transaction:
+                                transactionP.setVisibility(View.VISIBLE);
+                                break;
+                            case R.id.YE:
+                                eP.setVisibility(View.VISIBLE);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+        navigationView.getMenu().performIdentifierAction(R.id.Balance,0);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        mDrawerLayout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+                        // Respond when the drawer's position changes
+                    }
+
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        // Respond when the drawer is opened
+                        opened = true;
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        // Respond when the drawer is closed
+                        opened = false;
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+                        // Respond when the drawer motion state changes
+                    }
+                }
+        );
+        //mDrawerLayout
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if(!opened) {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                }else{
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

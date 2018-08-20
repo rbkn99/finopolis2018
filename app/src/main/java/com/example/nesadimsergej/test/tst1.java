@@ -38,10 +38,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
-public class Office_TCP extends AppCompatActivity {
+public class tst1 extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    View balanceP,transactionP,eP,coalitionsP,create_coalitionP,queriesP,token_settingsP;
+    View balanceP,transactionP,eP;
     Credentials credentials;
 
     Web3j web3;
@@ -66,12 +66,13 @@ public class Office_TCP extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_office_tcp);
+        setContentView(R.layout.activity_tst1);
         LoadAll();
         HideAllPgs();
         SetUpDrawerLayout();
 
-        //Loyalty c;
+
+
 
         updateBalanceBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -97,7 +98,27 @@ public class Office_TCP extends AppCompatActivity {
             }
         });
         // тут все круто
+        /*bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        HideAllPgs();
+                        switch (item.getItemId()) {
 
+                            case R.id.Balance:
+                                balanceP.setVisibility(View.VISIBLE);
+                                break;
+                            case R.id.Transaction:
+                                transactionP.setVisibility(View.VISIBLE);
+                                break;
+                            case R.id.YE:
+                                eP.setVisibility(View.VISIBLE);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+*/
         // Обработчик для кнопки выхода
         // Стирает всю информацию о пользователе и переходит на стартовую сцену
         exitOfficeBtn.setOnClickListener(new View.OnClickListener() {
@@ -181,11 +202,6 @@ public class Office_TCP extends AppCompatActivity {
     }
 
     void LoadAll(){
-        //queriesP,token_settingsP
-        coalitionsP = findViewById(R.id.coalitionsP);
-        create_coalitionP = findViewById(R.id.create_coalitionP);
-        queriesP = findViewById(R.id.queriesP);
-        token_settingsP = findViewById(R.id.token_settingsP);
         deployContractBtn = findViewById(R.id.deployContractBtn);
         contractTest = findViewById(R.id.contractBtn);
         infoBtn = findViewById(R.id.infoBtn);
@@ -356,11 +372,6 @@ public class Office_TCP extends AppCompatActivity {
         balanceP.setVisibility(View.GONE);
         transactionP.setVisibility(View.GONE);
         eP.setVisibility(View.GONE);
-        //coalitionsP,create_coalitionP,queriesP,token_settingsP
-        coalitionsP.setVisibility(View.GONE);
-        create_coalitionP.setVisibility(View.GONE);
-        queriesP.setVisibility(View.GONE);
-        token_settingsP.setVisibility(View.GONE);
     }
 
 
@@ -386,18 +397,6 @@ public class Office_TCP extends AppCompatActivity {
                                 break;
                             case R.id.YE:
                                 eP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.coalitions:
-                                coalitionsP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.create_coalition:
-                                create_coalitionP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.queries:
-                                queriesP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.token_settings:
-                                token_settingsP.setVisibility(View.VISIBLE);
                                 break;
                         }
                         return true;

@@ -31,18 +31,12 @@ import org.web3j.utils.Numeric;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    /*
-    public static final String ADDRESS = "com.example.myfirstapp.MESSAGE";
-    public static final String PRIVATE_KEY = "com.example.myfirstapp.MESSAGE";
-    public static final String PUBLIC_KEY = "com.example.myfirstapp.MESSAGE";
-    */
-    ConstraintLayout TCPLayout;
-    ConstraintLayout UserLayout;
-    ConstraintLayout black;
+
+    ConstraintLayout UserLayout,TCPLayout;
     Spinner dropdown;
-    Button userRegisterButton;
-    Button tcpRegisterButton;
-    EditText phone;
+    Button userRegisterButton,tcpRegisterButton;
+    EditText phoneUSER,phoneTCP,nameTCP;
+    Web3j web3;
     String[] items = new String[]{"Клиент-покупатель","ТСП"};
 
     @Override
@@ -51,26 +45,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         LoadAll();
 
+        // Настраиваем список для выбора роли
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        //set the spinners adapter to the previously created one.
-        ResetScene();
         dropdown.setAdapter(adapter);
         dropdown.setSelection(0);
+
+        // Обработчик выбора роли
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
             {
-                //Object item = parent.getItemAtPosition(pos);
+                HideAllPgs();
                 switch (pos){
-                    case 0:
-                            ResetScene();
-                            UserLayout.setVisibility(View.VISIBLE);
-                            TCPLayout.setVisibility(View.GONE);
-                        break;
                     case 1:
-                            ResetScene();
-                            UserLayout.setVisibility(View.GONE);
                             TCPLayout.setVisibility(View.VISIBLE);
+                        break;
+                    case 0:
+                            UserLayout.setVisibility(View.VISIBLE);
                         break;
                     default:break;
                 }
@@ -97,17 +88,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
     void RegisterUser(){
+        if(!checkUserFields())
+            return;
+
         userRegisterButton.setEnabled(false);
         new Handler().post(new Runnable() {
             public void run() {
-
-                Web3j web3 = Web3jFactory.build(new HttpService(Config.web3Address));
                 try {
-
+                    //Заводин новый адресс, публичный ключ и приватный ключ
                     File f = new File(getApplicationContext().getFilesDir(),"");
-
                     String str = WalletUtils.generateLightNewWalletFile(" ", f);
-                    System.out.println(str);
+                    Credentials credentials = WalletUtils.loadCredentials(" ",f.getAbsolutePath() + "/" +str);
 
                     // Сохраняем всю интересующую нас информацию
                     SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
@@ -117,18 +108,37 @@ public class MainActivity extends AppCompatActivity {
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
 
-                    Credentials credentials = WalletUtils.loadCredentials(" ",f.getAbsolutePath() + "/" +str);
+                    /**
+                     * Загружаем смарт контракт ( все действия будут выполнены не от имени регистрируемого пользователя,
+                     * а от имени владельца контракта( того, кто его залил)
+                     **/
+                    Loyalty contract = Loyalty.load(
+                            Config.contractAdress,/*Адресс контракта (указан в конфиге) */
+                            web3,/* */
+                            Credentials.create(Config.prk, Config.puk),/**/
+                            Loyalty.GAS_PRICE,
+                            Loyalty.GAS_LIMIT);
 
+                    String phoneNumber = phoneUSER.getText().toString();
+                    // Если номер это просто то 1, то текущий пользователь не регистрируется( кул хак)
+                    if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
 
-                    Loyalty_sol_Loyalty contract = Loyalty_sol_Loyalty.load(Config.contractAdress,web3,credentials,Loyalty_sol_Loyalty.GAS_PRICE,
-                            Loyalty_sol_Loyalty.GAS_LIMIT);
+                        // Хэш номера телефона, который мы будем отправлять в блокчейн
+                        BigInteger phoneHash = new BigInteger(
+                                String.valueOf(phoneNumber.hashCode())
+                        );
 
-                    //contract.addCustomer(credentials.getAddress().substring(2),new BigInteger("1312124")).sendAsync().get();
-
-                    // Переходим на следующую сцену
+                        // Регистрируем пользователя
+                        contract.addCustomer(
+                                credentials.getAddress(),
+                                phoneHash
+                        ).sendAsync().get();
+                    }else{
+                        System.out.println("COOL HACK");
+                    }
+                    // Переходим на сцену с личным кабинетом пользователя
                     Intent intent = new Intent(getBaseContext(), Office_User.class);
                     startActivity(intent);
-                    //userRegisterButton.setEnabled(true);
                 }catch(Exception e){
                     userRegisterButton.setEnabled(true);
                     ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
@@ -138,60 +148,108 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    boolean checkUserFields(){
+        String phoneNumber = phoneUSER.getText().toString();
+        return phoneNumber.length() > 0;
+    }
+    boolean checkTCPFields(){
+        return true;
+    }
+
     void RegisterTCP(){
-        Web3j web3 = Web3jFactory.build(new HttpService(Config.web3Address));
-        try {
-            NetListening connected = web3.netListening().sendAsync().get();
-            if(connected.isListening()){
-                // Мы подключены
-                // create new private/public key pair
-                // Создаем нового пользователя
-                ECKeyPair keyPair = Keys.createEcKeyPair();
-                BigInteger publicKey = keyPair.getPublicKey();
-                String publicKeyHex = Numeric.toHexStringWithPrefix(publicKey);
-                BigInteger privateKey = keyPair.getPrivateKey();
-                String privateKeyHex = Numeric.toHexStringWithPrefix(privateKey);
-                Credentials credentials = Credentials.create(new ECKeyPair(privateKey, publicKey));
-                String address = credentials.getAddress();
+        if(!checkTCPFields())
+            return;
 
-                TransactionReceipt transactionReceipt =
-                        Transfer.sendFunds(web3,Credentials.create(Config.secretKey1),address,
-                                BigDecimal.valueOf(Config.TCP_START_BALANCE), Convert.Unit.ETHER).sendAsync().get();
+        userRegisterButton.setEnabled(false);
+        new Handler().post(new Runnable() {
+            public void run() {
+                try {
+                    //Заводин новый адресс, публичный ключ и приватный ключ
+                    File f = new File(getApplicationContext().getFilesDir(),"");
+                    String str = WalletUtils.generateLightNewWalletFile(" ", f);
+                    Credentials credentials = WalletUtils.loadCredentials(" ",f.getAbsolutePath() + "/" +str);
 
+                    // Сохраняем всю интересующую нас информацию
+                    SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("NAME", str);
+                    editor.putString("PATH",f.getAbsolutePath());
+                    editor.putBoolean(Config.IS_TCP,false);
+                    editor.apply();
 
+                    /**
+                     * Загружаем смарт контракт ( все действия будут выполнены не от имени регистрируемого пользователя,
+                     * а от имени владельца контракта( того, кто его залил)
+                     **/
+                    Loyalty contract = Loyalty.load(
+                            Config.contractAdress,/*Адресс контракта (указан в конфиге) */
+                            web3,/* */
+                            Credentials.create(Config.prk, Config.puk),/**/
+                            Loyalty.GAS_PRICE,
+                            Loyalty.GAS_LIMIT);
 
-                SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(Config.ADDRESS, address);
-                editor.putString(Config.PRIVATE_KEY, privateKeyHex);
-                editor.putString(Config.PUBLIC_KEY, publicKeyHex);
-                editor.putBoolean(Config.IS_TCP,true);
-                editor.apply();
+                    String phoneNumber = phoneTCP.getText().toString();
+                    String companyName = nameTCP.getText().toString();
 
-                // Переходим на следующую сцену
-                Intent intent = new Intent(this, infoAfterRegistration.class);
-                startActivity(intent);
+                    // Если номер это просто то 1, то текущий пользователь не регистрируется( кул хак)
+                    if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
 
+                        // Хэш номера телефона, который мы будем отправлять в блокчейн
+                        BigInteger phoneHash = new BigInteger(
+                                String.valueOf(phoneNumber.hashCode())
+                        );
+
+                        System.out.println(phoneNumber);
+                        System.out.println(phoneHash);
+                        System.out.println(phoneHash.bitLength());
+
+                        // Регистрируем пользователя
+                        contract.addCompany(
+                                credentials.getAddress(),
+                                companyName,
+                                phoneHash
+                        ).sendAsync().get();
+
+                    }else{
+                        System.out.println("COOL HACK");
+                    }
+                    // Переходим на сцену с личным кабинетом компании
+                    Intent intent = new Intent(getBaseContext(), Office_TCP.class);
+                    startActivity(intent);
+
+                }catch(Exception e){
+                    userRegisterButton.setEnabled(true);
+                    ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
+                    e.printStackTrace();
+                }
             }
-
-        }catch (Exception e){
-
-        }
+        });
 
     }
 
-
+    // Функция для загрузки всех нужных эелементов сцены
     void LoadAll(){
-        phone = findViewById(R.id.phone);
-        dropdown = findViewById(R.id.userSelector);
-        TCPLayout = findViewById(R.id.TCP);
-        UserLayout = findViewById(R.id.User);
+        web3 = Web3jFactory.build(new HttpService(Config.web3Address));
+        // Кнопки регистрации
         userRegisterButton = findViewById(R.id.userRegisterButton);
         tcpRegisterButton = findViewById(R.id.tcpRegisterButton);
-        black = findViewById(R.id.black);
+
+        // Поля для регистрации пользователя
+        phoneUSER = findViewById(R.id.phoneUSER);
+
+        // Поля регистрации компании
+        phoneTCP = findViewById(R.id.phoneTCP);
+        nameTCP = findViewById(R.id.nameTCP);
+
+        // Список для выбора кого регистрировать
+        dropdown = findViewById(R.id.userSelector);
+
+        TCPLayout = findViewById(R.id.TCP);
+        UserLayout = findViewById(R.id.User);
+
     }
 
-    void ResetScene(){
+    void HideAllPgs(){
         TCPLayout.setVisibility(View.GONE);
         UserLayout.setVisibility(View.GONE);
     }

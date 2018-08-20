@@ -28,6 +28,8 @@
         <activity android:name=".infoAfterRegistration" />
         <activity android:name=".Office_User" />
         <activity android:name=".Office_TCP" />
+        <activity android:name=".tst1" />
+        <activity android:name=".Login"></activity>
     </application>
 
 </manifest>
