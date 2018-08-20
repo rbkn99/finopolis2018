@@ -12,9 +12,10 @@ contract Loyalty {
     }
     
     // bank address
-    address owner;
+    address public owner;
     
-    mapping (address => Customer) private customers;
+    
+    mapping (address => Customer) public customers;
     mapping (address => Coalition.Company) public companies;
     
     // map from company (owner) address to Token
@@ -51,16 +52,16 @@ contract Loyalty {
     }
     
     // user calls
-    function logIn(uint phoneNumber) public returns (uint statusCode) {
+    function logIn(uint phoneNumber) public returns (uint) {
         // 0 - login failed, 1 - as customer, 2 - as company
         if (customers[msg.sender].phoneNumber != phoneNumber &&
                 companies[msg.sender].phoneNumber != phoneNumber)
-                statusCode = 0;
+                return 0;
         emit LoggedIn(msg.sender, phoneNumber);
         if (customers[msg.sender].phoneNumber == phoneNumber)
-            statusCode = 1;
+            return 1;
         else
-            statusCode = 2;
+            return 2;
     }
     
     // bank calls
@@ -72,7 +73,9 @@ contract Loyalty {
                                 public
                                 onlyOwner
                                 customerExists(customer)
-                                companyExists(company) {
+                                companyExists(company) returns (uint) // if bonusesAmount == 0 returns charged bonuses amount,
+                                                                      // in another case returns roubles amount
+                                {
                                     
         Token token = companies[company].ownToken;
         // charge bonuses to customer                            
@@ -83,6 +86,7 @@ contract Loyalty {
                 uint tokensAmount = roublesAmount.mul(token.inPrice());
                 token.transfer(company, customer, tokensAmount);
                 customers[customer].tokens[token] = true;
+                return tokensAmount;
             }
             else {
                 // TODO: hard case, needs merge with Slavique
@@ -91,7 +95,7 @@ contract Loyalty {
         // write off bonuses
         else {
             if (token.owner() == company) {
-                
+                //uint roublesAmount
             }
             else {
                 // TODO: hard case, needs merge with Slavique
@@ -101,7 +105,7 @@ contract Loyalty {
     
     // company calls
     // name of the token, tokens per spent rouble, price when you spend tokens
-    function createToken(string _name, uint inPrice, uint outPrice) public 
+    function createToken(string _name, uint inPrice, uint outPrice) public
         companyExists(msg.sender) {
         require(companies[msg.sender].ownToken.owner() == address(0)); // doesn't exist
         Token newToken = new Token(_name, inPrice, outPrice);
