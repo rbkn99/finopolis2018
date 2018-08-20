@@ -11,12 +11,38 @@ contract Loyalty {
         mapping (address => bool) tokens;
     }
     
+    struct Company {
+        bool exists;
+        Token token;
+        string name;
+        uint phoneNumber;
+        Request[] request_pool; 
+        mapping (address => bool) coalitions;
+    }
+    
+    struct Request {
+        string message;
+        address sender;
+        RequestType _type;
+    }
+    
+    struct Coalition{
+        bool exists;
+        string name;
+        address leader;
+        mapping (address => bool) members;
+    }
+    
+    enum RequestType {INVITE}
+    
     // bank address
     address public owner;
     
     
     mapping (address => Customer) public customers;
-    mapping (address => Coalition.Company) public companies;
+    mapping (address => Company) public companies;
+    mapping (address => Coalition) public coalitions;
+
     
     // map from company (owner) address to Token
     mapping (address => Token) public allTokens;
@@ -100,6 +126,33 @@ contract Loyalty {
         require(token.owner() == msg.sender);
         companies[msg.sender].ownToken = token;
         allTokens[msg.sender] = token;
+    }
+    
+    function addCoalition(address coalition, string _name) public 
+                                companyExists(msg.sender)
+                                coalitionNotExists(coalition){
+        coalitions[coalition].exists = true;
+        coalitions[coalition].name = _name;
+        coalitions[coalition].members[msg.sender] = true;
+        coalitions[coalition].leader = msg.sender;
+        companies[msg.sender].coalitions[coalition] = true;
+    }
+    
+    function inviteToCoalition(address coalition) public 
+                                companyExists(msg.sender)
+                                coalitionExists(coalition){
+        Request join_request;
+        join_request.message = "Idi nahui gomofobny pidaras";
+        join_request.sender = msg.sender;
+        join_request._type = RequestType.INVITE;
+        companies[coalitions[coalition].leader].request_pool.push(join_request);
+    }
+    
+    function getRequest () public // call while not tresnesh' 
+                            companyExists(msg.sender)
+                            {
+        var request = companies[msg.sender].request_pool[companies[msg.sender].request_pool.length - 1];
+        //return (request.message, request.sender);
     }
     
     modifier onlyOwner() {
