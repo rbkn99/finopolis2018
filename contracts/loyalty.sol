@@ -81,7 +81,9 @@ contract Loyalty {
         // write off bonuses
         else {
             if (token.owner() == company) {
-                //uint roublesAmount
+                uint deltaMoney = tokensAmount.mul(token.outPrice());
+                roublesAmount = roublesAmount.add(deltaMoney);
+                token.transfer(customer, company, tokensAmount);
             }
             else {
                 // TODO: hard case, needs merge with Slavique
