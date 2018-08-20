@@ -51,19 +51,6 @@ contract Loyalty {
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
     
-    // user calls
-    function logIn(uint phoneNumber) public returns (uint) {
-        // 0 - login failed, 1 - as customer, 2 - as company
-        if (customers[msg.sender].phoneNumber != phoneNumber &&
-                companies[msg.sender].phoneNumber != phoneNumber)
-                return 0;
-        emit LoggedIn(msg.sender, phoneNumber);
-        if (customers[msg.sender].phoneNumber == phoneNumber)
-            return 1;
-        else
-            return 2;
-    }
-    
     // bank calls
     function transferBonuses(address company,
                              address customer,
@@ -76,7 +63,6 @@ contract Loyalty {
                                 companyExists(company) returns (uint) // if bonusesAmount == 0 returns charged bonuses amount,
                                                                       // in another case returns roubles amount
                                 {
-                                    
         Token token = companies[company].ownToken;
         // charge bonuses to customer                            
         if (bonusesAmount == 0) {
@@ -105,12 +91,13 @@ contract Loyalty {
     
     // company calls
     // name of the token, tokens per spent rouble, price when you spend tokens
-    function createToken(string _name, uint inPrice, uint outPrice) public
+    function createToken(Token token) public
         companyExists(msg.sender) {
-        require(companies[msg.sender].ownToken.owner() == address(0)); // doesn't exist
-        Token newToken = new Token(_name, inPrice, outPrice);
-        companies[msg.sender].ownToken = newToken;
-        allTokens[msg.sender] = newToken;
+        // doesn't exist
+        require(companies[msg.sender].ownToken.owner() == address(0));
+        require(token.owner() == msg.sender);
+        companies[msg.sender].ownToken = token;
+        allTokens[msg.sender] = token;
     }
     
     modifier onlyOwner() {
