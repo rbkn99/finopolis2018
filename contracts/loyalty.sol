@@ -43,6 +43,7 @@ contract Loyalty {
     mapping (address => Company) public companies;
     mapping (address => Coalition) public coalitions;
 
+    uint64 companiesCount;
     Company[] public companySet;
     
     // map from company (owner) address to Token
@@ -55,6 +56,7 @@ contract Loyalty {
     
     constructor() public {
         owner = msg.sender;
+        companiesCount = 0;
     }
     
     // bank calls
@@ -73,6 +75,7 @@ contract Loyalty {
                 companyNotExists(company)
                 customerNotExists(company) {
         companySet.push(companies[company]);
+        companiesCount++;
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
@@ -94,37 +97,33 @@ contract Loyalty {
         Token token = companies[company].token;
         // charge bonuses to customer                            
         if (bonusesAmount == 0) {
-            
-            // the simpliest case - when token belongs to the company
-            if (token.owner() == company) {
-                uint tokensAmount = roublesAmount.mul(token.inPrice());
-                token.transfer(company, customer, tokensAmount);
-                customers[customer].tokens[token] = true;
+            uint tokensAmount = roublesAmount.mul(token.inPrice());
+            token.transfer(company, customer, tokensAmount);
+            customers[customer].tokens[token] = true;
+            return tokensAmount;
+        }
+        // write off bonuses
+        else {
+            uint deltaMoney;
+            if (token.owner() == tokenOwner) {
+                deltaMoney = tokensAmount.mul(token.outPrice());
+                roublesAmount = roublesAmount.add(deltaMoney);
+                token.transfer(customer, company, tokensAmount);
             }
             else {
                 address current_coalition = isMatch(companies[company], 
                                                     companies[tokenOwner]);
                 require(current_coalition != address(0));
-                
-            }
-            return tokensAmount;
-        }
-        // write off bonuses
-        else {
-            if (token.owner() == company) {
-                uint deltaMoney = tokensAmount.mul(token.outPrice());
+                deltaMoney = tokensAmount.mul(token.exchangePrice());
                 roublesAmount = roublesAmount.add(deltaMoney);
-                token.transfer(customer, company, tokensAmount);
-            }
-            else {
-                // TODO: hard case, needs merge with Slavique
+                token.transfer(customer, tokenOwner, tokensAmount);
             }
             return roublesAmount;
         }
     }
     
     // check if 2 companies belongs to the one coalition and returns its name
-    function isMatch(Company c1, Company c2) private returns (address) {
+    function isMatch(Company c1, Company c2) private pure returns (address) {
         for (uint i = 0; i < c1.coalitionNames.length; i++) {
             for (uint j = 0; j < c2.coalitionNames.length; j++) {
                 if (c1.coalitionNames[i] == c2.coalitionNames[j])
