@@ -42,6 +42,7 @@ contract Loyalty {
     mapping (address => Company) public companies;
     mapping (address => Coalition) public coalitions;
 
+    address[] public companySet;
     
     // map from company (owner) address to Token
     mapping (address => Token) public allTokens;
@@ -70,6 +71,7 @@ contract Loyalty {
                 onlyOwner
                 companyNotExists(company)
                 customerNotExists(company) {
+        companySet.push(company);
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
