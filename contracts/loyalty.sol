@@ -148,7 +148,7 @@ contract Loyalty {
         else
             token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
     }
-    
+// --------------------------------------------------- NAHUI S MOEGO BOLOTA --------------------------------------------------------------------------    
     // company calls - it becomes coalition owner
     function addCoalition(address coalition, string _name) public
                                 companyExists(msg.sender)
