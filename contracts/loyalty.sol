@@ -15,7 +15,8 @@ contract Loyalty {
         Token token;
         string name;
         uint phoneNumber;
-        Request[] request_pool; 
+        Request[] request_pool;
+        address[] coalitionNames;
         mapping (address => bool) coalitions;
     }
     
@@ -42,7 +43,7 @@ contract Loyalty {
     mapping (address => Company) public companies;
     mapping (address => Coalition) public coalitions;
 
-    address[] public companySet;
+    Company[] public companySet;
     
     // map from company (owner) address to Token
     mapping (address => Token) public allTokens;
@@ -71,7 +72,7 @@ contract Loyalty {
                 onlyOwner
                 companyNotExists(company)
                 customerNotExists(company) {
-        companySet.push(company);
+        companySet.push(companies[company]);
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
@@ -101,7 +102,10 @@ contract Loyalty {
                 customers[customer].tokens[token] = true;
             }
             else {
-                //require(coalitions[company])
+                address current_coalition = isMatch(companies[company], 
+                                                    companies[tokenOwner]);
+                require(current_coalition != address(0));
+                
             }
             return tokensAmount;
         }
@@ -117,6 +121,17 @@ contract Loyalty {
             }
             return roublesAmount;
         }
+    }
+    
+    // check if 2 companies belongs to the one coalition and returns its name
+    function isMatch(Company c1, Company c2) private returns (address) {
+        for (uint i = 0; i < c1.coalitionNames.length; i++) {
+            for (uint j = 0; j < c2.coalitionNames.length; j++) {
+                if (c1.coalitionNames[i] == c2.coalitionNames[j])
+                    return c1.coalitionNames[i];
+            }
+        }
+        return address(0);
     }
     
     // company calls
@@ -135,9 +150,10 @@ contract Loyalty {
             token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
     }
     
-    function addCoalition(address coalition, string _name) public 
+    // company calls - it becomes coalition owner
+    function addCoalition(address coalition, string _name) public
                                 companyExists(msg.sender)
-                                coalitionNotExists(coalition){
+                                coalitionNotExists(coalition) {
         coalitions[coalition].exists = true;
         coalitions[coalition].name = _name;
         coalitions[coalition].members[msg.sender] = true;
@@ -145,9 +161,10 @@ contract Loyalty {
         companies[msg.sender].coalitions[coalition] = true;
     }
     
+    // falcon calls
     function inviteToCoalition(address coalition) public 
                                 companyExists(msg.sender)
-                                coalitionExists(coalition){
+                                coalitionExists(coalition) {
         Request join_request;
         join_request.message = "Idi nahui gomofobny pidaras";
         join_request.sender = msg.sender;
@@ -158,7 +175,9 @@ contract Loyalty {
     function getRequest () public // call while not tresnesh' 
                             companyExists(msg.sender)
                             {
-        var request = companies[msg.sender].request_pool[companies[msg.sender].request_pool.length - 1];
+        var request = companies[msg.sender].request_pool[
+            companies[msg.sender].request_pool.length - 1];
+        //TODO: if request is confirmed, push the coalition to company's coalitions
         //return (request.message, request.sender);
     }
     
