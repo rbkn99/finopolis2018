@@ -27,7 +27,7 @@
             android:layout_height="100dp" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/tokenName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -41,12 +41,12 @@
             android:layout_height="30dp" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/purchasePrise"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Цена при покупке"
-            android:inputType="textPersonName|numberDecimal"
+            android:inputType="numberDecimal"
             tools:layout_editor_absoluteX="98dp"
             tools:layout_editor_absoluteY="74dp" />
 
@@ -55,12 +55,12 @@
             android:layout_height="30dp" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/price_when_using"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Цена при использовании"
-            android:inputType="textPersonName|numberDecimal"
+            android:inputType="numberDecimal"
             tools:layout_editor_absoluteX="98dp"
             tools:layout_editor_absoluteY="74dp" />
 
@@ -69,14 +69,24 @@
             android:layout_height="30dp" />
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/swapPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Цена при обмене"
-            android:inputType="textPersonName|numberDecimal"
+            android:inputType="numberDecimal"
             tools:layout_editor_absoluteX="98dp"
             tools:layout_editor_absoluteY="74dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/createTokenBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Создать" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

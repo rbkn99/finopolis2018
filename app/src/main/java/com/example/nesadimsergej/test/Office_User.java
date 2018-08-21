@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.web3j.abi.datatypes.Int;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.WalletUtils;
@@ -36,43 +37,60 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class Office_User extends AppCompatActivity {
+public class Office_User extends Office {
 
-    private DrawerLayout mDrawerLayout;
-    View balanceP,transactionP,eP;
-    Credentials credentials;
+    //private DrawerLayout mDrawerLayout;
 
-    Web3j web3;
+    //ArrayList<View> pages= new ArrayList<>();
+    //Map<Integer, Integer> map = new HashMap<>();
+
+    View balanceP,transactionP,eP,exchange_bonusesP,pay_bonusesP,user_bonusesP;
+
+
+    //public Credentials credentials;
+    //public Web3j web3;
+
+    /*
     TextView money;
     Button updateBalanceBtn,addEth,infoBtn;
     SharedPreferences sharedPref;
     EditText balanceCheater;
     Button exitOfficeBtn;
     BottomNavigationView bottomNavigationView;
-
+    */
     //TextView privateKeyInfo,publicKeyInfo,addressInfo;
+    /*
     EditText targetAddress;
     EditText targetSum;
     Button sendEth;
     Button contractTest;
     Button deployContractBtn;
+    */
 
-
-    private ClipData myClip;
-    private ClipboardManager myClipboard;
+    //private ClipData myClip;
+    //private ClipboardManager myClipboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office_user);
+
+        map.put(R.id.Balance,R.id.balanceP);
+        map.put(R.id.Transaction,R.id.transactionP);
+        map.put(R.id.YE,R.id.eP);
+        map.put(R.id.user_bonuses,R.id.user_bonusesP);
+        map.put(R.id.exchange_bonuses,R.id.exchange_bonusesP);
+        map.put(R.id.pay_bonuses,R.id.pay_bonusesP);
+
         LoadAll();
         HideAllPgs();
         SetUpDrawerLayout();
-
-
-
 
         updateBalanceBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -97,28 +115,7 @@ public class Office_User extends AppCompatActivity {
                 InfoPopUP();
             }
         });
-        // тут все круто
-        /*bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        HideAllPgs();
-                        switch (item.getItemId()) {
 
-                            case R.id.Balance:
-                                balanceP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.Transaction:
-                                transactionP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.YE:
-                                eP.setVisibility(View.VISIBLE);
-                                break;
-                        }
-                        return true;
-                    }
-                });
-*/
         // Обработчик для кнопки выхода
         // Стирает всю информацию о пользователе и переходит на стартовую сцену
         exitOfficeBtn.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +133,6 @@ public class Office_User extends AppCompatActivity {
         contractTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //System.out.println("called1488");
                 Contract();
             }
         });
@@ -147,12 +143,8 @@ public class Office_User extends AppCompatActivity {
             }
         });
 
-        // Выбираем вкладку с балансом
-        //Menu bottomNavigationMenu = bottomNavigationView.getMenu();
-        //bottomNavigationMenu.performIdentifierAction(R.id.Balance, 0);
         UpdateBalance();
 
-        //mDrawerLayout.getHea
     }
 
 
@@ -201,118 +193,39 @@ public class Office_User extends AppCompatActivity {
         dialog.show();
     }
 
-    void LoadAll(){
-        deployContractBtn = findViewById(R.id.deployContractBtn);
-        contractTest = findViewById(R.id.contractBtn);
-        infoBtn = findViewById(R.id.infoBtn);
-        targetAddress = findViewById(R.id.targetAddress);
-        targetSum = findViewById(R.id.targetSum);
-        sendEth = findViewById(R.id.sendEth);
-        exitOfficeBtn = findViewById(R.id.exitOfficeBtn);
+    @Override
+    protected void LoadAll(){
+        super.LoadAll();
+        //exchange_bonusesP,pay_bonusesP,user_bonusesP
+        exchange_bonusesP = findViewById(R.id.exchange_bonusesP);
+        pay_bonusesP = findViewById(R.id.pay_bonusesP);
+        user_bonusesP = findViewById(R.id.user_bonusesP);
         balanceP = findViewById(R.id.balanceP);
         transactionP = findViewById(R.id.transactionP);
         eP = findViewById(R.id.eP);
-        money = findViewById(R.id.ethInfo);
-        updateBalanceBtn = findViewById(R.id.updateBalanceBtn);
-        balanceCheater = findViewById(R.id.balanceCheater);
-        addEth = findViewById(R.id.addEth);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        web3 = Web3jFactory.build(new HttpService(Config.web3Address));
-        sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
 
-        try {
-            credentials = WalletUtils.loadCredentials(" ",
-                    sharedPref.getString("PATH", "NA") + "/" + sharedPref.getString("NAME", "NA"));
-        }catch (Exception e){
+        pages.add(exchange_bonusesP);
+        pages.add(pay_bonusesP);
+        pages.add(user_bonusesP);
+        pages.add(balanceP);
+        pages.add(transactionP);
+        pages.add(eP);
 
-        }
-    }
 
-    void Contract(){
-
-        try {
-
-            Loyalty contract = Loyalty
-                    .load(Config.contractAdress,web3,Credentials.create(Config.prk
-                            ,Config.puk),Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
-            //contract.
-            System.out.println(contract.getContractAddress());
-            try {
-                BigInteger i = new BigInteger("12345");
-                System.out.println(i.bitCount());
-
-                TransactionReceipt a = contract.addCompany(credentials.getAddress(),"PidorasCo",i).sendAsync().get();
-
-                Toast.makeText(getApplicationContext(),  a.getBlockNumber().toString(),
-                        Toast.LENGTH_SHORT).show();
-
-            }catch (Exception e){
-                Toast.makeText(getApplicationContext(), "Pizdec!",
-                        Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println("error1");
-        }
 
     }
-    String contractAddress = "";
-    void UploadContract(){
-        new Thread(new Runnable() {
-            public void run() {
-                deployContractBtn.setEnabled(false);
-                try {
-
-                    Loyalty contract = Loyalty
-                            .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT).sendAsync().get();
-
-                    contractAddress = contract.getContractAddress();
-                    deployContractBtn.setEnabled(true);
-                    System.out.println(contractAddress);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Error!",
-                            Toast.LENGTH_SHORT).show();
-                    deployContractBtn.setEnabled(true);
-                }
-            }
-        }).run();
-    }
-
-    //
-    void SendEth(){
-        new Thread(new Runnable() {
-            public void run() {
-                String address = targetAddress.getText().toString();
-                float v = Float.parseFloat(targetSum.getText().toString());
-
-                try {
-                    TransactionReceipt transactionReceipt =
-                            Transfer.sendFunds(web3, credentials, address,
-                                    BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Error!",
-                            Toast.LENGTH_SHORT).show();
-                }
-                UpdateBalance();
-            }
-        }).run();
-    }
 
 
+
+/*
     int max(int a, int b){
         if(a>= b)
             return a;
         return b;
     }
-
+*/
     // Функция обновляющая баланс пользователя
-    void UpdateBalance(){
+    /*void UpdateBalance(){
         new Thread(new Runnable() {
             public void run() {
                 updateBalanceBtn.setEnabled(false);
@@ -346,9 +259,9 @@ public class Office_User extends AppCompatActivity {
             }
         }).run();
     }
+    */
 
-
-    void AddEth(){
+    /*void AddEth(){
 
         new Thread(new Runnable() {
             public void run() {
@@ -366,78 +279,28 @@ public class Office_User extends AppCompatActivity {
                 }
             }
         }).run();
+    }*/
+
+    /*void HideAllPgs(){
+        for (View v:pages
+             ) {
+            v.setVisibility(View.GONE);
+        }
+        //balanceP.setVisibility(View.GONE);
+        //transactionP.setVisibility(View.GONE);
+        //eP.setVisibility(View.GONE);
     }
+    void UnHidePage(int id){
+        for (View v:pages
+                ) {
+            if(v.getId() == id)
+                v.setVisibility(View.VISIBLE);
+        }
+    }*/
 
-    void HideAllPgs(){
-        balanceP.setVisibility(View.GONE);
-        transactionP.setVisibility(View.GONE);
-        eP.setVisibility(View.GONE);
-    }
 
+    //boolean opened = false;
 
-    boolean opened = false;
-    void SetUpDrawerLayout(){
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setCheckedItem(R.id.Balance);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem item) {
-                        HideAllPgs();
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
-                        switch (item.getItemId()) {
-
-                            case R.id.Balance:
-                                //System.out.println();
-                                balanceP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.Transaction:
-                                transactionP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.YE:
-                                eP.setVisibility(View.VISIBLE);
-                                break;
-                        }
-                        return true;
-                    }
-                });
-
-        navigationView.getMenu().performIdentifierAction(R.id.Balance,0);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-
-        mDrawerLayout.addDrawerListener(
-                new DrawerLayout.DrawerListener() {
-                    @Override
-                    public void onDrawerSlide(View drawerView, float slideOffset) {
-                        // Respond when the drawer's position changes
-                    }
-
-                    @Override
-                    public void onDrawerOpened(View drawerView) {
-                        // Respond when the drawer is opened
-                        opened = true;
-                    }
-
-                    @Override
-                    public void onDrawerClosed(View drawerView) {
-                        // Respond when the drawer is closed
-                        opened = false;
-                    }
-
-                    @Override
-                    public void onDrawerStateChanged(int newState) {
-                        // Respond when the drawer motion state changes
-                    }
-                }
-        );
-        //mDrawerLayout
-
-    }
 
 
     @Override

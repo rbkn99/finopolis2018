@@ -2,4 +2,5 @@
 <resources>
     <color name="red">#db4d2e</color>
     <color name="green">#1f963d</color>
+    <color name="buttonBckgrnd1">#eeaa7b</color>
 </resources>

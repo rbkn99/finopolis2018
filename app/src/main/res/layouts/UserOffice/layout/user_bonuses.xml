@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:stretchColumns="1">
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="KFC"
+                android:textSize="25sp"
+                android:paddingLeft="30dp"/>
+            <TextView
+                android:text="14"
+                android:gravity="right"
+                android:textSize="25sp"
+                android:paddingRight="30dp"/>
+            <TextView
+                android:text="88"
+                android:gravity="right"
+                android:textSize="25sp"
+                android:paddingRight="30dp" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="BURGER KONG"
+                android:textSize="25sp"
+                android:paddingLeft="30dp"/>
+            <TextView
+                android:text="13"
+                android:gravity="right"
+                android:textSize="25sp"
+                android:paddingRight="30dp"/>
+            <TextView
+                android:text="37"
+                android:gravity="right"
+                android:textSize="25sp"
+                android:paddingRight="30dp" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="BURGER KONG"
+                android:textSize="25sp"
+                android:paddingLeft="30dp"/>
+            <TextView
+                android:text="13"
+                android:gravity="right"
+                android:textSize="25sp"
+                android:paddingRight="30dp"/>
+            <TextView
+                android:text="37"
+                android:gravity="right"
+                android:textSize="25sp"
+                android:paddingRight="30dp" />
+        </TableRow>
+    </TableLayout>
+
+
+</android.support.constraint.ConstraintLayout>

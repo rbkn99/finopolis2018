@@ -2,23 +2,11 @@ package com.example.nesadimsergej.test;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Credentials;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-
-import org.web3j.crypto.WalletUtils;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.Web3jFactory;
-import org.web3j.protocol.core.RemoteCall;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.http.HttpService;
-import org.web3j.tuples.generated.Tuple2;
-
-import java.math.BigInteger;
 
 public class start extends AppCompatActivity {
     Button loginBtn,registerBtn;
@@ -124,7 +112,7 @@ public class start extends AppCompatActivity {
 
     }
     void Register(){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Register.class);
         startActivity(intent);
     }
 

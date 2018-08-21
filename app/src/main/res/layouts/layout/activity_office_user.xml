@@ -66,6 +66,24 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/user_bonusesP"
+                layout="@layout/user_bonuses"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <include
+                android:id="@+id/exchange_bonusesP"
+                layout="@layout/exchange_bonuses"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <include
+                android:id="@+id/pay_bonusesP"
+                layout="@layout/pay_bonuses"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
         </FrameLayout>
 
         <!-- Container for contents of drawer - use NavigationView to make configuration easier -->

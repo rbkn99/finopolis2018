@@ -10,8 +10,15 @@
         <item
             android:id="@+id/YE"
             android:title="@string/Shieet" />
+
         <item
-            android:id="@+id/nav_manage"
-            android:title="hui" />
+            android:id="@+id/user_bonuses"
+            android:title="Мои бонусы" />
+        <item
+            android:id="@+id/exchange_bonuses"
+            android:title="Обменять" />
+        <item
+            android:id="@+id/pay_bonuses"
+            android:title="Оплатить" />
     </group>
 </menu>

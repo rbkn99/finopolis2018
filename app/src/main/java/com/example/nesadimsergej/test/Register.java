@@ -30,7 +30,7 @@ import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class Register extends AppCompatActivity {
 
     ConstraintLayout UserLayout,TCPLayout;
     Spinner dropdown;

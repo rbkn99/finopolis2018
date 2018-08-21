@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -36,37 +34,62 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class Office_TCP extends AppCompatActivity {
+public class Office_TCP extends Office {
 
-    private DrawerLayout mDrawerLayout;
+    //private DrawerLayout mDrawerLayout;
+
+    //ArrayList<View> pages= new ArrayList<>();
+
+    //Map<Integer, Integer> map = new HashMap<>();
+
     View balanceP,transactionP,eP,coalitionsP,create_coalitionP,queriesP,token_settingsP;
-    Credentials credentials;
 
-    Web3j web3;
+    Create_coalition create_coalition;
+    Coalitions coalitions;
+    Queries queries;
+    Token_settings token_settings;
+
+    //public Credentials credentials;
+    //public Web3j web3;
+
+    /*
     TextView money;
     Button updateBalanceBtn,addEth,infoBtn;
     SharedPreferences sharedPref;
     EditText balanceCheater;
     Button exitOfficeBtn;
     BottomNavigationView bottomNavigationView;
-
+    */
     //TextView privateKeyInfo,publicKeyInfo,addressInfo;
+    /*
     EditText targetAddress;
     EditText targetSum;
     Button sendEth;
     Button contractTest;
     Button deployContractBtn;
+    */
 
-
-    private ClipData myClip;
-    private ClipboardManager myClipboard;
+    //private ClipData myClip;
+    //private ClipboardManager myClipboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office_tcp);
+
+        map.put(R.id.Balance,R.id.balanceP);
+        map.put(R.id.Transaction,R.id.transactionP);
+        map.put(R.id.YE,R.id.eP);
+        map.put(R.id.coalitions,R.id.coalitionsP);
+        map.put(R.id.create_coalition,R.id.create_coalitionP);
+        map.put(R.id.queries,R.id.queriesP);
+        map.put(R.id.token_settings,R.id.token_settingsP);
+
         LoadAll();
         HideAllPgs();
         SetUpDrawerLayout();
@@ -180,38 +203,34 @@ public class Office_TCP extends AppCompatActivity {
         dialog.show();
     }
 
-    void LoadAll(){
-        //queriesP,token_settingsP
+    @Override
+    protected void LoadAll(){
+        super.LoadAll();
         coalitionsP = findViewById(R.id.coalitionsP);
         create_coalitionP = findViewById(R.id.create_coalitionP);
         queriesP = findViewById(R.id.queriesP);
         token_settingsP = findViewById(R.id.token_settingsP);
-        deployContractBtn = findViewById(R.id.deployContractBtn);
-        contractTest = findViewById(R.id.contractBtn);
-        infoBtn = findViewById(R.id.infoBtn);
-        targetAddress = findViewById(R.id.targetAddress);
-        targetSum = findViewById(R.id.targetSum);
-        sendEth = findViewById(R.id.sendEth);
-        exitOfficeBtn = findViewById(R.id.exitOfficeBtn);
         balanceP = findViewById(R.id.balanceP);
         transactionP = findViewById(R.id.transactionP);
         eP = findViewById(R.id.eP);
-        money = findViewById(R.id.ethInfo);
-        updateBalanceBtn = findViewById(R.id.updateBalanceBtn);
-        balanceCheater = findViewById(R.id.balanceCheater);
-        addEth = findViewById(R.id.addEth);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        web3 = Web3jFactory.build(new HttpService(Config.web3Address));
-        sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
 
-        try {
-            credentials = WalletUtils.loadCredentials(" ",
-                    sharedPref.getString("PATH", "NA") + "/" + sharedPref.getString("NAME", "NA"));
-        }catch (Exception e){
+        pages.add(coalitionsP);
+        pages.add(create_coalitionP);
+        pages.add(queriesP);
+        pages.add(token_settingsP);
+        pages.add(balanceP);
+        pages.add(transactionP);
+        pages.add(eP);
 
-        }
+        create_coalition = new Create_coalition(create_coalitionP);
+        coalitions = new Coalitions(coalitionsP);
+        queries = new Queries(queriesP);
+        token_settings = new Token_settings(token_settingsP);
+
+
     }
 
+    /*
     void Contract(){
 
         try {
@@ -287,16 +306,11 @@ public class Office_TCP extends AppCompatActivity {
             }
         }).run();
     }
+    */
 
-
-    int max(int a, int b){
-        if(a>= b)
-            return a;
-        return b;
-    }
 
     // Функция обновляющая баланс пользователя
-    void UpdateBalance(){
+    /*void UpdateBalance(){
         new Thread(new Runnable() {
             public void run() {
                 updateBalanceBtn.setEnabled(false);
@@ -331,41 +345,13 @@ public class Office_TCP extends AppCompatActivity {
         }).run();
     }
 
-
-    void AddEth(){
-
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-
-                    float v = Float.parseFloat(balanceCheater.getText().toString());
-
-                    TransactionReceipt transactionReceipt =
-                            Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
-                                    BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
-                    UpdateBalance();
-
-                } catch (Exception e){
-                    System.out.println(e);
-                }
-            }
-        }).run();
-    }
-
-    void HideAllPgs(){
-        balanceP.setVisibility(View.GONE);
-        transactionP.setVisibility(View.GONE);
-        eP.setVisibility(View.GONE);
-        //coalitionsP,create_coalitionP,queriesP,token_settingsP
-        coalitionsP.setVisibility(View.GONE);
-        create_coalitionP.setVisibility(View.GONE);
-        queriesP.setVisibility(View.GONE);
-        token_settingsP.setVisibility(View.GONE);
-    }
+    */
 
 
-    boolean opened = false;
-    void SetUpDrawerLayout(){
+
+
+    //boolean opened = false;
+   /* void SetUpDrawerLayout(){
         mDrawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setCheckedItem(R.id.Balance);
@@ -375,31 +361,7 @@ public class Office_TCP extends AppCompatActivity {
                     public boolean onNavigationItemSelected(MenuItem item) {
                         HideAllPgs();
                         mDrawerLayout.closeDrawer(GravityCompat.START);
-                        switch (item.getItemId()) {
-
-                            case R.id.Balance:
-                                //System.out.println();
-                                balanceP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.Transaction:
-                                transactionP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.YE:
-                                eP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.coalitions:
-                                coalitionsP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.create_coalition:
-                                create_coalitionP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.queries:
-                                queriesP.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.token_settings:
-                                token_settingsP.setVisibility(View.VISIBLE);
-                                break;
-                        }
+                        UnHidePage(map.get(item.getItemId()));
                         return true;
                     }
                 });
@@ -438,7 +400,7 @@ public class Office_TCP extends AppCompatActivity {
         );
         //mDrawerLayout
 
-    }
+    }*/
 
 
     @Override

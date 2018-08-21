@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/coalitionName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="98dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/createCoalitionBtn"
         android:layout_width="161dp"
 
         android:layout_height="wrap_content"
@@ -32,5 +32,5 @@
         android:text="Создать"
         android:textColor="@color/backgrnd"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        app:layout_constraintTop_toBottomOf="@+id/coalitionName" />
 </android.support.constraint.ConstraintLayout>
