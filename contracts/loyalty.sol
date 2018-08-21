@@ -1,6 +1,5 @@
 pragma solidity ^0.4.0;
 
-import "./coalition.sol";
 import "./token.sol";
 
 contract Loyalty {
@@ -89,7 +88,7 @@ contract Loyalty {
                                 companyExists(company) returns (uint) // if bonusesAmount == 0 returns charged bonuses amount,
                                                                       // in another case returns roubles amount
                                 {
-        Token token = companies[company].ownToken;
+        Token token = companies[company].token;
         // charge bonuses to customer                            
         if (bonusesAmount == 0) {
             
@@ -98,11 +97,11 @@ contract Loyalty {
                 uint tokensAmount = roublesAmount.mul(token.inPrice());
                 token.transfer(company, customer, tokensAmount);
                 customers[customer].tokens[token] = true;
-                return tokensAmount;
             }
             else {
-                // TODO: hard case, needs merge with Slavique
+                //require(coalitions[company])
             }
+            return tokensAmount;
         }
         // write off bonuses
         else {
@@ -114,18 +113,24 @@ contract Loyalty {
             else {
                 // TODO: hard case, needs merge with Slavique
             }
+            return roublesAmount;
         }
     }
     
     // company calls
     // name of the token, tokens per spent rouble, price when you spend tokens
-    function createToken(Token token) public
+    function setToken(string _name, uint _inPrice, uint _outPrice,
+                         uint _exchangePrice) public
         companyExists(msg.sender) {
-        // doesn't exist
-        require(companies[msg.sender].ownToken.owner() == address(0));
-        require(token.owner() == msg.sender);
-        companies[msg.sender].ownToken = token;
-        allTokens[msg.sender] = token;
+        Token token;
+        // doesn't exist => create
+        if (companies[msg.sender].token.owner() == address(0)) {
+            token = new Token(_name, _inPrice, _outPrice, _exchangePrice);
+            companies[msg.sender].token = token;
+            allTokens[msg.sender] = token;
+        }
+        else
+            token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
     }
     
     function addCoalition(address coalition, string _name) public 

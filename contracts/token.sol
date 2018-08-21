@@ -19,7 +19,6 @@ library SafeMath {
     }
 }
 
-
 contract Token {
     using SafeMath for uint;
     mapping (address => uint) balances;
@@ -29,6 +28,7 @@ contract Token {
     // tokens per rouble
     uint public inPrice;
     uint public outPrice;
+    uint public exchangePrice;
     
     mapping (address => uint) policies;
     
@@ -37,11 +37,18 @@ contract Token {
     
     event Transfer(address indexed from, address indexed to, uint tokens);
     
-    constructor(string _name, uint _inPrice, uint _outPrice) public {
+    constructor(string _name, uint _inPrice, 
+                uint _outPrice, uint _exchangePrice) public {
         owner = msg.sender;
+        updValue(_name, _inPrice, _outPrice, _exchangePrice);
+    }
+    
+    function updValue(string _name, uint _inPrice, 
+                      uint _outPrice, uint _exchangePrice) onlyOwner public {
         name = _name;
         inPrice = _inPrice;
         outPrice = _outPrice;
+        exchangePrice = _exchangePrice;
     }
     
     function transfer(address from, address to, uint amount) public onlyOwner {
