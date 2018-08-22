@@ -15,6 +15,7 @@ import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tuples.generated.Tuple2;
 import org.web3j.tuples.generated.Tuple4;
+import org.web3j.tuples.generated.Tuple5;
 
 import java.math.BigInteger;
 
@@ -89,15 +90,15 @@ public class Login extends AppCompatActivity {
                     // 2 -
                     // 3 -
                     // 4 - phoneHash
-                    Tuple4<Boolean, String, String, BigInteger> b = contract.companies(credentials.getAddress()).sendAsync().get();
-                    targetHash = b.getValue4();
+                    Tuple5<Boolean, String, String, BigInteger, BigInteger> b = contract.companies(credentials.getAddress()).sendAsync().get();
+                    targetHash = b.getValue5();
                     if(phoneHash.equals(targetHash)) {
                         //E BOI
                         // Это компания
                         Intent intent = new Intent(context, Office_TCP.class);
                         startActivity(intent);
                     }else{
-                        //System.out.println("pizda1488");
+                        System.out.println("pizda1488");
                     }
                 }
 

@@ -1,67 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:stretchColumns="1">
+        android:layout_height="match_parent">
 
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:text="KFC"
-                android:textSize="25sp"
-                android:paddingLeft="30dp"/>
-            <TextView
-                android:text="14"
-                android:gravity="right"
-                android:textSize="25sp"
-                android:paddingRight="30dp"/>
-            <TextView
-                android:text="88"
-                android:gravity="right"
-                android:textSize="25sp"
-                android:paddingRight="30dp" />
-        </TableRow>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:text="BURGER KONG"
-                android:textSize="25sp"
-                android:paddingLeft="30dp"/>
-            <TextView
-                android:text="13"
-                android:gravity="right"
-                android:textSize="25sp"
-                android:paddingRight="30dp"/>
-            <TextView
-                android:text="37"
-                android:gravity="right"
-                android:textSize="25sp"
-                android:paddingRight="30dp" />
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:text="BURGER KONG"
-                android:textSize="25sp"
-                android:paddingLeft="30dp"/>
-            <TextView
-                android:text="13"
-                android:gravity="right"
-                android:textSize="25sp"
-                android:paddingRight="30dp"/>
-            <TextView
-                android:text="37"
-                android:gravity="right"
-                android:textSize="25sp"
-                android:paddingRight="30dp" />
-        </TableRow>
-    </TableLayout>
+            <TableLayout
+                android:id="@+id/bonusesTable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:stretchColumns="1"
+                tools:layout_editor_absoluteX="20dp"
+                tools:layout_editor_absoluteY="20dp">
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_column="1"
+                        android:paddingLeft="30dp"
+                        android:text="KFC"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:paddingRight="30dp"
+                        android:text="14"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:paddingRight="30dp"
+                        android:text="88"
+                        android:textSize="25sp" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_column="1"
+                        android:paddingLeft="30dp"
+                        android:text="BURGER KONG"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:paddingRight="30dp"
+                        android:text="13"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:paddingRight="30dp"
+                        android:text="37"
+                        android:textSize="25sp" />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_column="1"
+                        android:paddingLeft="30dp"
+                        android:text="BURGER KONG"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:paddingRight="30dp"
+                        android:text="13"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:gravity="right"
+                        android:paddingRight="30dp"
+                        android:text="37"
+                        android:textSize="25sp" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

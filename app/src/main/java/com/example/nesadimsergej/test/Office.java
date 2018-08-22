@@ -1,5 +1,6 @@
 package com.example.nesadimsergej.test;
 
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
@@ -26,6 +28,8 @@ import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tuples.generated.Tuple4;
+import org.web3j.tuples.generated.Tuple5;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
@@ -37,6 +41,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Office extends AppCompatActivity {
+
+    protected View balanceP,transactionP,eP;
+
     protected ArrayList<View> pages = new ArrayList<>();
     protected Map<Integer, Integer> map = new HashMap<>();
     public Credentials credentials;
@@ -63,7 +70,6 @@ public class Office extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
     }
     protected void HideAllPgs(){
         for (View v:pages
@@ -144,6 +150,50 @@ public class Office extends AppCompatActivity {
         return b;
     }
 
+    protected  void InfoPopUP(){
+        myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.info_pop_up);
+
+
+        TextView privateKeyInfo = dialog.findViewById(R.id.PrKUO);
+        TextView publicKeyInfo = dialog.findViewById(R.id.PuKUO);
+        TextView addressInfo = dialog.findViewById(R.id.AdUO);
+        TextView pathTV = dialog.findViewById(R.id.pathTV);
+        TextView nameTV = dialog.findViewById(R.id.nameTV);
+
+
+        addressInfo.setText(
+                credentials.getAddress());
+
+        ECKeyPair p = credentials.getEcKeyPair();
+
+        publicKeyInfo.setText(
+                p.getPublicKey().toString(16));
+        privateKeyInfo.setText(
+                p.getPrivateKey().toString(16));
+
+        pathTV.setText(sharedPref.getString("PATH", "NA"));
+        nameTV.setText(sharedPref.getString("NAME", "NA"));
+
+        View.OnClickListener o = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = ((TextView)v).getText().toString();
+                myClip = ClipData.newPlainText("text", text);
+                myClipboard.setPrimaryClip(myClip);
+                Toast.makeText(getApplicationContext(), "Text Copied",
+                        Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        addressInfo.setOnClickListener(o);
+        publicKeyInfo.setOnClickListener(o);
+        privateKeyInfo.setOnClickListener(o);
+        pathTV.setOnClickListener(o);
+        nameTV.setOnClickListener(o);
+        dialog.show();
+    }
 
     protected void AddEth(){
 
@@ -276,6 +326,9 @@ public class Office extends AppCompatActivity {
     }
 
     protected void LoadAll(){
+        balanceP = findViewById(R.id.balanceP);
+        transactionP = findViewById(R.id.transactionP);
+        eP = findViewById(R.id.eP);
         deployContractBtn = findViewById(R.id.deployContractBtn);
         contractTest = findViewById(R.id.contractBtn);
         infoBtn = findViewById(R.id.infoBtn);
@@ -298,5 +351,28 @@ public class Office extends AppCompatActivity {
         }
     }
 
+    protected void LoadAllCompanies(){
+
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+        BigInteger companiesCount = BigInteger.ZERO;
+        try {
+            companiesCount = contract.companiesCount().send();
+        }
+        catch (Exception e){
+
+        }
+
+        for(BigInteger i = BigInteger.ZERO ; i.compareTo(companiesCount) == -1 ; i = i.add( BigInteger.ONE)) {
+            System.out.println("here1111");
+            try {
+                Tuple5<Boolean, String, String, BigInteger, BigInteger> s = contract.companySet(i).send();
+                System.out.println(s);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+    }
 
 }

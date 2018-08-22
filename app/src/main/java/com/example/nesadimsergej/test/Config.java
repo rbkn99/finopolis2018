@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class Config {
     public static String web3Address = "HTTP://192.168.1.34:8545";//https://ropsten.infura.io/v3/6107ae917f254c9780385c9d1c734e2b
-    public static String contractAdress = "43a79dbdc0d08bc6b8ce2dcd7d3f33f4fdfe6398";
+    public static String contractAdress = "51fb89a939bf2510d522826ca8b966df50d9a81a";
     public static String secretKey1 = "6b194546eef8f3f84deae03e7806dadcd981ebb6164f853e4a090fcaf36809ce";
     public static String address1 = "0xffCEF01631268eBc760eB3343372048f6c36122c";
     public static int TCP_START_BALANCE = 1000;
@@ -13,8 +13,8 @@ public class Config {
     public static String IS_TCP = "IS_TCP";
     public static String AccountInfo = "AccountInfo";
 
-    public static String prk = "11ddbbf033756f6e7736cb3501ccd74bc9f47fa7a93cbddf9bb17ef8e953e91d";
-    public static String puk = "7ad55e4c6ae200b469819e94d7129f741083789a5494de243c27c441125e691a9b1a1009e4e8bc459c706679b8e767ba52efc67f68b9b751594d85dda611496f";
+    public static String prk = "d071ad53e9e7f2e7912a558ab8fa940457caaa610d4e7fcc084e9657d9bca19";
+    public static String puk = "4ae482ff78c7077bd7abad616041de944d61e16cc9fd1722eb0479270a1c84bfdf74df541be20d366846c80ae4b9f2586f4cb74c3241843bb3d1b3033da5cc0d";
 
     public static String CONTRACT = "CONTRACT";
     public static String PRIVATE_KEY = "PRIVATE_KEY";

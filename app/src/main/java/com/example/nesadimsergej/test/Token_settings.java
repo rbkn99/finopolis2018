@@ -32,11 +32,17 @@ public class Token_settings extends SceneController {
         createTokenBtn.setOnClickListener(v -> CreateToken());
     }
 
+    String f(String s){
+        if(s.equals(""))
+            return "0";
+        return s;
+
+    }
     void CreateToken(){
         String name = tokenName.getText().toString();
-        Integer price = Integer.valueOf(purchasePrise.getText().toString());
-        Integer using_price = Integer.valueOf(price_when_using.getText().toString());
-        Integer swap_price = Integer.valueOf(swapPrice.getText().toString());
+        Integer price = Integer.valueOf(f(purchasePrise.getText().toString()));
+        Integer using_price = Integer.valueOf(f(price_when_using.getText().toString()));
+        Integer swap_price = Integer.valueOf(f(swapPrice.getText().toString()));
 
         System.out.println("here");
         Toast.makeText(page.getContext(), "Жду Рыбкина",
