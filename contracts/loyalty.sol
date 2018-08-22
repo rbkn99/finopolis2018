@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.23;
 
 import "./token.sol";
 
@@ -12,6 +12,7 @@ contract Loyalty {
     
     struct Company {
         bool exists;
+        address _a;
         Token token;
         string name;
         uint256 deposit;
@@ -54,6 +55,7 @@ contract Loyalty {
     event AddCompany(address companyAddress, string name, uint phoneNumber);
     event AddCustomer(address customerAddress, uint number);
     event LoggedIn(address _address, uint number);
+    event Log(address _address);
     
     constructor() public {
         owner = msg.sender;
@@ -76,6 +78,7 @@ contract Loyalty {
                 companyNotExists(company)
                 customerNotExists(company) {
         companiesCount++;
+        companies[company]._a = company;
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
@@ -144,15 +147,14 @@ contract Loyalty {
     function setToken(string _name, uint _inPrice, uint _outPrice,
                          uint _exchangePrice) public
         companyExists(msg.sender) {
-        Token token;
         // doesn't exist => create
         if (companies[msg.sender].token.owner() == address(0)) {
-            token = new Token(_name, _inPrice, _outPrice, _exchangePrice);
+            Token token;
             companies[msg.sender].token = token;
             allTokens[msg.sender] = token;
         }
-        else
-            token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
+        //else
+        //    companies[msg.sender].token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
     }
     
     function addEther() payable public companyExists(msg.sender) {
