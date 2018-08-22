@@ -194,14 +194,15 @@ contract Loyalty {
         companies[company].request_pool.push(join_request);
     }
     
-    function getRequest () public // Not working
+    function getRequest () public view // Not working
                             companyExists(msg.sender)
+                            returns (string message, address sender)
                             {
             
-        var request = companies[msg.sender].request_pool[
+        Request request = companies[msg.sender].request_pool[
             companies[msg.sender].request_pool.length - 1];
         //TODO: if request is confirmed, push the coalition to company's coalitions
-        //return (request.message, request.sender);
+        return (request.message, request.sender);
     }
     // to whom and what to respond
     function respond (address request_sender,  bool answer) public 
