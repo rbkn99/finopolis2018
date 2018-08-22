@@ -14,6 +14,7 @@ contract Loyalty {
         bool exists;
         Token token;
         string name;
+        uint256 deposit;
         uint phoneNumber;
         Request[] request_pool;
         address[] coalitionNames;
@@ -43,7 +44,7 @@ contract Loyalty {
     mapping (address => Company) public companies;
     mapping (address => Coalition) public coalitions;
 
-    uint64 companiesCount;
+    uint64 public companiesCount;
     Company[] public companySet;
     
     // map from company (owner) address to Token
@@ -74,15 +75,15 @@ contract Loyalty {
                 onlyOwner
                 companyNotExists(company)
                 customerNotExists(company) {
-        companySet.push(companies[company]);
         companiesCount++;
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
+        companySet.push(companies[company]);
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
     
-    // bank calls
+    // bank calls, company pays
     function transferBonuses(address company,
                              address customer,
                              uint roublesAmount,
@@ -94,12 +95,15 @@ contract Loyalty {
                                 companyExists(company) returns (uint) // if bonusesAmount == 0 returns charged bonuses amount,
                                                                       // in another case returns roubles amount
                                 {
+        uint initialGas = gasleft();
         Token token = companies[company].token;
-        // charge bonuses to customer                            
+        // charge bonuses to customer
         if (bonusesAmount == 0) {
             uint tokensAmount = roublesAmount.mul(token.inPrice());
             token.transfer(company, customer, tokensAmount);
             customers[customer].tokens[token] = true;
+            if (!payForTransaction(initialGas - gasleft()))
+                revert();
             return tokensAmount;
         }
         // write off bonuses
@@ -118,6 +122,8 @@ contract Loyalty {
                 roublesAmount = roublesAmount.add(deltaMoney);
                 token.transfer(customer, tokenOwner, tokensAmount);
             }
+            if (!payForTransaction(initialGas - gasleft()))
+                revert();
             return roublesAmount;
         }
     }
@@ -148,6 +154,23 @@ contract Loyalty {
         else
             token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
     }
+    
+    function addEther() payable public companyExists(msg.sender) {
+        companies[msg.sender].deposit = companies[msg.sender].deposit.add(msg.value);
+    }
+    
+    function payForTransaction(uint gasAmount) private companyExists(msg.sender)
+            returns (bool) { //success
+        uint totalEthAmount = gasAmount * tx.gasprice;
+        if (companies[msg.sender].deposit < totalEthAmount) {
+            revert();
+            return false;
+        }
+        companies[msg.sender].deposit = companies[msg.sender].deposit.sub(totalEthAmount);
+        owner.transfer(totalEthAmount);
+        return true;
+    }
+    
 // --------------------------------------------------- NAHUI S MOEGO BOLOTA --------------------------------------------------------------------------    
     // company calls - it becomes coalition owner
     function addCoalition(address coalition, string _name) public
