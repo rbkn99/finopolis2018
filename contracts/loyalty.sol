@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.23;
 
 import "./token.sol";
 
@@ -12,8 +12,10 @@ contract Loyalty {
     
     struct Company {
         bool exists;
+        address _a;
         Token token;
         string name;
+        uint256 deposit;
         uint phoneNumber;
         Request[] request_pool;
         address[] coalitionNames;
@@ -42,6 +44,7 @@ contract Loyalty {
     mapping (address => Company) public companies;
     mapping (address => Coalition) public coalitions;
 
+    uint64 public companiesCount;
     Company[] public companySet;
     
     // map from company (owner) address to Token
@@ -51,9 +54,11 @@ contract Loyalty {
     event AddCompany(address companyAddress, string name, uint phoneNumber);
     event AddCustomer(address customerAddress, uint number);
     event LoggedIn(address _address, uint number);
+    event Log(address _address);
     
     constructor() public {
         owner = msg.sender;
+        companiesCount = 0;
     }
     
     // bank calls
@@ -71,14 +76,16 @@ contract Loyalty {
                 onlyOwner
                 companyNotExists(company)
                 customerNotExists(company) {
-        companySet.push(companies[company]);
+        companiesCount++;
+        companies[company]._a = company;
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
+        companySet.push(companies[company]);
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
     
-    // bank calls
+    // bank calls, company pays
     function transferBonuses(address company,
                              address customer,
                              uint roublesAmount,
@@ -90,40 +97,41 @@ contract Loyalty {
                                 companyExists(company) returns (uint) // if bonusesAmount == 0 returns charged bonuses amount,
                                                                       // in another case returns roubles amount
                                 {
+        uint initialGas = gasleft();
         Token token = companies[company].token;
-        // charge bonuses to customer                            
+        // charge bonuses to customer
         if (bonusesAmount == 0) {
-            
-            // the simpliest case - when token belongs to the company
-            if (token.owner() == company) {
-                uint tokensAmount = roublesAmount.mul(token.inPrice());
-                token.transfer(company, customer, tokensAmount);
-                customers[customer].tokens[token] = true;
+            uint tokensAmount = roublesAmount.mul(token.inPrice());
+            token.transfer(company, customer, tokensAmount);
+            customers[customer].tokens[token] = true;
+            if (!payForTransaction(initialGas - gasleft()))
+                revert();
+            return tokensAmount;
+        }
+        // write off bonuses
+        else {
+            uint deltaMoney;
+            if (token.owner() == tokenOwner) {
+                deltaMoney = tokensAmount.mul(token.outPrice());
+                roublesAmount = roublesAmount.add(deltaMoney);
+                token.transfer(customer, company, tokensAmount);
             }
             else {
                 address current_coalition = isMatch(companies[company], 
                                                     companies[tokenOwner]);
                 require(current_coalition != address(0));
-                
-            }
-            return tokensAmount;
-        }
-        // write off bonuses
-        else {
-            if (token.owner() == company) {
-                uint deltaMoney = tokensAmount.mul(token.outPrice());
+                deltaMoney = tokensAmount.mul(token.exchangePrice());
                 roublesAmount = roublesAmount.add(deltaMoney);
-                token.transfer(customer, company, tokensAmount);
+                token.transfer(customer, tokenOwner, tokensAmount);
             }
-            else {
-                // TODO: hard case, needs merge with Slavique
-            }
+            if (!payForTransaction(initialGas - gasleft()))
+                revert();
             return roublesAmount;
         }
     }
     
     // check if 2 companies belongs to the one coalition and returns its name
-    function isMatch(Company c1, Company c2) private returns (address) {
+    function isMatch(Company c1, Company c2) private pure returns (address) {
         for (uint i = 0; i < c1.coalitionNames.length; i++) {
             for (uint j = 0; j < c2.coalitionNames.length; j++) {
                 if (c1.coalitionNames[i] == c2.coalitionNames[j])
@@ -138,16 +146,32 @@ contract Loyalty {
     function setToken(string _name, uint _inPrice, uint _outPrice,
                          uint _exchangePrice) public
         companyExists(msg.sender) {
-        Token token;
         // doesn't exist => create
         if (companies[msg.sender].token.owner() == address(0)) {
-            token = new Token(_name, _inPrice, _outPrice, _exchangePrice);
+            Token token;
             companies[msg.sender].token = token;
             allTokens[msg.sender] = token;
         }
-        else
-            token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
+        //else
+        //    companies[msg.sender].token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
     }
+    
+    function addEther() payable public companyExists(msg.sender) {
+        companies[msg.sender].deposit = companies[msg.sender].deposit.add(msg.value);
+    }
+    
+    function payForTransaction(uint gasAmount) private companyExists(msg.sender)
+            returns (bool) { //success
+        uint totalEthAmount = gasAmount * tx.gasprice;
+        if (companies[msg.sender].deposit < totalEthAmount) {
+            revert();
+            return false;
+        }
+        companies[msg.sender].deposit = companies[msg.sender].deposit.sub(totalEthAmount);
+        owner.transfer(totalEthAmount);
+        return true;
+    }
+    
 // --------------------------------------------------- NAHUI S MOEGO BOLOTA --------------------------------------------------------------------------    
     // coalition - coalition leader, _name - coalition name
     function addCoalition(address coalition, string _name) public
