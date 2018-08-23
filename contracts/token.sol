@@ -26,7 +26,7 @@ contract Token {
     address public owner; // loyalty.sol
     address public nominal_owner; // company
     
-    // tokens per rouble
+    // tokens per rouble, mul by 10^18
     uint public inPrice;
     uint public outPrice;
     uint public exchangePrice;
