@@ -22,7 +22,7 @@ library SafeMath {
 contract Token {
     using SafeMath for uint;
     mapping (address => uint) balances;
-    string name;
+    string public name;
     address public owner; // loyalty.sol
     address public nominal_owner; // company
     
