@@ -24,6 +24,8 @@ contract Loyalty {
         
         Request[] request_pool;
         address[] coalitionNames;
+        address coalition;
+        bool has_coalition;
         uint64 request_count;
     }
     
@@ -200,8 +202,10 @@ contract Loyalty {
         coalitions[coalition].exists = true;
         coalitions[coalition].name = _name;
         coalitions[coalition].members.push(coalition);
+        companies[coalition].coalition = coalition;
+        companies[coalition].has_coalition = true;
     }
-    // leader calls. company - company to invite NOT WORKING!
+    // leader calls. company - company to invite 
     function inviteToCoalition(address company) public 
                                 companyExists(msg.sender)
                                 coalitionExists(msg.sender)
@@ -241,9 +245,10 @@ contract Loyalty {
         return coalitions[coalition].members[index];
     }
     
-    // to whom and what to respond
+    // to whomstd've and what to respond
     function respond (address request_sender,  bool answer) public 
                             companyExists(msg.sender)
+                            notInCoalition
                             {
         bool requestExists;
         uint request_index;
@@ -256,6 +261,7 @@ contract Loyalty {
         require(requestExists, "You\'re trying to asnwer a nonexisting request");
         if (answer) {
             coalitions[request_sender].members.push(msg.sender);
+            companies[msg.sender].coalition = request_sender;
         }
         else {
             
@@ -303,5 +309,10 @@ contract Loyalty {
     modifier coalitionNotExists(address coalition) { 
         require(!coalitions[coalition].exists, "Coalition already exists."); 
         _; 
+    }
+    
+    modifier notInCoalition() {
+        require(companies[msg.sender].has_coalition == false);
+        _;
     }
 }
