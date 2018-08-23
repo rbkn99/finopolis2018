@@ -17,6 +17,7 @@ contract Loyalty {
         string name;
         uint256 deposit;
         uint phoneNumber;
+        uint64 request_count;
         Request[] request_pool;
         address[] coalitionNames;
         mapping (address => bool) coalitions;
@@ -81,6 +82,7 @@ contract Loyalty {
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
+        companies[company].request_count = 0;
         companySet.push(companies[company]);
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
@@ -192,18 +194,25 @@ contract Loyalty {
         join_request.sender = msg.sender;
         join_request._type = RequestType.INVITE;
         companies[company].request_pool.push(join_request);
+        companies[company].request_count++;
     }
     
-    function getRequest () public view // Not working
+    function getRequestCount() public view
+                            companyExists(msg.sender)
+                            returns (uint64 request_count){
+        
+        return companies[msg.sender].request_count;
+    }
+    
+    function getRequestOnIndex (uint64 index) public view
                             companyExists(msg.sender)
                             returns (string message, address sender)
                             {
             
-        Request request = companies[msg.sender].request_pool[
-            companies[msg.sender].request_pool.length - 1];
-        //TODO: if request is confirmed, push the coalition to company's coalitions
+        Request request = companies[msg.sender].request_pool[index];
         return (request.message, request.sender);
     }
+    
     // to whom and what to respond
     function respond (address request_sender,  bool answer) public 
                             companyExists(msg.sender)
