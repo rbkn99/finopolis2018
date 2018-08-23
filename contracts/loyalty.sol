@@ -24,7 +24,6 @@ contract Loyalty {
         
         Request[] request_pool;
         address[] coalitionNames;
-        mapping (address => bool) coalitions;
         uint64 request_count;
     }
     
@@ -201,7 +200,6 @@ contract Loyalty {
         coalitions[coalition].exists = true;
         coalitions[coalition].name = _name;
         coalitions[coalition].members.push(coalition);
-        companies[coalition].coalitions[coalition] = true;
     }
     // leader calls. company - company to invite NOT WORKING!
     function inviteToCoalition(address company) public 
