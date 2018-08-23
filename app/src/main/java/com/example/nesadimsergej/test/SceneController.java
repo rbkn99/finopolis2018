@@ -12,4 +12,8 @@ public class SceneController {
 
 
     }
+
+    void OnSelected(){
+
+    }
 }

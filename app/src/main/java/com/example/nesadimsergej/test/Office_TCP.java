@@ -135,7 +135,6 @@ public class Office_TCP extends Office {
         queriesP = findViewById(R.id.queriesP);
         token_settingsP = findViewById(R.id.token_settingsP);
 
-
         pages.add(coalitionsP);
         pages.add(create_coalitionP);
         pages.add(queriesP);
@@ -148,6 +147,11 @@ public class Office_TCP extends Office {
         coalitions = new Coalitions(coalitionsP);
         queries = new Queries(queriesP);
         token_settings = new Token_settings(token_settingsP);
+
+        idToScene.put(R.id.coalitionsP,coalitions);
+        idToScene.put(R.id.create_coalitionP,create_coalition);
+        idToScene.put(R.id.queriesP,queries);
+        idToScene.put(R.id.token_settingsP,token_settings);
 
 
     }

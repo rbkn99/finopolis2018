@@ -7,30 +7,51 @@
     android:background="@color/backgrnd"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/coalitionName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="98dp"
-        android:layout_marginStart="98dp"
-        android:layout_marginTop="37dp"
-        android:ems="10"
-        android:hint="Название"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/createCoalitionBtn"
-        android:layout_width="161dp"
+        <include
+            android:id="@+id/coalitionCreated"
+            layout="@layout/coaltion_page"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </android.support.constraint.ConstraintLayout>
 
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="125dp"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="375dp"
-        android:background="@color/buttonBckgrnd"
-        android:text="Создать"
-        android:textColor="@color/backgrnd"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/createCoalitionPart"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/coalitionName" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/coalitionName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="98dp"
+            android:layout_marginStart="98dp"
+            android:layout_marginTop="37dp"
+            android:ems="10"
+            android:hint="Название"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/createCoalitionBtn"
+            android:layout_width="161dp"
+
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="125dp"
+            android:layout_marginStart="125dp"
+            android:layout_marginTop="375dp"
+            android:background="@color/buttonBckgrnd"
+            android:text="Создать"
+            android:textColor="@color/backgrnd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/coalitionName" />
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>

@@ -16,6 +16,7 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tuples.generated.Tuple2;
 import org.web3j.tuples.generated.Tuple4;
 import org.web3j.tuples.generated.Tuple5;
+import org.web3j.tuples.generated.Tuple6;
 
 import java.math.BigInteger;
 
@@ -58,12 +59,23 @@ public class Login extends AppCompatActivity {
 
     void TryToLogin(){
             String phoneNumber = numberLogin.getText().toString();
-            String fileName = sharedPref.getString("NAME","PZD");
+            //String fileName = sharedPref.getString("NAME","PZD");
             String pathToFile = sharedPref.getString("PATH","EC");
 
             try {
-                org.web3j.crypto.Credentials credentials = WalletUtils.loadCredentials(" ",
-                        pathToFile + "/" + fileName);
+                BigInteger phoneHash = new BigInteger(
+                        String.valueOf(phoneNumber.hashCode())
+                );
+
+                String fileName = phoneHash.toString() +".json";
+                org.web3j.crypto.Credentials credentials;
+                try {
+                    credentials = WalletUtils.loadCredentials(" ",
+                            pathToFile + "/" + fileName);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return;
+                }
 
                 Loyalty contract = Loyalty.load(
                         Config.contractAdress,
@@ -72,14 +84,17 @@ public class Login extends AppCompatActivity {
                         Loyalty.GAS_PRICE,
                         Loyalty.GAS_LIMIT);
 
-                BigInteger phoneHash = new BigInteger(
-                        String.valueOf(phoneNumber.hashCode())
-                );
                 Tuple2<Boolean, BigInteger> a = contract.customers(credentials.getAddress()).sendAsync().get();
 
                 BigInteger targetHash = a.getValue2();
 
+                SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("NAME",fileName);
+
+
                 if(phoneHash.equals(targetHash)){
+                    editor.apply();
                     //E BOI
                     // Это обычный пользователь
                     Intent intent = new Intent(context, Office_User.class);
@@ -90,9 +105,13 @@ public class Login extends AppCompatActivity {
                     // 2 -
                     // 3 -
                     // 4 - phoneHash
-                    Tuple5<Boolean, String, String, BigInteger, BigInteger> b = contract.companies(credentials.getAddress()).sendAsync().get();
-                    targetHash = b.getValue5();
+
+                    Tuple6<Boolean, String, String, String, BigInteger, BigInteger> b = contract.companies(credentials.getAddress()).sendAsync().get();
+                    Company cmp = new Company(b);
+                    targetHash = cmp.phoneNumber;
+
                     if(phoneHash.equals(targetHash)) {
+                        editor.apply();
                         //E BOI
                         // Это компания
                         Intent intent = new Intent(context, Office_TCP.class);

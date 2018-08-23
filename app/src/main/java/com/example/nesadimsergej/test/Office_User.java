@@ -1,5 +1,6 @@
 package com.example.nesadimsergej.test;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class Office_User extends Office {
@@ -121,7 +124,17 @@ public class Office_User extends Office {
         });
 
         UpdateBalance();
-        //LoadAllCompanies();
+
+
+        LoadAllCompanies();
+        Timer timer = new Timer();
+        timer.schedule(new CompanyUpdater(), 0, 15000);
+    }
+    class CompanyUpdater extends TimerTask {
+        @Override
+        public void run() {
+            ((Activity)context).runOnUiThread(() -> LoadAllCompanies());
+        }
     }
 
 
@@ -144,6 +157,10 @@ public class Office_User extends Office {
         pages.add(balanceP);
         pages.add(transactionP);
         pages.add(eP);
+
+        idToScene.put(R.id.user_bonusesP,user_bonuses);
+        idToScene.put(R.id.exchange_bonusesP,exchange_bonuses);
+        idToScene.put(R.id.pay_bonusesP,pay_bonuses);
 
     }
 

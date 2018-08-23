@@ -23,7 +23,7 @@
             android:layout_height="40dp" />
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/companySelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -32,7 +32,7 @@
             android:layout_height="40dp" />
 
         <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/bonusSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -48,7 +48,7 @@
             android:layout_height="40dp" />
 
         <EditText
-            android:id="@+id/editText7"
+            android:id="@+id/paySum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -61,7 +61,7 @@
             android:layout_height="40dp" />
 
         <EditText
-            android:id="@+id/editText8"
+            android:id="@+id/sum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -74,7 +74,7 @@
             android:layout_height="40dp" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/payBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Оплатить" />

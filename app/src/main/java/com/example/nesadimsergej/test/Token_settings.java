@@ -5,6 +5,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+
+import java.math.BigInteger;
+import java.security.KeyStore;
+
 public class Token_settings extends SceneController {
 
 
@@ -40,13 +48,29 @@ public class Token_settings extends SceneController {
     }
     void CreateToken(){
         String name = tokenName.getText().toString();
-        Integer price = Integer.valueOf(f(purchasePrise.getText().toString()));
-        Integer using_price = Integer.valueOf(f(price_when_using.getText().toString()));
-        Integer swap_price = Integer.valueOf(f(swapPrice.getText().toString()));
+        BigInteger in_prince = new BigInteger(f(purchasePrise.getText().toString()));
+        BigInteger out_price = new BigInteger(f(price_when_using.getText().toString()));
+        BigInteger swap_price = new BigInteger(f(swapPrice.getText().toString()));
 
-        System.out.println("here");
-        Toast.makeText(page.getContext(), "Жду Рыбкина",
-                Toast.LENGTH_SHORT).show();
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Web3j web3 = ((Office)page.getContext()).web3;
+        System.out.println(credentials.getAddress());
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        RemoteCall<TransactionReceipt> s =contract.setToken(name,in_prince,out_price,swap_price);
+
+        try {
+            s.send();
+
+        }catch (Exception e){
+            Toast.makeText(page.getContext(), "Недостаточно средств для создания",
+                            Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+        //System.out.println("here");
+        //Toast.makeText(page.getContext(), "Жду Рыбкина",
+        //        Toast.LENGTH_SHORT).show();
     }
 
 }

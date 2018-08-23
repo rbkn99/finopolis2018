@@ -27,9 +27,9 @@ import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tuples.generated.Tuple4;
-import org.web3j.tuples.generated.Tuple5;
+import org.web3j.tuples.generated.Tuple6;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
@@ -37,15 +37,24 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Office extends AppCompatActivity {
 
+    protected Office context;
+
     protected View balanceP,transactionP,eP;
 
-    protected ArrayList<View> pages = new ArrayList<>();
+    public ArrayList<View> pages = new ArrayList<>();
+
+    protected ArrayList<Company> companies = new ArrayList<>();
+
     protected Map<Integer, Integer> map = new HashMap<>();
+    protected Map<Integer, SceneController> idToScene = new HashMap<>();
+
+
     public Credentials credentials;
     public Web3j web3;
 
@@ -67,9 +76,15 @@ public class Office extends AppCompatActivity {
 
     protected DrawerLayout mDrawerLayout;
 
+    protected CompanyListUpdatedEvent listUpdatedEvent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        context = this;
+        listUpdatedEvent = new CompanyListUpdatedEvent(context);
+
     }
     protected void HideAllPgs(){
         for (View v:pages
@@ -80,8 +95,16 @@ public class Office extends AppCompatActivity {
     protected void UnHidePage(int id){
         for (View v:pages
                 ) {
-            if(v.getId() == id)
+
+            if(v.getId() == id) {
                 v.setVisibility(View.VISIBLE);
+                if (idToScene.containsKey(id)) {
+                    System.out.println("here200");
+                    idToScene.get(id).OnSelected();
+                } else {
+                    System.out.println("here201");
+                }
+            }
         }
     }
     protected boolean opened = false;
@@ -142,7 +165,6 @@ public class Office extends AppCompatActivity {
         );
 
     }
-
 
     protected int max(int a, int b){
         if(a>= b)
@@ -288,7 +310,7 @@ public class Office extends AppCompatActivity {
                 try {
 
                     Loyalty contract = Loyalty
-                            .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT).sendAsync().get();
+                            .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT).send();
 
                     contractAddress = contract.getContractAddress();
                     deployContractBtn.setEnabled(true);
@@ -342,6 +364,15 @@ public class Office extends AppCompatActivity {
         addEth = findViewById(R.id.addEth);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         web3 = Web3jFactory.build(new HttpService(Config.web3Address));
+
+        try {
+            Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().send();
+            String clientVersion = web3ClientVersion.getWeb3ClientVersion();
+            System.out.println("Client version: "+clientVersion);
+        }catch (Exception e){
+            System.out.println("No Client version");
+            e.printStackTrace();
+        }
         sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
         try {
             credentials = WalletUtils.loadCredentials(" ",
@@ -351,28 +382,118 @@ public class Office extends AppCompatActivity {
         }
     }
 
+    public void AddCompanyUpdatedListener(CompanyListUpdatedListener listener){
+        listUpdatedEvent.addListener(listener);
+    }
+
+    //protected void Company
+
     protected void LoadAllCompanies(){
 
+        ArrayList<Company> _companies = new ArrayList<>();
+        boolean hadError = false;
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         BigInteger companiesCount = BigInteger.ZERO;
         try {
+
             companiesCount = contract.companiesCount().send();
+
         }
         catch (Exception e){
-
+            e.printStackTrace();
+            hadError = true;
         }
 
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(companiesCount) == -1 ; i = i.add( BigInteger.ONE)) {
-            System.out.println("here1111");
+
             try {
-                Tuple5<Boolean, String, String, BigInteger, BigInteger> s = contract.companySet(i).send();
-                System.out.println(s);
+                Tuple6<Boolean, String, String, String, BigInteger, BigInteger> s = contract.companySet(i).send();
+                Company currentCompany = new Company(s);
+                System.out.println(currentCompany.toString());
+                _companies.add(currentCompany);
 
             }catch (Exception e){
+
                 e.printStackTrace();
+                hadError = true;
+                break;
+
             }
+
         }
 
+        if (! hadError){
+            companies = _companies;
+            listUpdatedEvent.sayHello();
+
+        }else{
+            Toast.makeText(this,"Andrey daolbaeb",Toast.LENGTH_LONG).show();
+        }
     }
 
+}
+
+
+class Company{
+
+    public boolean exists;
+    public String _a;
+    public String token;
+    public String companyName;
+    public BigInteger deposit;
+    public BigInteger phoneNumber;
+
+    private Tuple6<Boolean, String, String, String, BigInteger, BigInteger> constructorTuple;
+    public Company(Tuple6<Boolean, String, String, String, BigInteger, BigInteger> s){
+        exists = s.getValue1();
+        _a = s.getValue2();
+        token = s.getValue3();
+        companyName = s.getValue4();
+        deposit = s.getValue5();
+        phoneNumber = s.getValue6();
+
+        constructorTuple = s;
+    }
+
+    @Override
+    public String toString(){
+        return constructorTuple.toString();
+    }
+}
+
+
+interface CompanyListUpdatedListener {
+    void f(Office office);
+}
+
+class CompanyListUpdatedEvent {
+    private List<CompanyListUpdatedListener> listeners = new ArrayList<CompanyListUpdatedListener>();
+
+    Office office;
+    public CompanyListUpdatedEvent(Office _office){
+        office = _office;
+    }
+
+    public void addListener(CompanyListUpdatedListener toAdd) {
+        listeners.add(toAdd);
+    }
+
+    public void sayHello() {
+        System.out.println("Hello!!");
+
+        // Notify everybody that may be interested.
+        for (CompanyListUpdatedListener hl : listeners)
+            hl.f(office);
+    }
+}
+
+// Someone interested in "Hello" events
+class Responder implements CompanyListUpdatedListener {
+
+
+
+    @Override
+    public void f(Office office) {
+
+    }
 }

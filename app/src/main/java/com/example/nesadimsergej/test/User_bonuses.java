@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.web3j.tuples.generated.Tuple4;
 import org.web3j.tuples.generated.Tuple5;
+import org.web3j.tuples.generated.Tuple6;
 
 import java.math.BigInteger;
 import java.util.Timer;
@@ -31,46 +32,33 @@ public class User_bonuses extends SceneController {
 
         bonusesTable = page.findViewById(R.id.bonusesTable);
 
-        UpdateBonuses();
+        //UpdateBonuses();
 
-        Timer timer = new Timer();
-        timer.schedule(new BonusUpdater(), 0, 15000);
+        //Timer timer = new Timer();
+        //timer.schedule(new BonusUpdater(), 0, 15000);
+        ((Office)page.getContext()).AddCompanyUpdatedListener(new CompanyListUpdatedListener() {
+            @Override
+            public void f(Office office) {
+                UpdateBonuses(office);
+            }
+        });
     }
 
-    class BonusUpdater extends TimerTask {
+    /*class BonusUpdater extends TimerTask {
         @Override
         public void run() {
             ((Activity)page.getContext()).runOnUiThread(() -> UpdateBonuses());
         }
-    }
+    }*/
 
 
-    void UpdateBonuses(){
+    void UpdateBonuses(Office office){
         RemoveAllBonusRows();
-
-        Office of  = ((Office)page.getContext());
-        Loyalty contract = Loyalty.load(Config.contractAdress,of.web3,of.credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-        BigInteger companiesCount = BigInteger.ZERO;
-        try {
-            companiesCount = contract.companiesCount().send();
+        for (Company c:
+                office.companies
+             ) {
+            AddRow(c.companyName);
         }
-        catch (Exception e){
-
-        }
-
-        for(BigInteger i = BigInteger.ZERO ; i.compareTo(companiesCount) == -1 ; i = i.add( BigInteger.ONE)) {
-            System.out.println("here1111");
-            try {
-                Tuple5<Boolean, String, String, BigInteger, BigInteger> s = contract.companySet(i).sendAsync().get();
-                //System.out.println(s.getValue3());
-                AddRow(s.getValue3());
-
-            }catch (Exception e){
-                 System.out.println("ex1488");
-                 e.printStackTrace();
-            }
-        }
-
     }
 
     void AddRow(String text){

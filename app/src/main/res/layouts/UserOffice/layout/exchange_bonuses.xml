@@ -13,29 +13,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <SearchView
-            android:id="@+id/searchView"
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="150dp"
             android:layout_height="62dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/buttonBckgrnd1"
+            android:layout_marginTop="17dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView14">
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
-        </SearchView>
+            app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
         <TextView
             android:id="@+id/textView14"
@@ -56,13 +40,13 @@
             android:layout_height="55dp"
             android:layout_marginLeft="11dp"
             android:layout_marginStart="11dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="19dp"
             android:ems="10"
             android:gravity="center"
             android:hint="5000"
             android:inputType="number"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchView" />
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -73,29 +57,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <SearchView
-            android:id="@+id/searchView"
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="150dp"
             android:layout_height="62dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/buttonBckgrnd1"
+            android:layout_marginTop="17dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView14">
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
-        </SearchView>
+            app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
         <TextView
             android:id="@+id/textView14"
@@ -114,15 +82,15 @@
             android:id="@+id/editText6"
             android:layout_width="129dp"
             android:layout_height="55dp"
-            android:layout_marginLeft="11dp"
-            android:layout_marginStart="11dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="19dp"
             android:ems="10"
             android:gravity="center"
             android:hint="5000"
             android:inputType="number"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchView" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
     </android.support.constraint.ConstraintLayout>
 
