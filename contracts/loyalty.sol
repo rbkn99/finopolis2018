@@ -18,6 +18,7 @@ contract Loyalty {
         string name;
         uint256 deposit;
         uint phoneNumber;
+        uint64 request_count;
         Request[] request_pool;
         address[] coalitionNames;
         mapping (address => bool) coalitions;
@@ -32,7 +33,6 @@ contract Loyalty {
     struct Coalition{
         bool exists;
         string name;
-        address leader;
         mapping (address => bool) members;
     }
     
@@ -86,6 +86,7 @@ contract Loyalty {
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
+        companies[company].request_count = 0;
         companySet.push(companies[company]);
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
@@ -184,35 +185,70 @@ contract Loyalty {
     }
     
 // --------------------------------------------------- NAHUI S MOEGO BOLOTA --------------------------------------------------------------------------    
-    // company calls - it becomes coalition owner
+    // coalition - coalition leader, _name - coalition name
     function addCoalition(address coalition, string _name) public
-                                companyExists(msg.sender)
+                                onlyOwner
+                                companyExists(coalition)
                                 coalitionNotExists(coalition) {
         coalitions[coalition].exists = true;
         coalitions[coalition].name = _name;
-        coalitions[coalition].members[msg.sender] = true;
-        coalitions[coalition].leader = msg.sender;
+        coalitions[coalition].members[coalition] = true;
         companies[msg.sender].coalitions[coalition] = true;
     }
-    
-    // falcon calls
-    function inviteToCoalition(address coalition) public 
+    // leader calls. company - company to invite
+    function inviteToCoalition(address company) public 
                                 companyExists(msg.sender)
-                                coalitionExists(coalition) {
+                                coalitionExists(msg.sender) {
         Request join_request;
         join_request.message = "Idi nahui gomofobny pidaras";
         join_request.sender = msg.sender;
         join_request._type = RequestType.INVITE;
-        companies[coalitions[coalition].leader].request_pool.push(join_request);
+        companies[company].request_pool.push(join_request);
+        companies[company].request_count++;
     }
     
-    function getRequest () public // call while not tresnesh' 
+    function getRequestCount() public view
+                            companyExists(msg.sender)
+                            returns (uint64 request_count){
+        
+        return companies[msg.sender].request_count;
+    }
+    
+    function getRequestOnIndex (uint64 index) public view
+                            companyExists(msg.sender)
+                            returns (string message, address sender)
+                            {
+            
+        Request request = companies[msg.sender].request_pool[index];
+        return (request.message, request.sender);
+    }
+    
+    // to whom and what to respond
+    function respond (address request_sender,  bool answer) public 
                             companyExists(msg.sender)
                             {
-        var request = companies[msg.sender].request_pool[
-            companies[msg.sender].request_pool.length - 1];
-        //TODO: if request is confirmed, push the coalition to company's coalitions
-        //return (request.message, request.sender);
+        bool requestExists;
+        uint request_index;
+        for (uint i = 0; i < companies[msg.sender].request_pool.length; i++){
+            if (companies[msg.sender].request_pool[i].sender == request_sender){
+                requestExists = true;
+                request_index = i;
+            }
+        }
+        require(requestExists, "You\'re trying to asnwer a nonexisting request");
+        if (answer) {
+            coalitions[request_sender].members[msg.sender] = true;
+        }
+        else {
+            
+        }
+        delete companies[msg.sender].request_pool[request_index];
+        for(i = request_index + 1; 
+            i < companies[msg.sender].request_pool.length;
+            i++){
+                companies[msg.sender].request_pool[i - 1] = companies[msg.sender].request_pool[i];
+        }
+        companies[msg.sender].request_pool.length -= 1;
     }
     
     modifier onlyOwner() {
