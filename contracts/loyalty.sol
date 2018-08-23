@@ -29,16 +29,14 @@ contract Loyalty {
     }
     
     struct Request {
-        string message;
         address sender;
         RequestType _type;
     }
     
-    struct Coalition {
+    struct Coalition{
         bool exists;
         string name;
-        address leader;
-        mapping (address => bool) members;
+        address[] members;
     }
     
     enum RequestType {INVITE}
@@ -202,41 +200,53 @@ contract Loyalty {
                                 coalitionNotExists(coalition) {
         coalitions[coalition].exists = true;
         coalitions[coalition].name = _name;
-        coalitions[coalition].members[coalition] = true;
-        companies[msg.sender].coalitions[coalition] = true;
-     }
-    
-    // leader calls. company - company to invite
+        coalitions[coalition].members.push(coalition);
+        companies[coalition].coalitions[coalition] = true;
+    }
+    // leader calls. company - company to invite NOT WORKING!
     function inviteToCoalition(address company) public 
-                                 companyExists(msg.sender)
-                                 coalitionExists(msg.sender) {
+                                companyExists(msg.sender)
+                                coalitionExists(msg.sender)
+                                companyExists(company){
         Request join_request;
-        join_request.message = "Idi nahui gomofobny pidaras";
         join_request.sender = msg.sender;
         join_request._type = RequestType.INVITE;
         companies[company].request_pool.push(join_request);
         companies[company].request_count++;
     }
     
-   function getRequestCount() public view
+    function getRequestCount() public view
                             companyExists(msg.sender)
-                            returns (uint64 request_count){
+                            returns (uint request_count){
         
         return companies[msg.sender].request_count;
     }
-
+ 
     function getRequestOnIndex (uint64 index) public view
                             companyExists(msg.sender)
-                            returns (string message, address sender)
+                            returns (address sender)
                             {
+            
         Request request = companies[msg.sender].request_pool[index];
-        return (request.message, request.sender);
+        return request.sender;
+    }
+    
+    function getCoalitionSize (address coalition) public view 
+                            coalitionExists(coalition)
+                            returns (uint size){
+        return coalitions[coalition].members.length;
+    }
+    
+    function getCoalitionMember(address coalition, uint index) public view 
+                            coalitionExists(coalition)
+                            returns (address member){
+        return coalitions[coalition].members[index];
     }
     
     // to whom and what to respond
     function respond (address request_sender,  bool answer) public 
                             companyExists(msg.sender)
-                             {
+                            {
         bool requestExists;
         uint request_index;
         for (uint i = 0; i < companies[msg.sender].request_pool.length; i++){
@@ -247,10 +257,10 @@ contract Loyalty {
         }
         require(requestExists, "You\'re trying to asnwer a nonexisting request");
         if (answer) {
-            coalitions[request_sender].members[msg.sender] = true;
+            coalitions[request_sender].members.push(msg.sender);
         }
         else {
-             
+            
         }
         delete companies[msg.sender].request_pool[request_index];
         for(i = request_index + 1; 
@@ -260,7 +270,7 @@ contract Loyalty {
         }
         companies[msg.sender].request_pool.length -= 1;
     }
-
+    
     
     modifier onlyOwner() {
         require(msg.sender == owner);
