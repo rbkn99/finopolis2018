@@ -87,6 +87,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Создать" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <Button
+            android:id="@+id/payForToken"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Залить бабки" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

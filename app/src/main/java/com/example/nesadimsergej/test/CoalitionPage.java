@@ -4,10 +4,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.tuples.generated.Tuple2;
+
+import java.math.BigInteger;
 
 public class CoalitionPage extends SceneController {
 
@@ -54,6 +57,36 @@ public class CoalitionPage extends SceneController {
 
     void Invite(){
 
+        String cAddress = inviteAddress.getText().toString();
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Web3j web3 = ((Office)page.getContext()).web3;
+
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,
+                credentials,
+                Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        try {
+
+
+            System.out.println( contract.companies(credentials.getAddress()).send());
+            System.out.println( contract.coalitions(credentials.getAddress()).send());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            System.out.println(credentials.getAddress());
+            System.out.println(cAddress);
+            contract.inviteToCoalition(cAddress).sendAsync().get();
+
+
+            Toast.makeText(page.getContext(),"Приглашение отправлено", Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+        }
     }
 
     void LoadCoalitionInfo(){

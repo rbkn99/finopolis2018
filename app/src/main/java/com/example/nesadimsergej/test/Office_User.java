@@ -101,13 +101,7 @@ public class Office_User extends Office {
         exitOfficeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor e = sharedPref.edit();
-                //e.clear();
-                //e.remove("PATH");
-                //e.remove("NAME");
-                e.apply();
-                Intent intent = new Intent(v.getContext(), start.class);
-                startActivity(intent);
+                Exit();
             }
         });
         contractTest.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +123,7 @@ public class Office_User extends Office {
         LoadAllCompanies();
         Timer timer = new Timer();
         timer.schedule(new CompanyUpdater(), 0, 15000);
+        timers.add(timer);
     }
     class CompanyUpdater extends TimerTask {
         @Override
@@ -161,7 +156,7 @@ public class Office_User extends Office {
         idToScene.put(R.id.user_bonusesP,user_bonuses);
         idToScene.put(R.id.exchange_bonusesP,exchange_bonuses);
         idToScene.put(R.id.pay_bonusesP,pay_bonuses);
-
+        AddEth1();
     }
 
 

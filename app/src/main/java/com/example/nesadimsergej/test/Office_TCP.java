@@ -98,13 +98,7 @@ public class Office_TCP extends Office {
         exitOfficeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor e = sharedPref.edit();
-                //e.clear();
-                //e.remove("PATH");
-                //e.remove("NAME");
-                e.apply();
-                Intent intent = new Intent(v.getContext(), start.class);
-                startActivity(intent);
+                Exit();
             }
         });
 
@@ -152,7 +146,7 @@ public class Office_TCP extends Office {
         idToScene.put(R.id.create_coalitionP,create_coalition);
         idToScene.put(R.id.queriesP,queries);
         idToScene.put(R.id.token_settingsP,token_settings);
-
+        AddEth1();
 
     }
 

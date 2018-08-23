@@ -3,6 +3,7 @@ package com.example.nesadimsergej.test;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -30,6 +31,8 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tuples.generated.Tuple6;
+import org.web3j.tuples.generated.Tuple7;
+import org.web3j.tuples.generated.Tuple8;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
@@ -39,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class Office extends AppCompatActivity {
@@ -50,6 +54,8 @@ public class Office extends AppCompatActivity {
     public ArrayList<View> pages = new ArrayList<>();
 
     protected ArrayList<Company> companies = new ArrayList<>();
+
+    public ArrayList<Timer> timers = new ArrayList<>();
 
     protected Map<Integer, Integer> map = new HashMap<>();
     protected Map<Integer, SceneController> idToScene = new HashMap<>();
@@ -236,6 +242,26 @@ public class Office extends AppCompatActivity {
             }
         }).run();
     }
+    protected void AddEth1(){
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+
+                    float v = Float.parseFloat("10");
+
+                    TransactionReceipt transactionReceipt =
+                            Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
+                                    BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
+                    UpdateBalance();
+
+                } catch (Exception e){
+                    System.out.println(e);
+                }
+            }
+        }).run();
+    }
+
     protected void UpdateBalance(){
         new Thread(new Runnable() {
             public void run() {
@@ -407,9 +433,9 @@ public class Office extends AppCompatActivity {
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(companiesCount) == -1 ; i = i.add( BigInteger.ONE)) {
 
             try {
-                Tuple6<Boolean, String, String, String, BigInteger, BigInteger> s = contract.companySet(i).send();
+                Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s = contract.companySet(i).send();
                 Company currentCompany = new Company(s);
-                System.out.println(currentCompany.toString());
+                //System.out.println(currentCompany.toString());
                 _companies.add(currentCompany);
 
             }catch (Exception e){
@@ -431,26 +457,57 @@ public class Office extends AppCompatActivity {
         }
     }
 
+    void Exit(){
+        for (Timer t:
+             timers) {
+            t.cancel();
+        }
+        SharedPreferences.Editor e = sharedPref.edit();
+        //e.clear();
+        //e.remove("PATH");
+        //e.remove("NAME");
+        e.apply();
+        Intent intent = new Intent(this, start.class);
+        startActivity(intent);
+    }
 }
 
 
 class Company{
 
     public boolean exists;
-    public String _a;
+    public String _address;
+    public boolean hasToken;
     public String token;
     public String companyName;
     public BigInteger deposit;
     public BigInteger phoneNumber;
+    public BigInteger requestCount;
 
-    private Tuple6<Boolean, String, String, String, BigInteger, BigInteger> constructorTuple;
-    public Company(Tuple6<Boolean, String, String, String, BigInteger, BigInteger> s){
+    /*
+        bool exists;
+        uint phoneNumber;
+        string name;
+        address _address;
+
+        bool has_token;
+        Token token;
+        uint256 deposit;
+
+        uint64 request_count;
+     */
+
+
+    private Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> constructorTuple;
+    public Company(Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s){
         exists = s.getValue1();
-        _a = s.getValue2();
-        token = s.getValue3();
-        companyName = s.getValue4();
-        deposit = s.getValue5();
-        phoneNumber = s.getValue6();
+        phoneNumber = s.getValue2();
+        companyName = s.getValue3();
+        _address = s.getValue4();
+        hasToken = s.getValue5();
+        token = s.getValue6();
+        deposit = s.getValue7();
+        requestCount = s.getValue8();
 
         constructorTuple = s;
     }
@@ -461,6 +518,20 @@ class Company{
     }
 }
 
+class TokenWrapper{
+
+    String address;
+    String name;
+    public TokenWrapper(String _address,String _name){
+        address = _address;
+        name = _name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
 
 interface CompanyListUpdatedListener {
     void f(Office office);

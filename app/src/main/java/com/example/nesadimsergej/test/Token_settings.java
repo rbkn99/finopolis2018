@@ -20,7 +20,7 @@ public class Token_settings extends SceneController {
     EditText purchasePrise;
     EditText price_when_using;
     EditText swapPrice;
-    Button createTokenBtn;
+    Button createTokenBtn,payForToken;
 
     public Token_settings(View _page){
         super();
@@ -38,6 +38,8 @@ public class Token_settings extends SceneController {
         swapPrice = page.findViewById(R.id.swapPrice);
         createTokenBtn = page.findViewById(R.id.createTokenBtn);
         createTokenBtn.setOnClickListener(v -> CreateToken());
+        payForToken = page.findViewById(R.id.payForToken);
+        payForToken.setOnClickListener(v -> PayForToken());
     }
 
     String f(String s){
@@ -61,7 +63,8 @@ public class Token_settings extends SceneController {
 
         try {
             s.send();
-
+            Toast.makeText(page.getContext(), "Что-то произошло",
+                    Toast.LENGTH_SHORT).show();
         }catch (Exception e){
             Toast.makeText(page.getContext(), "Недостаточно средств для создания",
                             Toast.LENGTH_SHORT).show();
@@ -71,6 +74,19 @@ public class Token_settings extends SceneController {
         //System.out.println("here");
         //Toast.makeText(page.getContext(), "Жду Рыбкина",
         //        Toast.LENGTH_SHORT).show();
+    }
+
+    void PayForToken(){
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Web3j web3 = ((Office)page.getContext()).web3;
+        System.out.println(credentials.getAddress());
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+        try {
+            contract.addEther(new BigInteger("1000000000000000000")).send();
+        }catch (Exception e){
+            System.out.println("Ну охуеть теперь");
+            e.printStackTrace();
+        }
     }
 
 }

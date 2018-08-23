@@ -17,6 +17,8 @@ import org.web3j.tuples.generated.Tuple2;
 import org.web3j.tuples.generated.Tuple4;
 import org.web3j.tuples.generated.Tuple5;
 import org.web3j.tuples.generated.Tuple6;
+import org.web3j.tuples.generated.Tuple7;
+import org.web3j.tuples.generated.Tuple8;
 
 import java.math.BigInteger;
 
@@ -106,7 +108,7 @@ public class Login extends AppCompatActivity {
                     // 3 -
                     // 4 - phoneHash
 
-                    Tuple6<Boolean, String, String, String, BigInteger, BigInteger> b = contract.companies(credentials.getAddress()).sendAsync().get();
+                    Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> b = contract.companies(credentials.getAddress()).sendAsync().get();
                     Company cmp = new Company(b);
                     targetHash = cmp.phoneNumber;
 

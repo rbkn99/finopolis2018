@@ -7,9 +7,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
 import org.web3j.tuples.generated.Tuple4;
 import org.web3j.tuples.generated.Tuple5;
 import org.web3j.tuples.generated.Tuple6;
+import org.web3j.tuples.generated.Tuple8;
 
 import java.math.BigInteger;
 import java.util.Timer;
@@ -50,22 +53,51 @@ public class User_bonuses extends SceneController {
             ((Activity)page.getContext()).runOnUiThread(() -> UpdateBonuses());
         }
     }*/
-
+    public String tene18 = "1000000000000000000";
 
     void UpdateBonuses(Office office){
         RemoveAllBonusRows();
         for (Company c:
                 office.companies
              ) {
-            AddRow(c.companyName);
+            Web3j web3 = ((Office)page.getContext()).web3;
+            Credentials credentials = ((Office)page.getContext()).credentials;
+
+            String companyAddress = c._address;
+
+            Loyalty loyalty = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+            try {
+
+                Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s = loyalty.companies(companyAddress).send();
+                c = new Company(s);
+            }catch (Exception e){
+                System.out.println("GayBar");
+                e.printStackTrace();
+            }
+
+            BonusRow r = AddRow(c.companyName);
+            String tokeAddress = c.token;
+
+            //Token.load(tokeAddress,)
+            Token contract = Token.load(tokeAddress,web3,credentials,
+                    Token.GAS_PRICE,Token.GAS_LIMIT);
+            try {
+                BigInteger bi = contract.balanceOf(credentials.getAddress()).send();
+                bi = bi.divide(new BigInteger(tene18));
+                r.SetNumber1(bi.toString());
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
-    void AddRow(String text){
+    BonusRow AddRow(String text){
         View view = View.inflate(page.getContext(),R.layout.bonus_row,null);
         bonusesTable.addView(view);
         BonusRow r = new BonusRow(view);
         r.SetText(text);
+        return r;
     }
 
     void RemoveAllBonusRows(){
@@ -93,6 +125,11 @@ class BonusRow{
         bonusNumber1 = row.findViewById(R.id.bonusNumber1);
         bonusNumber2 = row.findViewById(R.id.bonusNumber2);
     }
+
+    public void SetNumber1(String s){
+        bonusNumber1.setText(s);
+    }
+
 }
 
 
