@@ -13,6 +13,7 @@ contract Loyalty {
     struct Company {
         bool exists;
         address _a;
+        bool has_token;
         Token token;
         string name;
         uint256 deposit;
@@ -50,6 +51,9 @@ contract Loyalty {
     
     // map from company (owner) address to Token
     mapping (address => Token) public allTokens;
+    
+    // cost of asm operations of transferBonuses() func
+    uint constant public transferBonuses_transaction_cost = 119290;
     
     // events for debug and output
     event AddCompany(address companyAddress, string name, uint phoneNumber);
@@ -105,7 +109,7 @@ contract Loyalty {
             uint tokensAmount = roublesAmount.mul(token.inPrice());
             token.transfer(company, customer, tokensAmount);
             customers[customer].tokens[token] = true;
-            if (!payForTransaction(initialGas - gasleft()))
+            if (!payForTransaction(company, initialGas - gasleft()))
                 revert();
             return tokensAmount;
         }
@@ -125,7 +129,7 @@ contract Loyalty {
                 roublesAmount = roublesAmount.add(deltaMoney);
                 token.transfer(customer, tokenOwner, tokensAmount);
             }
-            if (!payForTransaction(initialGas - gasleft()))
+            if (!payForTransaction(company, initialGas - gasleft()))
                 revert();
             return roublesAmount;
         }
@@ -148,27 +152,33 @@ contract Loyalty {
                          uint _exchangePrice) public
         companyExists(msg.sender) {
         // doesn't exist => create
-        if (companies[msg.sender].token.owner() == address(0)) {
-            Token token;
+        if (!companies[msg.sender].has_token) {
+            Token token = new Token(msg.sender, _name, _inPrice, _outPrice, _exchangePrice);
             companies[msg.sender].token = token;
             allTokens[msg.sender] = token;
+            companies[msg.sender].has_token = true;
         }
-        //else
-        //    companies[msg.sender].token.updValue(_name, _inPrice, _outPrice, _exchangePrice);
+        else
+            companies[msg.sender].token.updValue(_name, _inPrice,
+                                                _outPrice, _exchangePrice);
     }
     
     function addEther() payable public companyExists(msg.sender) {
         companies[msg.sender].deposit = companies[msg.sender].deposit.add(msg.value);
     }
     
-    function payForTransaction(uint gasAmount) private companyExists(msg.sender)
+    event debug(uint gas_A, uint total_eth, uint price);
+    
+    function payForTransaction(address company, uint gasAmount) private 
+                                                        companyExists(company)
             returns (bool) { //success
-        uint totalEthAmount = gasAmount * tx.gasprice;
-        if (companies[msg.sender].deposit < totalEthAmount) {
+        uint totalEthAmount = (gasAmount + transferBonuses_transaction_cost) * tx.gasprice;
+        if (companies[company].deposit < totalEthAmount) {
             revert();
             return false;
         }
-        companies[msg.sender].deposit = companies[msg.sender].deposit.sub(totalEthAmount);
+        emit debug(gasAmount, totalEthAmount, tx.gasprice);
+        companies[company].deposit = companies[company].deposit.sub(totalEthAmount);
         owner.transfer(totalEthAmount);
         return true;
     }
