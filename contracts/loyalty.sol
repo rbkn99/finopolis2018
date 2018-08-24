@@ -197,6 +197,9 @@ contract Loyalty {
     function exchangeToken(address customer, Token token1, Token token2, uint amount)
                                                 public onlyOwner customerExists(customer) {
         require(token1.balances(customer) >= amount, "Not enough bonuses");
+        address current_coalition = isMatch(companies[token1.nominal_owner()], 
+                                                    companies[token2.nominal_owner()]);
+        require(current_coalition != address(0), "Not in one coalition");
         uint amount2 = amount.mul(token1.exchangePrice());
         token1.charge(customer, amount);
         token2.emitToken(customer, amount2);

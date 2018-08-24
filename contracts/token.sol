@@ -21,7 +21,7 @@ library SafeMath {
 
 contract Token {
     using SafeMath for uint;
-    mapping (address => uint) balances;
+    mapping (address => uint) public balances;
     string public name;
     address public owner; // loyalty.sol
     address public nominal_owner; // company
@@ -60,15 +60,19 @@ contract Token {
     function transfer(address from, address to, uint amount) onlyOwners public {
         // fuck economic laws
         if (from == nominal_owner && balances[nominal_owner] < amount) {
-            emitToken(2 * amount);
+            emitToken(nominal_owner, 2 * amount);
         }
         balances[from] = balances[from].sub(amount);
         balances[to] = balances[to].add(amount);
         emit Transfer(from, to, amount);
     }
     
-    function emitToken(uint amount) public onlyOwners {
-        balances[nominal_owner] = balances[nominal_owner].add(amount);
+    function charge(address _address, uint amount) public onlyOwners {
+        balances[_address] = balances[_address].sub(amount);
+    }
+    
+    function emitToken(address _address, uint amount) public onlyOwners {
+        balances[_address] = balances[_address].add(amount);
     }
     
     function balanceOf(address _address) public view returns (uint) {
