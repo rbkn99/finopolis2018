@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -118,9 +119,11 @@ public class Pay_bonuses extends SceneController {
 
                 TokenWrapper selected =(TokenWrapper) tokenSelector.getSelectedItem();
 
+                int i = tokens.indexOf(selected);
+
                 ArrayAdapter<TokenWrapper> adapter = new ArrayAdapter<>(page.getContext(), android.R.layout.simple_spinner_dropdown_item, tokens);
                 tokenSelector.setAdapter(adapter);
-                tokenSelector.setSelection(0);
+                tokenSelector.setSelection(i);
 
             }else{
 
@@ -151,6 +154,7 @@ public class Pay_bonuses extends SceneController {
 
     void Pay(){
         Company selectedCompany = companies.get(companySelector.getSelectedItemPosition());
+        TokenWrapper selectedToken =(TokenWrapper) tokenSelector.getSelectedItem();
 
         Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
@@ -158,11 +162,19 @@ public class Pay_bonuses extends SceneController {
 
         Loyalty loyaltyContractBank = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
-        try {
+        String paySumStr = paySum.getText().toString();
 
+        if(paySumStr.isEmpty()){
+            Toast.makeText(page.getContext(),"Введите сумму в рублях",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        try {
+            BigInteger sumR = (new BigInteger(paySumStr)).multiply(new BigInteger("1000000000000000000"));
 
             loyaltyContractBank.transferBonuses(selectedCompany._address, credentials.getAddress(),
-                    new BigInteger("100000000000000000000"), BigInteger.ZERO,
+                    sumR, BigInteger.ZERO,
                     "0x0000000000000000000000000000000000000000").send();
 
 

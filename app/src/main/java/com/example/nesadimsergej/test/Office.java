@@ -30,6 +30,7 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tuples.generated.Tuple10;
 import org.web3j.tuples.generated.Tuple6;
 import org.web3j.tuples.generated.Tuple7;
 import org.web3j.tuples.generated.Tuple8;
@@ -476,15 +477,20 @@ public class Office extends AppCompatActivity {
 class Company{
 
     public boolean exists;
+    public BigInteger phoneNumber;
+    public String companyName;
     public String _address;
     public boolean hasToken;
     public String token;
-    public String companyName;
+
     public BigInteger deposit;
-    public BigInteger phoneNumber;
+
     public BigInteger requestCount;
+    String coalition;
+    boolean hasCoalition;
 
     /*
+        struct Company {
         bool exists;
         uint phoneNumber;
         string name;
@@ -494,7 +500,10 @@ class Company{
         Token token;
         uint256 deposit;
 
+        Request[] request_pool;
+        address[] coalitionNames;
         uint64 request_count;
+    }
      */
 
 
@@ -507,8 +516,9 @@ class Company{
         hasToken = s.getValue5();
         token = s.getValue6();
         deposit = s.getValue7();
+        //coalition = s.getValue8();
+        //hasCoalition = s.getValue9();
         requestCount = s.getValue8();
-
         constructorTuple = s;
     }
 
@@ -530,6 +540,15 @@ class TokenWrapper{
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof TokenWrapper ){
+            return address == ((TokenWrapper) obj).address;
+        }else {
+            return super.equals(obj);
+        }
     }
 }
 

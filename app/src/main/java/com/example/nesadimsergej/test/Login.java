@@ -13,6 +13,7 @@ import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tuples.generated.Tuple10;
 import org.web3j.tuples.generated.Tuple2;
 import org.web3j.tuples.generated.Tuple4;
 import org.web3j.tuples.generated.Tuple5;
@@ -108,7 +109,8 @@ public class Login extends AppCompatActivity {
                     // 3 -
                     // 4 - phoneHash
 
-                    Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> b = contract.companies(credentials.getAddress()).sendAsync().get();
+                    Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> b =
+                            contract.companies(credentials.getAddress()).sendAsync().get();
                     Company cmp = new Company(b);
                     targetHash = cmp.phoneNumber;
 

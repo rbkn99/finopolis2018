@@ -49,13 +49,12 @@ public class Create_coalition extends SceneController {
     @Override
     void OnSelected() {
         super.OnSelected();
-        if(isCoalitionExists()){
-            CoaltionExists();
-            coalitionPage.OnSelected();
-        }else{
+        //if(isCoalitionExists()){
+        //    CoaltionExists();
+        //    coalitionPage.OnSelected();
+        //}else{
 
-        }
-
+        //}
     }
 
     void CoalitionNotExists(){
@@ -79,9 +78,10 @@ public class Create_coalition extends SceneController {
                 credentials,
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         try {
-            Tuple2<Boolean, String> s = contract.coalitions(credentials.getAddress()).send();
+            Company s =new Company( contract.companies(credentials.getAddress()).send());
             //System.out.println(s);
-            return s.getValue1();
+            return s.hasCoalition;
+
         }catch (Exception e){
             e.printStackTrace();
             return false;
@@ -99,7 +99,7 @@ public class Create_coalition extends SceneController {
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
        try {
-            contract.addCoalition(credentials.getAddress(), cName).send();
+           contract.addCoalition(credentials.getAddress(), cName).send();
            Toast.makeText(page.getContext(), "Коалиция создана",
                    Toast.LENGTH_SHORT).show();
         }catch (Exception e){

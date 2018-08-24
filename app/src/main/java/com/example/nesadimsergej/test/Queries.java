@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.web3j.abi.datatypes.Array;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.tuples.generated.Tuple10;
 import org.web3j.tuples.generated.Tuple2;
 import org.web3j.tuples.generated.Tuple7;
 import org.web3j.tuples.generated.Tuple8;
@@ -67,7 +68,6 @@ public class Queries extends SceneController {
 
 
     void UpdateQueries(){
-        //System.out.println("UpdateQueries");
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
 
@@ -78,9 +78,9 @@ public class Queries extends SceneController {
 
         BigInteger requestCount = BigInteger.ZERO;
         try {
-            Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s =contract.companies(credentials.getAddress()).send();
+            //Tuple10<Boolean, BigInteger, String, String, Boolean, String, BigInteger, String, Boolean, BigInteger> s =contract.companies(credentials.getAddress()).send();
             requestCount = contract.getRequestCount().send();//(new Company(s)).requestCount;
-            System.out.println(s);
+            //System.out.println(s);
         }catch (Exception e){
 
         }
@@ -101,35 +101,45 @@ public class Queries extends SceneController {
             }
         }
 
-
-
-        // Запрос к Рыбкину
-        // ....
-        // Вот что пришло
-        //resultQueries.add(new Tuple2<>(QueriGenerator(), "SUPER SECRET CODE"));
-
-
+        queriList.removeAllViews();
         for (Tuple2<String,String> t: resultQueries
              ) {
             String queriText = t.getValue1();
             String secreteCode = t.getValue2();
             AddQueri(queriText,secreteCode);
         }
+
+
+    }
+
+
+    private void AnswerRequest(Queri q, boolean answer){
+
+        String requestAddress = q.secreteCode;
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Web3j web3 = ((Office)page.getContext()).web3;
+
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,
+                credentials,
+                Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        try {
+            contract.respond(requestAddress, answer).send();
+            Toast.makeText(page.getContext(), "движж???0)",
+                    Toast.LENGTH_SHORT).show();
+            q.Destroy();
+        }catch (Exception e) {
+
+        }
     }
 
     void OnQueriAccepted(Queri q){
-        Toast.makeText(page.getContext(), q.getText()+" +",
-                        Toast.LENGTH_SHORT).show();
-
-
-        q.Destroy();
+        AnswerRequest(q,true);
     }
     void OnQueriDeclined(Queri q){
-        Toast.makeText(page.getContext(), q.getText()+" -",
-                        Toast.LENGTH_SHORT).show();
 
 
-        q.Destroy();
+        AnswerRequest(q,false);
     }
 
 
