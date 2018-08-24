@@ -258,6 +258,18 @@ contract Loyalty {
         return coalitions[coalition].members[index];
     }
     
+    function getCompanyCoalitionCount() public view 
+                            companyExists(msg.sender)
+                            returns (uint256 size){
+        return companies[msg.sender].coalitionNames.length;
+    }
+    
+    function getCompanyCoalition (uint256 index) public view 
+                            companyExists(msg.sender)
+                            returns (address coalition){
+        return companies[msg.sender].coalitionNames[index];
+    }
+    
     // to whomstd've and what to respond
     function respond (address request_sender,  bool answer) public 
                             companyExists(msg.sender)
