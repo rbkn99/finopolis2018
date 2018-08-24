@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class Config {
     public static String web3Address = "HTTP://172.20.10.3:8545";//https://ropsten.infura.io/v3/6107ae917f254c9780385c9d1c734e2b
-    public static String contractAdress = "0x5506195b3459712b4262231425aca5966d5c236a";
+    public static String contractAdress = "0x393fC9E20C494774dbcA3b0d559991731742be0F";
     // 0xcb94ceac938dec39254f57b384cfd9e2d9db06f9 - kovan
     public static String secretKey1 = "6b194546eef8f3f84deae03e7806dadcd981ebb6164f853e4a090fcaf36809ce";
     public static String address1 = "0xffCEF01631268eBc760eB3343372048f6c36122c";
@@ -14,9 +14,9 @@ public class Config {
     public static String IS_TCP = "IS_TCP";
     public static String AccountInfo = "AccountInfo";
     // 0x3f65550164f4a8dac7393515dbacea4265a98f24 - kovan(address)
-    public static String prk = "3db77fe50280293f68adda27d03616bed019a693f26e50254f60c44a6c998ad";
+    public static String prk = "d9d51bfe94d29402ccba7bce8450617062acf048d8fe7bec22be941adffe9b83";
     //a23bba064c6fffd33184219ee5b6267f0c795723367d9a40c3b32fc818dd32b6 - kovan
-    public static String puk = "444148cf36fb0428632eff8e25b4e2cc25722ce539afe156d3b68008f6760269c802c725f584f241a30318af186e5f6dea132b26d821ba51c8ba72433195daff";
+    public static String puk = "970105fdb15de25290ad9f98b06ccac3585ab92f64ebd3d0fa8f0b7e7ee71e92b2656efedf6013d98d5d34d672da375887988943e0bc39adddb38100d6b4babe";
     // c483a91517c87d998f0a817b8e9615ffc14b064be874a631fa8532af84e856100a8b29c8c1a509014bdc0a52c961b03e4e711324883427f38e3621396909c4b1 - kovan
     public static String CONTRACT = "CONTRACT";
     public static String PRIVATE_KEY = "PRIVATE_KEY";
