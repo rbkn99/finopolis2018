@@ -193,6 +193,19 @@ contract Loyalty {
         return true;
     }
     
+    
+    // ---------------------------  exchange /don't thead on me/  -------------------------------
+    
+    function exchangeToken(address customer, Token token1, Token token2, uint amount)
+                                                public onlyOwner customerExists(customer) {
+        require(token1.balances(customer) >= amount, "Not enough bonuses");
+        uint amount2 = amount.mul(token1.exchangePrice());
+        token1.charge(customer, amount);
+        token2.emitToken(customer, amount2);
+    }
+    
+    
+    
 // --------------------------------------------------- NAHUI S MOEGO BOLOTA --------------------------------------------------------------------------    
     // coalition - coalition leader, _name - coalition name
     function addCoalition(address coalition, string _name) public
@@ -206,10 +219,10 @@ contract Loyalty {
         companies[coalition].has_coalition = true;
     }
     // leader calls. company - company to invite 
-    function inviteToCoalition(address company) public 
+    function inviteToCoalition(address company) public
                                 companyExists(msg.sender)
                                 coalitionExists(msg.sender)
-                                companyExists(company){
+                                companyExists(company) {
         Request join_request;
         join_request.sender = msg.sender;
         join_request._type = RequestType.INVITE;
