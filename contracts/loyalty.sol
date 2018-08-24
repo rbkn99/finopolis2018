@@ -273,6 +273,7 @@ contract Loyalty {
                 companies[msg.sender].request_pool[i - 1] = companies[msg.sender].request_pool[i];
         }
         companies[msg.sender].request_pool.length -= 1;
+        companies[msg.sender].request_count--;
     }
     
     
