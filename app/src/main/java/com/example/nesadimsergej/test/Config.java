@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Config {
-    public static String web3Address = "HTTP://172.20.10.3:8545";//https://ropsten.infura.io/v3/6107ae917f254c9780385c9d1c734e2b
+    public static String web3Address = "HTTP://192.168.43.135:8545";//https://ropsten.infura.io/v3/6107ae917f254c9780385c9d1c734e2b
     public static String contractAdress = "0x5506195b3459712b4262231425aca5966d5c236a";
     // 0xcb94ceac938dec39254f57b384cfd9e2d9db06f9 - kovan
-    public static String secretKey1 = "6b194546eef8f3f84deae03e7806dadcd981ebb6164f853e4a090fcaf36809ce";
+    //public static String secretKey1 = "6b194546eef8f3f84deae03e7806dadcd981ebb6164f853e4a090fcaf36809ce";
+    public static String secretKey1 = "f75f6d3d648406a09f2b2447d2b4c5f199cedef964c65284873801610fd2afc0";
     public static String address1 = "0xffCEF01631268eBc760eB3343372048f6c36122c";
     public static int TCP_START_BALANCE = 1000;
     public static String ADDRESS = "ADDRESS";

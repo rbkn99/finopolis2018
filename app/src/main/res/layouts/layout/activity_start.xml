@@ -37,4 +37,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerBtn" />
 
+    <Button
+        android:id="@+id/goToRbkn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="147dp"
+        android:layout_marginStart="147dp"
+        android:layout_marginTop="74dp"
+        android:text="go to rybkin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

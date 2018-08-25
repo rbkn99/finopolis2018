@@ -10,6 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
         <activity android:name=".start">
             <intent-filter>
@@ -29,7 +30,10 @@
         <activity android:name=".Office_User" />
         <activity android:name=".Office_TCP" />
         <activity android:name=".tst1" />
-        <activity android:name=".Login"></activity>
+        <activity android:name=".Login" />
+        <activity
+            android:name=".OrdersViewActivity"
+            android:label="@string/title_activity_orders_view"></activity>
     </application>
 
 </manifest>

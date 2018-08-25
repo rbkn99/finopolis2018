@@ -10,7 +10,7 @@ import android.widget.Button;
 
 public class start extends AppCompatActivity {
     Button loginBtn,registerBtn;
-
+    Button goToRybkin;
     SharedPreferences.Editor editor;
     SharedPreferences sharedPref;
     start context;
@@ -24,7 +24,7 @@ public class start extends AppCompatActivity {
 
         loginBtn = findViewById(R.id.loginBtn);
         registerBtn = findViewById(R.id.registerBtn);
-
+        goToRybkin = findViewById(R.id.goToRbkn);
         sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
 
 
@@ -36,7 +36,12 @@ public class start extends AppCompatActivity {
             loginBtn.setVisibility(View.GONE);
         }
 
-
+        goToRybkin.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OrdersViewActivity.class);
+                startActivity(intent);
+            }
+        });
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
