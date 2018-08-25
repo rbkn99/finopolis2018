@@ -48,8 +48,6 @@ contract Loyalty {
     mapping (address => Company) public companies;
     mapping (address => Coalition) public coalitions;
     
-    // map from company (owner) address to Token
-    mapping (address => Token) public allTokens;
 
     // for web3 communication
     uint64 public companiesCount;
@@ -106,7 +104,6 @@ contract Loyalty {
                                 companyExists(company) returns (uint val) // if bonusesAmount == 0 returns charged bonuses amount * 10^18,
                                                                       // in another case returns roubles amount * 10^18
                                 {
-        require(companies[tokenOwner].token.balances(customer) >= bonusesAmount, "Not enough bonuses");
         uint initialGas = gasleft();
         Token token = companies[company].token;
         // charge bonuses to customer
@@ -118,6 +115,7 @@ contract Loyalty {
         }
         // write off bonuses
         else {
+            require(companies[tokenOwner].token.balances(customer) >= bonusesAmount, "Not enough bonuses");
             uint deltaMoney;
             if (token.nominal_owner() == tokenOwner) {
                 deltaMoney = bonusesAmount.mul(token.outPrice());
@@ -129,7 +127,7 @@ contract Loyalty {
                 address current_coalition = isMatch(companies[company], 
                                                     companies[tokenOwner]);
                 require(current_coalition != address(0), "Not in one ccoalition");
-                deltaMoney = bonusesAmount.mul(allTokens[tokenOwner].exchangePrice());
+                deltaMoney = bonusesAmount.mul(companies[tokenOwner].token.exchangePrice());
                 deltaMoney = deltaMoney.div(token.exchangePrice());
                 deltaMoney = deltaMoney.mul(token.outPrice());
                 roublesAmount = roublesAmount.mul(10^18);
@@ -162,7 +160,6 @@ contract Loyalty {
         if (!companies[msg.sender].has_token) {
             Token token = new Token(msg.sender, _name, _inPrice, _outPrice, _exchangePrice);
             companies[msg.sender].token = token;
-            allTokens[msg.sender] = token;
             companies[msg.sender].has_token = true;
         }
         else
@@ -200,8 +197,12 @@ contract Loyalty {
     
     // ---------------------------  exchange /don't thead on me/  -------------------------------
     
-    function exchangeToken(address customer, Token token1, Token token2, uint amount)
-                                                public onlyOwner customerExists(customer) returns (uint amount2) {
+    function exchangeToken(address customer, address tokenOwner1, address tokenOwner2, uint amount)
+                                                public onlyOwner customerExists(customer) 
+                                                companyExists(tokenOwner1) companyExists(tokenOwner2)
+                                                returns (uint amount2) {
+        Token token1 = companies[tokenOwner1].token;
+        Token token2 = companies[tokenOwner2].token;
         require(token1.balances(customer) >= amount, "Not enough bonuses");
         address current_coalition = isMatch(companies[token1.nominal_owner()],
                                                     companies[token2.nominal_owner()]);
