@@ -6,6 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -25,7 +33,7 @@
                 android:layout_marginStart="176dp"
                 android:layout_marginTop="42dp"
                 android:gravity="center"
-                android:text="TextView"
+                android:text="@string/coalition_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/coaltionAddressText" />
@@ -40,7 +48,7 @@
                 android:layout_height="wrap_content"
 
                 android:gravity="center"
-                android:text="TextView"
+                android:text="@string/coalitionAddress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +63,7 @@
                 android:layout_height="wrap_content"
 
                 android:ems="10"
-                android:hint="address"
+                android:hint="@string/inviteAddress"
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/coalitionNameText" />
@@ -69,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:text="Invite"
+                android:text="@string/Invite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/inviteAddress" />
 

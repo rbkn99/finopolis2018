@@ -82,7 +82,7 @@ public class Token_settings extends SceneController {
         System.out.println(credentials.getAddress());
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         try {
-            contract.addEther(new BigInteger("1000000000000000000")).send();
+            contract.addEther(Config.AddToToken).send();
         }catch (Exception e){
             System.out.println("Ну охуеть теперь");
             e.printStackTrace();

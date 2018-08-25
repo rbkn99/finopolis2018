@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.tuples.generated.Tuple2;
 
 public class Create_coalition extends SceneController {
 
@@ -95,9 +94,9 @@ public class Create_coalition extends SceneController {
         Web3j web3 = ((Office)page.getContext()).web3;
 
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,
-                Credentials.create(Config.prk,Config.puk),
+                Credentials.create(Config.bankPrivateKey,Config.bankPublicKey),
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
+        System.out.println(cName);
        try {
            contract.addCoalition(credentials.getAddress(), cName).send();
            Toast.makeText(page.getContext(), "Коалиция создана",

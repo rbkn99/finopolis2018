@@ -78,15 +78,15 @@ public class Queries extends SceneController {
 
         BigInteger requestCount = BigInteger.ZERO;
         try {
-            //Tuple10<Boolean, BigInteger, String, String, Boolean, String, BigInteger, String, Boolean, BigInteger> s =contract.companies(credentials.getAddress()).send();
-            requestCount = contract.getRequestCount().send();//(new Company(s)).requestCount;
-            //System.out.println(s);
+            Company s =new Company( contract.companies(credentials.getAddress()).send());
+            requestCount = s.requestCount;//contract.getRequestCount().send();//(new Company(s)).requestCount;
+            System.out.println(s);
         }catch (Exception e){
 
         }
 
         ArrayList<Tuple2<String,String>> resultQueries = new ArrayList<>();
-        System.out.println(requestCount);
+        System.out.println("Request count: "+requestCount);
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(requestCount) == -1 ; i = i.add( BigInteger.ONE)) {
             try {
 

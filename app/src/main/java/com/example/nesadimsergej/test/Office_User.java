@@ -122,7 +122,7 @@ public class Office_User extends Office {
 
         LoadAllCompanies();
         Timer timer = new Timer();
-        timer.schedule(new CompanyUpdater(), 0, 15000);
+        timer.schedule(new CompanyUpdater(), 0, 30000);
         timers.add(timer);
     }
     class CompanyUpdater extends TimerTask {
@@ -156,9 +156,8 @@ public class Office_User extends Office {
         idToScene.put(R.id.user_bonusesP,user_bonuses);
         idToScene.put(R.id.exchange_bonusesP,exchange_bonuses);
         idToScene.put(R.id.pay_bonusesP,pay_bonuses);
-        AddEth1();
+        //AddEth1();
     }
-
 
 
     @Override

@@ -14,15 +14,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/bonus1"
             android:layout_width="150dp"
             android:layout_height="62dp"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="18dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+            app:layout_constraintTop_toBottomOf="@+id/balance1" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/balance1"
             android:layout_width="96dp"
             android:layout_height="55dp"
             android:layout_marginLeft="27dp"
@@ -35,18 +35,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editText6"
+            android:id="@+id/exchangeCount"
             android:layout_width="129dp"
             android:layout_height="55dp"
             android:layout_marginLeft="11dp"
             android:layout_marginStart="11dp"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="16dp"
             android:ems="10"
             android:gravity="center"
             android:hint="5000"
             android:inputType="number"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintTop_toBottomOf="@+id/bonus1" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -58,15 +58,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/bonus2"
             android:layout_width="150dp"
             android:layout_height="62dp"
             android:layout_marginTop="17dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+            app:layout_constraintTop_toBottomOf="@+id/balance2" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/balance2"
             android:layout_width="96dp"
             android:layout_height="55dp"
             android:layout_marginLeft="27dp"
@@ -78,19 +78,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/editText6"
+        <TextView
+            android:id="@+id/resultBonus"
             android:layout_width="129dp"
             android:layout_height="55dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="19dp"
-            android:ems="10"
+            android:layout_marginTop="16dp"
             android:gravity="center"
-            android:hint="5000"
-            android:inputType="number"
+            android:text="TextView"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintTop_toBottomOf="@+id/bonus2" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -105,7 +104,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/changeInCoalition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Обменять в коалиции" />

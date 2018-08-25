@@ -26,7 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".infoAfterRegistration" />
         <activity android:name=".Office_User" />
         <activity android:name=".Office_TCP" />
         <activity android:name=".tst1" />

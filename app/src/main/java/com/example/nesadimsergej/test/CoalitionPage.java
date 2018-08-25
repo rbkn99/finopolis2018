@@ -25,6 +25,7 @@ public class CoalitionPage extends SceneController {
     LinearLayout coalitionMembers;
 
     Button inviteButton;
+    public Button back;
     EditText inviteAddress;
 
 
@@ -47,11 +48,22 @@ public class CoalitionPage extends SceneController {
         inviteButton = page.findViewById(R.id.inviteButton);
         inviteAddress = page.findViewById(R.id.inviteAddress);
         coalitionMembers = page.findViewById(R.id.coalitionMembers);
+        back = page.findViewById(R.id.back);
+
+        coalitionMembers.removeAllViews();
 
         LoadCoalitionInfo();
         DisplayCoalitionInfo();
+        //UpdateCoalitionMembers();
+        if(coalitionAddress.equals(((Office)page.getContext()).credentials.getAddress())) {
+            inviteButton.setVisibility(View.VISIBLE);
+            inviteAddress.setVisibility(View.VISIBLE);
+            inviteButton.setOnClickListener(v -> Invite());
 
-        inviteButton.setOnClickListener(v -> Invite());
+        }else{
+            inviteButton.setVisibility(View.INVISIBLE);
+            inviteAddress.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -95,6 +107,7 @@ public class CoalitionPage extends SceneController {
     }
 
     void LoadCoalitionInfo(){
+        System.out.println("LoadCoalitionInfo");
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
 
@@ -102,9 +115,9 @@ public class CoalitionPage extends SceneController {
                 credentials,
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         try {
-            Tuple2<Boolean, String> s = contract.coalitions(credentials.getAddress()).send();
+            Tuple2<Boolean, String> s = contract.coalitions(coalitionAddress).send();
             coaltionInfo = new CoaltionInfo(s);
-            //System.out.println(s);
+            System.out.println(s);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -144,10 +157,6 @@ public class CoalitionPage extends SceneController {
              ) {
             AddRow(address);
         }
-
-
-
-
     }
 
     UserRow AddRow(String text){
@@ -157,7 +166,6 @@ public class CoalitionPage extends SceneController {
         r.SetName(text);
         return r;
     }
-
 
     class CoaltionInfo{
         Boolean exists;
