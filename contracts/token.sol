@@ -26,7 +26,9 @@ contract Token {
     address public owner; // loyalty.sol
     address public nominal_owner; // company
     
-    // tokens per rouble, mul by 10^18
+    // inPrice - how much bonuses you receive from each rouble when pay only with roubles * 10^18
+    // outPrice - how much roubles you receive from each bonus when pay with roubles and bonuses * 10^18
+    // exchangePrice - how much each bonus costs in roubles when you exchange one bonus to another * 10^18
     uint public inPrice;
     uint public outPrice;
     uint public exchangePrice;

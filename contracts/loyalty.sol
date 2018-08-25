@@ -103,9 +103,10 @@ contract Loyalty {
                                 public
                                 onlyOwner
                                 customerExists(customer)
-                                companyExists(company) returns (uint) // if bonusesAmount == 0 returns charged bonuses amount * 10^18,
+                                companyExists(company) returns (uint val) // if bonusesAmount == 0 returns charged bonuses amount * 10^18,
                                                                       // in another case returns roubles amount * 10^18
                                 {
+        require(companies[tokenOwner].token.balances(customer) >= bonusesAmount, "Not enough bonuses");
         uint initialGas = gasleft();
         Token token = companies[company].token;
         // charge bonuses to customer
@@ -113,9 +114,7 @@ contract Loyalty {
             bonusesAmount = roublesAmount.mul(token.inPrice());
             token.transfer(company, customer, bonusesAmount);
             customers[customer].tokens[token] = true;
-            if (!payForTransaction(company, initialGas - gasleft()))
-                revert();
-            return bonusesAmount;
+            val = bonusesAmount;
         }
         // write off bonuses
         else {
@@ -130,15 +129,17 @@ contract Loyalty {
                 address current_coalition = isMatch(companies[company], 
                                                     companies[tokenOwner]);
                 require(current_coalition != address(0), "Not in one ccoalition");
-                deltaMoney = bonusesAmount.mul(token.exchangePrice());
+                deltaMoney = bonusesAmount.mul(allTokens[tokenOwner].exchangePrice());
+                deltaMoney = deltaMoney.div(token.exchangePrice());
                 deltaMoney = deltaMoney.mul(token.outPrice());
+                roublesAmount = roublesAmount.mul(10^18);
                 roublesAmount = roublesAmount.add(deltaMoney);
-                token.transfer(customer, tokenOwner, bonusesAmount);
+                companies[tokenOwner].token.transfer(customer, tokenOwner, bonusesAmount);
             }
-            if (!payForTransaction(company, initialGas - gasleft()))
-                revert();
-            return roublesAmount;
+            val = roublesAmount;
         }
+        if (!payForTransaction(company, initialGas - gasleft()))
+            revert();
     }
     
     // check if 2 companies belongs to the one coalition and returns its name
