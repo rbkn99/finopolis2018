@@ -32,6 +32,15 @@ contract Loyalty {
         RequestType _type;
     }
     
+    struct Offer {
+        uint256 id;
+        address seller;
+        address sellToken;
+        address wantedToken;
+        uint256 sellAmount;
+        uint256 buyAmount;
+    }
+
     struct Coalition{
         bool exists;
         string name;
