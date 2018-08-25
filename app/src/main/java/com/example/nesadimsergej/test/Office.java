@@ -299,8 +299,8 @@ public class Office extends AppCompatActivity {
         try {
 
             Loyalty contract = Loyalty
-                    .load(Config.contractAdress,web3,Credentials.create(Config.prk
-                            ,Config.puk),Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+                    .load(Config.contractAdress,web3,Credentials.create(Config.bankPrivateKey
+                            ,Config.bankPublicKey),Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
             //contract.
 
@@ -527,12 +527,12 @@ class Company{
 
 class TokenWrapper{
 
-    String address;
+    String tokenAddress;
     String name;
     String ownerAddress;
     String nominalOwner;
     public TokenWrapper(String _address,String _name,String _ownerAddress,String _nominalOwner){
-        address = _address;
+        tokenAddress = _address;
         name = _name;
         ownerAddress = _ownerAddress;
         nominalOwner = _nominalOwner;
@@ -546,7 +546,7 @@ class TokenWrapper{
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof TokenWrapper ){
-            return address.equals(((TokenWrapper) obj).address);
+            return tokenAddress.equals(((TokenWrapper) obj).tokenAddress);
         }else {
             return super.equals(obj);
         }
@@ -554,7 +554,7 @@ class TokenWrapper{
     @Override
     public int hashCode(){
 
-        return address.hashCode();
+        return tokenAddress.hashCode();
     }
 }
 

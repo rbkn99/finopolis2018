@@ -8,10 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.util.concurrent.Future;
 
 import android.view.View;
@@ -21,18 +18,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.AdapterView;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Keys;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.core.RemoteCall;
-import org.web3j.protocol.core.methods.response.NetListening;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.Transfer;
-import org.web3j.utils.Convert;
-import org.web3j.utils.Numeric;
+
 import android.widget.TextView;
 
 public class Register extends AppCompatActivity {
@@ -120,7 +112,7 @@ public class Register extends AppCompatActivity {
                         Loyalty contract = Loyalty.load(
                                 Config.contractAdress,
                                 web3,/* */
-                                Credentials.create(Config.prk, Config.puk),/**/
+                                Credentials.create(Config.bankPrivateKey, Config.bankPublicKey),/**/
                                 Loyalty.GAS_PRICE,
                                 Loyalty.GAS_LIMIT);
 
@@ -200,7 +192,7 @@ public class Register extends AppCompatActivity {
                     Loyalty contract = Loyalty.load(
                             Config.contractAdress,/*Адресс контракта (указан в конфиге) */
                             web3,/* */
-                            Credentials.create(Config.prk, Config.puk),/**/
+                            Credentials.create(Config.bankPrivateKey, Config.bankPublicKey),/**/
                             Loyalty.GAS_PRICE,
                             Loyalty.GAS_LIMIT);
 

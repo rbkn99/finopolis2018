@@ -9,14 +9,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.tuples.generated.Tuple2;
 
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,9 +88,6 @@ public class Pay_bonuses extends SceneController {
         if(selectedItem >=0)
             selectedCompanyName =(String) companySelector.getItemAtPosition(selectedItem);
 
-        //System.out.println("EEE BOOOI");
-        //System.out.println(selectedCompanyName);
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(office, android.R.layout.simple_spinner_dropdown_item, companyNames);
         companySelector.setAdapter(adapter);
 
@@ -104,8 +98,6 @@ public class Pay_bonuses extends SceneController {
     }
 
     void CompanySelected(AdapterView<?> parent, View view, int position, long id){
-        //System.out.println(companies.get(position).companyName);
-
         Company selectedCompany = companies.get(position);
 
         Web3j web3 = ((Office)page.getContext()).web3;
@@ -245,17 +237,10 @@ public class Pay_bonuses extends SceneController {
 
         Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
-        Credentials bankCredentials = Credentials.create(Config.prk,Config.puk);
+        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
         System.out.println("Start address: "+bankCredentials.getAddress());
 
         Loyalty loyaltyContractBank = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
-        try {
-            System.out.println("Owner address: "+loyaltyContractBank.owner().send());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
 
         try {
             selectedCompany = new Company(loyaltyContractBank.companies(selectedCompany._address).send());
@@ -277,13 +262,13 @@ public class Pay_bonuses extends SceneController {
             return;
         }
 
-        String tokenAddress = selectedToken.address;
+        String tokenAddress = selectedToken.tokenAddress;
         Token tokenContract = Token.load(tokenAddress,web3,credentials, Token.GAS_PRICE, Token.GAS_LIMIT);
 
         BigInteger bonusCount = BigInteger.ZERO;
         String tokenOwner = "0x0000000000000000000000000000000000000000";
         try {
-            bonusCount = tokenContract.balanceOf(credentials.getAddress()).send().divide(new BigInteger("1000000000000000000"));
+            bonusCount = tokenContract.balanceOf(credentials.getAddress()).send().divide(Config.tene18);
             tokenOwner = tokenContract.nominal_owner().send();
         }catch (Exception e){
             Toast.makeText(page.getContext(),"Error!",Toast.LENGTH_SHORT);
@@ -294,12 +279,9 @@ public class Pay_bonuses extends SceneController {
             Toast.makeText(page.getContext(),"Недостаточно бонусов на счету",Toast.LENGTH_SHORT).show();
             return;
         }
-        //System.out.println(bonusCount);
         try {
-
-
-            BigInteger sumR = (new BigInteger(paySumStr)).multiply(new BigInteger("1000000000000000000"));
-            BigInteger bonusSumR = bonusSum.multiply(new BigInteger("1000000000000000000"));
+            BigInteger sumR = (new BigInteger(paySumStr)).multiply(Config.tene18);
+            BigInteger bonusSumR = bonusSum.multiply(Config.tene18);
             System.out.println("Сумма в рублях: "+sumR);
             System.out.println("Сумма в бонусах: "+bonusSumR);
             System.out.println("Адрес компании: "+selectedCompany._address);
@@ -327,7 +309,6 @@ public class Pay_bonuses extends SceneController {
                     tokenOwner).send();
 
         }catch (Exception e){
-            System.out.println("хуй");
             e.printStackTrace();
         }
 

@@ -1,5 +1,6 @@
 package com.example.nesadimsergej.test;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,13 +43,6 @@ public class Exchange_bonuses extends SceneController {
         exchangeCount = page.findViewById(R.id.exchangeCount);
         resultBonus = page.findViewById(R.id.resultBonus);
         changeInCoalition = page.findViewById(R.id.changeInCoalition);
-        //((Office)page.getContext()).AddCompanyUpdatedListener(new CompanyListUpdatedListener() {
-        //    @Override
-        //    public void f(Office office) {
-        //        UpdateBonuses1(office);
-        //    }
-        //});
-
         changeInCoalition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,6 +52,7 @@ public class Exchange_bonuses extends SceneController {
 
         bonus1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
+            @SuppressLint("SetTextI18n")
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
             {
                 TokenWrapperWithBalance bonus =(TokenWrapperWithBalance) bonus1.getItemAtPosition(pos);
@@ -74,6 +69,7 @@ public class Exchange_bonuses extends SceneController {
 
         bonus2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
+            @SuppressLint("SetTextI18n")
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
             {
                 TokenWrapperWithBalance bonus =(TokenWrapperWithBalance) bonus2.getItemAtPosition(pos);
@@ -91,7 +87,6 @@ public class Exchange_bonuses extends SceneController {
 
     @Override
     void OnSelected(){
-        System.out.println("UPDATEBONUSES1");
         UpdateBonuses1();
     }
 
@@ -108,19 +103,15 @@ public class Exchange_bonuses extends SceneController {
                 office.companies
                 )
         {
-            System.out.println("UPDATEBONUSES2");
             try {
                 Company normalCompany = new Company(loyalty.companies(c._address).send());
                 if(!normalCompany.hasToken){
                     continue;
                 }
                 Token tokenContract = Token.load(normalCompany.token,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
-                String tokenName = "ERROR";
-                try{
-                    tokenName = tokenContract.name().send();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+
+                TokenWrapper token = Pay_bonuses.getToken(web3,credentials,normalCompany.token);
+
                 String nominalOwner = "ERROR";
                 try{
                     nominalOwner = tokenContract.nominal_owner().send();
@@ -130,13 +121,13 @@ public class Exchange_bonuses extends SceneController {
                 BigInteger balance = BigInteger.ZERO;
                 try{
                     balance = tokenContract.balanceOf(credentials.getAddress()).send().divide(
-                            new BigInteger("1000000000000000000"));
+                            Config.tene18);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
 
-                TokenWrapperWithBalance token = new TokenWrapperWithBalance(normalCompany.token,tokenName,balance,normalCompany._address,nominalOwner);
-                tokens.add(token);
+                TokenWrapperWithBalance tokenWithBalance = new TokenWrapperWithBalance(token.tokenAddress, token.name,balance,normalCompany._address,nominalOwner);
+                tokens.add(tokenWithBalance);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -151,21 +142,12 @@ public class Exchange_bonuses extends SceneController {
                 selectedCompanyName1 = (TokenWrapperWithBalance) bonus1.getItemAtPosition(selectedItem1);
         }catch (Exception e){
             //no variants
+            e.printStackTrace();
         }
-        /*
-        int selectedItem2 = bonus1.getSelectedItemPosition();
-        TokenWrapperWithBalance selectedCompanyName2 = null;
 
-        try {
-        if(selectedItem2 >=0)
-            selectedCompanyName2 =(TokenWrapperWithBalance) bonus1.getItemAtPosition(selectedItem2);
-        }catch (Exception e){
-            //no variants
-        }*/
         ArrayAdapter<TokenWrapperWithBalance> adapter = new ArrayAdapter<>(office, android.R.layout.simple_spinner_dropdown_item,tokens );
         bonus1.setAdapter(adapter);
 
-        //bonus2.setAdapter(adapter);
 
 
 
@@ -173,11 +155,6 @@ public class Exchange_bonuses extends SceneController {
         if(selectedCompanyName1!=null)
             newSelectedItem = tokens.indexOf(selectedCompanyName1);
         bonus1.setSelection(newSelectedItem);
-
-        /*newSelectedItem = 0;
-        if(selectedCompanyName2!=null)
-            newSelectedItem = tokens.indexOf(selectedCompanyName2);
-        bonus2.setSelection(newSelectedItem);*/
     }
 
     void UpdateBonuses2(){
@@ -203,18 +180,17 @@ public class Exchange_bonuses extends SceneController {
         ArrayList<TokenWrapperWithBalance> tokens= new ArrayList<>();
 
         for (TokenWrapper token:s) {
-            Token currentToken = Token.load(token.address,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
+            Token currentToken = Token.load(token.tokenAddress,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
             try {
                 BigInteger balance = currentToken.balanceOf(credentials.getAddress()).send().divide(
-                        new BigInteger("1000000000000000000")
+                        Config.tene18
                 );
-                tokens.add(new TokenWrapperWithBalance(token.address,token.name,balance,token.ownerAddress,token.nominalOwner));
+                tokens.add(new TokenWrapperWithBalance(token.tokenAddress,token.name,balance,token.ownerAddress,token.nominalOwner));
             }catch (Exception e){
 
             }
         }
 
-        //System.out.println(s);
         ArrayAdapter<TokenWrapperWithBalance> adapter = new ArrayAdapter<>(page.getContext(), android.R.layout.simple_spinner_dropdown_item, tokens);
         bonus2.setAdapter(adapter);
         bonus2.setSelection(0);
@@ -227,7 +203,7 @@ public class Exchange_bonuses extends SceneController {
         TokenWrapperWithBalance token2 =(TokenWrapperWithBalance) bonus2.getSelectedItem();
         Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
-        Credentials bankCredentials = Credentials.create(Config.prk,Config.puk);
+        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
         Loyalty loyalty = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
         BigInteger exchangeToken = new BigInteger(exchangeCount.getText().toString());
@@ -237,8 +213,8 @@ public class Exchange_bonuses extends SceneController {
         debug+="Название первого токена: "+token1.wrapper.name+"\n";
         debug+="Название второго токена: "+token2.wrapper.name+"\n";
         debug+="Количество первого токена: "+exchangeToken+"\n";
-        debug+="Адрес первого токена: "+token1.wrapper.address+"\n";
-        debug+="Адрес второго токена: "+token2.wrapper.address+"\n";
+        debug+="Адрес первого токена: "+token1.wrapper.tokenAddress+"\n";
+        debug+="Адрес второго токена: "+token2.wrapper.tokenAddress+"\n";
         debug+=": "+token1.wrapper.ownerAddress+"\n";
         debug+=": "+token2.wrapper.ownerAddress+"\n";
         debug+="Владелец первого токена: "+token1.wrapper.nominalOwner+"\n";
@@ -252,19 +228,6 @@ public class Exchange_bonuses extends SceneController {
         try{
             String tokenOwner1 = token1.wrapper.nominalOwner;
             String tokenOwner2 = token2.wrapper.nominalOwner;
-
-            try {
-                System.out.println(loyalty.companies(tokenOwner1).send());
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            try {
-                System.out.println(loyalty.companies(tokenOwner2).send());
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
 
             loyalty.exchangeToken(credentials.getAddress(),tokenOwner1,tokenOwner2,exchangeTokenR).send();
         }catch (Exception e){

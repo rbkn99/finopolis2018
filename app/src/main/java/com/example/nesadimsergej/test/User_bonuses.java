@@ -1,23 +1,14 @@
 package com.example.nesadimsergej.test;
 
-import android.app.Activity;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.tuples.generated.Tuple10;
-import org.web3j.tuples.generated.Tuple4;
-import org.web3j.tuples.generated.Tuple5;
-import org.web3j.tuples.generated.Tuple6;
 import org.web3j.tuples.generated.Tuple8;
 
 import java.math.BigInteger;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class User_bonuses extends SceneController {
 
@@ -48,48 +39,52 @@ public class User_bonuses extends SceneController {
         });
     }
 
-    /*class BonusUpdater extends TimerTask {
-        @Override
-        public void run() {
-            ((Activity)page.getContext()).runOnUiThread(() -> UpdateBonuses());
-        }
-    }*/
     public String tene18 = "1000000000000000000";
 
+    // Функция обновляет список компанием с указанием количества бонусов
     void UpdateBonuses(Office office){
-        RemoveAllBonusRows();Web3j web3 = ((Office)page.getContext()).web3;
+        // Стираем все старое
+        RemoveAllBonusRows();
+        Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
         Loyalty loyalty = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        // Перебираем все коспании
         for (Company c:
                 office.companies
              ) {
-
-
+            // Адрес компании, которую мы рассматриваем в текущий момент
+            // С помощью него мы будем получать сначала адрес токена этой компании(если он есть)
+            // а потом и баланс пользователя
             String companyAddress = c._address;
-
 
             try {
                 Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s = loyalty.companies(companyAddress).send();
                 c = new Company(s);
-                System.out.println(s);
             }catch (Exception e){
-                System.out.println("GayBar");
+                // В случае если что-то пошло не так мы просто переходим к рассмотрению следующей компании
                 e.printStackTrace();
+                continue;
             }
+            // В случае если компания пока что не завела свой токен мы просто переходим к следующей компании
             if(!c.hasToken){
                 continue;
             }
+            // Добавляем строчку в список бонусов
             BonusRow r = AddRow(c.companyName);
             String tokeAddress = c.token;
 
-            //Token.load(tokeAddress,)
-
+            // Сейчас мы попробуем узнать баланс пользователя
             Token contract = Token.load(tokeAddress,web3,credentials,
                     Token.GAS_PRICE,Token.GAS_LIMIT);
             try {
-                BigInteger bi = contract.balanceOf(credentials.getAddress()).send();
-                bi = bi.divide(new BigInteger(tene18));
-                r.SetNumber1(bi.toString());
+
+                BigInteger userBalance = contract.balanceOf(credentials.getAddress()).send();
+                // Делим userBalance на 10^18 так как в solidity только целые числа и что бы передать туда вещ число
+                // нужно домножить его на 10^18
+                userBalance = userBalance.divide(new BigInteger(tene18));
+                // Записываем это число в нашу строчку
+                r.SetNumber1(userBalance.toString());
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -97,6 +92,8 @@ public class User_bonuses extends SceneController {
         }
     }
 
+    // Функция которая добавляют на сцену bonus_row.xml
+    // Устанавливает название компании равное text
     BonusRow AddRow(String text){
         View view = View.inflate(page.getContext(),R.layout.bonus_row,null);
         bonusesTable.addView(view);
