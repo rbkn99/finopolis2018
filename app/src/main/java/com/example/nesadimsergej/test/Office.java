@@ -30,9 +30,6 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tuples.generated.Tuple10;
-import org.web3j.tuples.generated.Tuple6;
-import org.web3j.tuples.generated.Tuple7;
 import org.web3j.tuples.generated.Tuple8;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
@@ -106,10 +103,9 @@ public class Office extends AppCompatActivity {
             if(v.getId() == id) {
                 v.setVisibility(View.VISIBLE);
                 if (idToScene.containsKey(id)) {
-                    System.out.println("here200");
                     idToScene.get(id).OnSelected();
                 } else {
-                    System.out.println("here201");
+                    //System.out.println("here201");
                 }
             }
         }
@@ -249,7 +245,7 @@ public class Office extends AppCompatActivity {
             public void run() {
                 try {
 
-                    float v = Float.parseFloat("10");
+                    float v = Config.AddBalance;
 
                     TransactionReceipt transactionReceipt =
                             Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
@@ -307,7 +303,8 @@ public class Office extends AppCompatActivity {
                             ,Config.puk),Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
             //contract.
-            System.out.println(contract.getContractAddress());
+
+            System.out.println("Contract address:"+contract.getContractAddress());
             try {
                 BigInteger i = new BigInteger("12345");
                 System.out.println(i.bitCount());
@@ -337,11 +334,11 @@ public class Office extends AppCompatActivity {
                 try {
 
                     Loyalty contract = Loyalty
-                            .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT.multiply(new BigInteger("10"))).send();
+                            .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT.add(new BigInteger("400000"))).send();
 
                     contractAddress = contract.getContractAddress();
                     deployContractBtn.setEnabled(true);
-                    System.out.println(contractAddress);
+                    System.out.println("Contract address1: "+contractAddress);
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Error!",
@@ -532,9 +529,13 @@ class TokenWrapper{
 
     String address;
     String name;
-    public TokenWrapper(String _address,String _name){
+    String ownerAddress;
+    String nominalOwner;
+    public TokenWrapper(String _address,String _name,String _ownerAddress,String _nominalOwner){
         address = _address;
         name = _name;
+        ownerAddress = _ownerAddress;
+        nominalOwner = _nominalOwner;
     }
 
     @Override
@@ -545,12 +546,45 @@ class TokenWrapper{
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof TokenWrapper ){
-            return address == ((TokenWrapper) obj).address;
+            return address.equals(((TokenWrapper) obj).address);
         }else {
             return super.equals(obj);
         }
     }
+    @Override
+    public int hashCode(){
+
+        return address.hashCode();
+    }
 }
+
+class TokenWrapperWithBalance{
+    TokenWrapper wrapper;
+    BigInteger balance;
+    public TokenWrapperWithBalance(String _address,String _name, BigInteger _balance, String ownerAddress,String _nominalAddress){
+        wrapper = new TokenWrapper(_address,_name,ownerAddress,_nominalAddress);
+        balance = _balance;
+    }
+    @Override
+    public String toString() {
+        return wrapper.name;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof TokenWrapperWithBalance ){
+            return wrapper.equals(((TokenWrapperWithBalance) obj).wrapper);
+        }else {
+            return super.equals(obj);
+        }
+    }
+    @Override
+    public int hashCode(){
+
+        return wrapper.hashCode();
+    }
+
+}
+
 
 interface CompanyListUpdatedListener {
     void f(Office office);

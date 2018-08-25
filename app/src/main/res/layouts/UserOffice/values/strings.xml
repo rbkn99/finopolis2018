@@ -3,4 +3,9 @@
     <string name="create_coalition">Создать коалицию</string>
     <string name="queries">Запросы</string>
     <string name="coalitions">Мои коалиции</string>
+    <string name="Back">Назад</string>
+    <string name="coalition_name">coalition_name</string>
+    <string name="coalitionAddress">coalition_address</string>
+    <string name="inviteAddress">address</string>
+    <string name="Invite">Invite</string>
 </resources>

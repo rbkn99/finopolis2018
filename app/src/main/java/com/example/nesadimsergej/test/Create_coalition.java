@@ -97,7 +97,7 @@ public class Create_coalition extends SceneController {
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,
                 Credentials.create(Config.prk,Config.puk),
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
+        System.out.println(cName);
        try {
            contract.addCoalition(credentials.getAddress(), cName).send();
            Toast.makeText(page.getContext(), "Коалиция создана",

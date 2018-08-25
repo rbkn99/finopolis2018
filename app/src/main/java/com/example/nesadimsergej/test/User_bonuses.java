@@ -57,28 +57,33 @@ public class User_bonuses extends SceneController {
     public String tene18 = "1000000000000000000";
 
     void UpdateBonuses(Office office){
-        RemoveAllBonusRows();
+        RemoveAllBonusRows();Web3j web3 = ((Office)page.getContext()).web3;
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Loyalty loyalty = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         for (Company c:
                 office.companies
              ) {
-            Web3j web3 = ((Office)page.getContext()).web3;
-            Credentials credentials = ((Office)page.getContext()).credentials;
+
 
             String companyAddress = c._address;
 
-            Loyalty loyalty = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
             try {
                 Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s = loyalty.companies(companyAddress).send();
                 c = new Company(s);
+                System.out.println(s);
             }catch (Exception e){
                 System.out.println("GayBar");
                 e.printStackTrace();
             }
-
+            if(!c.hasToken){
+                continue;
+            }
             BonusRow r = AddRow(c.companyName);
             String tokeAddress = c.token;
 
             //Token.load(tokeAddress,)
+
             Token contract = Token.load(tokeAddress,web3,credentials,
                     Token.GAS_PRICE,Token.GAS_LIMIT);
             try {

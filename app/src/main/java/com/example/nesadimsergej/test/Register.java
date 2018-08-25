@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.file.Files;
+import java.util.concurrent.Future;
 
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,7 @@ import org.web3j.crypto.Keys;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
+import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.NetListening;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
@@ -102,20 +104,12 @@ public class Register extends AppCompatActivity {
                     File folder = new File(getApplicationContext().getFilesDir(),"");
                     String str = WalletUtils.generateLightNewWalletFile(" ", folder);
                     Credentials credentials = WalletUtils.loadCredentials(" ",folder.getAbsolutePath() + "/" +str);
-
                     // Сохраняем всю интересующую нас информацию
-
-
                     /**
                      * Загружаем смарт контракт ( все действия будут выполнены не от имени регистрируемого пользователя,
                      * а от имени владельца контракта( того, кто его залил)
                      **/
-                    Loyalty contract = Loyalty.load(
-                            Config.contractAdress,/*Адресс контракта (указан в конфиге) */
-                            web3,/* */
-                            Credentials.create(Config.prk, Config.puk),/**/
-                            Loyalty.GAS_PRICE,
-                            Loyalty.GAS_LIMIT);
+
 
                     String phoneNumber = phoneUSER.getText().toString();
                     // Если номер это просто то 1, то текущий пользователь не регистрируется( кул хак)
@@ -123,6 +117,12 @@ public class Register extends AppCompatActivity {
                     File crFile = new File(folder.getAbsolutePath() + "/" +str);
                     if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
 
+                        Loyalty contract = Loyalty.load(
+                                Config.contractAdress,
+                                web3,/* */
+                                Credentials.create(Config.prk, Config.puk),/**/
+                                Loyalty.GAS_PRICE,
+                                Loyalty.GAS_LIMIT);
 
                         // Хэш номера телефона, который мы будем отправлять в блокчейн
                         BigInteger phoneHash = new BigInteger(
@@ -130,12 +130,12 @@ public class Register extends AppCompatActivity {
                         );
                         newFileName = phoneHash.toString()+".json";
                         Boolean s = crFile.renameTo(new File(folder.getAbsolutePath() + "/"+newFileName));
-
+                        File crFile1 = new File(folder.getAbsolutePath() + "/" +str);
                         System.out.println(phoneNumber);
                         System.out.println(phoneHash);
                         System.out.println(phoneHash.bitLength());
-
-                        if(crFile.delete())
+                        //crFile1.
+                        /*if(crFile1.delete())
                         {
                             System.out.println("File deleted successfully");
                         }
@@ -143,12 +143,18 @@ public class Register extends AppCompatActivity {
                         {
                             System.out.println("Failed to delete the file");
                         }
+                        */
 
                         // Регистрируем пользователя
-                        contract.addCustomer(
+                        RemoteCall<TransactionReceipt> c = contract.addCustomer(
                                 credentials.getAddress(),
                                 phoneHash
-                        ).sendAsync().get();
+                        );
+
+
+                        Future<TransactionReceipt> a = c.sendAsync();
+                        System.out.println(a.toString());
+                        a.get();
 
                     }else{
                         System.out.println("COOL HACK");
@@ -234,7 +240,7 @@ public class Register extends AppCompatActivity {
                                 credentials.getAddress(),
                                 companyName,
                                 phoneHash
-                        ).sendAsync().get();
+                        ).send();
 
                     }else{
                         System.out.println("COOL HACK");

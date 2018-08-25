@@ -6,19 +6,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.tuples.generated.Tuple2;
 
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Pay_bonuses extends SceneController {
 
     Spinner companySelector,tokenSelector;
-    EditText paySum,sum;
+    EditText paySum, bonusesSum;
     Button payBtn;
     //TextView tokenName;
 
@@ -35,7 +40,7 @@ public class Pay_bonuses extends SceneController {
         companySelector = page.findViewById(R.id.companySelector);
         //bonusSelector = page.findViewById(R.id.bonusSelector);
         paySum = page.findViewById(R.id.paySum);
-        sum = page.findViewById(R.id.sum);
+        bonusesSum = page.findViewById(R.id.bonusesSum);
         payBtn = page.findViewById(R.id.payBtn);
         //tokenName = page.findViewById(R.id.tokenName);
         tokenSelector = page.findViewById(R.id.tokenSelector);
@@ -114,7 +119,7 @@ public class Pay_bonuses extends SceneController {
             Company normalCompany = new Company(loyaltyContract.companies(selectedCompany._address).send());
             if(normalCompany.hasToken){
 
-                CalculatePossibleTokens(web3,credentials,normalCompany);
+                //CalculatePossibleTokens(web3,credentials,normalCompany);
                 ArrayList<TokenWrapper> tokens = CalculatePossibleTokens(web3,credentials,normalCompany);
 
                 TokenWrapper selected =(TokenWrapper) tokenSelector.getSelectedItem();
@@ -132,51 +137,194 @@ public class Pay_bonuses extends SceneController {
 
         }
     }
-    ArrayList<TokenWrapper> CalculatePossibleTokens(Web3j web3,Credentials credentials,Company company){
-        ArrayList<TokenWrapper> tokens = new ArrayList<>();
-        tokens.add(getToken(web3,credentials,company.token));
 
-        return tokens;
+    public static ArrayList<TokenWrapper> CalculatePossibleTokens(Web3j web3,Credentials credentials,Company company){
+        Set<TokenWrapper> tokens = new HashSet<>();
+        tokens.add(getToken(web3,credentials,company.token));
+        String startCompany = company._address;
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        ArrayList<String> coalitionAddresses = GetCoalitions(credentials,web3,contract,startCompany);
+
+        for (String currentCoalition:coalitionAddresses)
+        {
+            ArrayList<String> coalitionMembers = GetCoalitionMember(credentials,web3,contract,currentCoalition);
+
+            for (String currentCompanyAddress: coalitionMembers) {
+
+                try {
+                    Company currentCompany = new Company(contract.companies(currentCompanyAddress).send());
+                    if(currentCompany.hasToken) {
+                        tokens.add(getToken(web3, credentials, currentCompany.token));
+                    }
+                }catch (Exception e){
+
+                }
+            }
+        }
+
+
+
+        //Set<TokenWrapper> uniqueGas = new HashSet<TokenWrapper>(tokens);
+        //System.out.println();
+        ArrayList<TokenWrapper> result = new ArrayList<>();
+        for (TokenWrapper token: tokens) {
+            result.add(token);
+        }
+
+        return result;
     }
 
-    TokenWrapper getToken(Web3j web3,Credentials credential,String address){
-        Token tokenContract = Token.load(address,web3,credential,Token.GAS_PRICE,Token.GAS_LIMIT);
-        String tokenName = "ERROR";
-        try{
-            tokenName = tokenContract.name().send();
+    public static ArrayList<String> GetCoalitionMember(Credentials credentials,Web3j web3,Loyalty contract, String coalitionAddress){
+        BigInteger coalitionSize = BigInteger.ZERO;
+        try {
+            coalitionSize = contract.getCoalitionSize(coalitionAddress).send();
+        }catch (Exception e){
+
+        }
+
+        ArrayList<String> coalitionMembers = new ArrayList<>();
+        for(BigInteger i = BigInteger.ZERO ; i.compareTo(coalitionSize) == -1 ; i = i.add( BigInteger.ONE)) {
+            try {
+                String s = contract.getCoalitionMember(coalitionAddress,i).send();
+                coalitionMembers.add(s);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return coalitionMembers;
+    }
+    public static ArrayList<String> GetCoalitions(Credentials credentials,Web3j web3,Loyalty contract, String companyAddress){
+
+        BigInteger coalitionCount = BigInteger.ZERO;
+        try {
+            coalitionCount = contract.getCompanyCoalitionCount(companyAddress).send();
+
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new TokenWrapper(address,tokenName);
+
+        ArrayList<String> coalitions = new ArrayList<>();
+
+
+        for(BigInteger i = BigInteger.ZERO ; i.compareTo(coalitionCount) == -1 ; i = i.add( BigInteger.ONE)) {
+            try {
+                String coalitionAddress = contract.getCompanyCoalition(companyAddress,i).sendAsync().get();
+                Tuple2<Boolean, String> coalition = contract.coalitions(coalitionAddress).send();
+                CoalitionWrapper coalitionWrapper = new CoalitionWrapper(coalition,coalitionAddress);
+                coalitions.add(coalitionWrapper.address);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return coalitions;
+    }
+
+
+    public static TokenWrapper getToken(Web3j web3,Credentials credential,String address){
+        Token tokenContract = Token.load(address,web3,credential,Token.GAS_PRICE,Token.GAS_LIMIT);
+        String tokenName = "ERROR";
+        String owner = "ERROR";
+        String nominal_owner = "ERROR";
+        try{
+            tokenName = tokenContract.name().send();
+            owner = tokenContract.owner().send();
+            nominal_owner = tokenContract.nominal_owner().send();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new TokenWrapper(address,tokenName,owner,nominal_owner);
     }
 
 
 
     void Pay(){
         Company selectedCompany = companies.get(companySelector.getSelectedItemPosition());
+
         TokenWrapper selectedToken =(TokenWrapper) tokenSelector.getSelectedItem();
 
         Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
         Credentials bankCredentials = Credentials.create(Config.prk,Config.puk);
+        System.out.println("Start address: "+bankCredentials.getAddress());
 
         Loyalty loyaltyContractBank = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
+        try {
+            System.out.println("Owner address: "+loyaltyContractBank.owner().send());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        try {
+            selectedCompany = new Company(loyaltyContractBank.companies(selectedCompany._address).send());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         String paySumStr = paySum.getText().toString();
+        String bonusSumStr = bonusesSum.getText().toString();
+
+        BigInteger bonusSum = BigInteger.ZERO;
+        if(!bonusSumStr.equals("")){
+            bonusSum = new BigInteger(bonusSumStr);
+        }
 
         if(paySumStr.isEmpty()){
             Toast.makeText(page.getContext(),"Введите сумму в рублях",Toast.LENGTH_SHORT).show();
             return;
         }
 
+        String tokenAddress = selectedToken.address;
+        Token tokenContract = Token.load(tokenAddress,web3,credentials, Token.GAS_PRICE, Token.GAS_LIMIT);
 
+        BigInteger bonusCount = BigInteger.ZERO;
+        String tokenOwner = "0x0000000000000000000000000000000000000000";
         try {
+            bonusCount = tokenContract.balanceOf(credentials.getAddress()).send().divide(new BigInteger("1000000000000000000"));
+            tokenOwner = tokenContract.nominal_owner().send();
+        }catch (Exception e){
+            Toast.makeText(page.getContext(),"Error!",Toast.LENGTH_SHORT);
+            e.printStackTrace();
+        }
+
+        if(bonusCount.compareTo(bonusSum) == -1){
+            Toast.makeText(page.getContext(),"Недостаточно бонусов на счету",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //System.out.println(bonusCount);
+        try {
+
+
             BigInteger sumR = (new BigInteger(paySumStr)).multiply(new BigInteger("1000000000000000000"));
+            BigInteger bonusSumR = bonusSum.multiply(new BigInteger("1000000000000000000"));
+            System.out.println("Сумма в рублях: "+sumR);
+            System.out.println("Сумма в бонусах: "+bonusSumR);
+            System.out.println("Адрес компании: "+selectedCompany._address);
+            System.out.println("Имя компании: "+selectedCompany.companyName);
+
+            if(bonusSumR.equals(BigInteger.ZERO))
+                tokenOwner = "0x0000000000000000000000000000000000000000";
+            System.out.println("Адрес владельца токена: "+tokenOwner);
+
+            try {
+                System.out.println(loyaltyContractBank.companies(selectedCompany._address).send());
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            try {
+                System.out.println(loyaltyContractBank.customers(credentials.getAddress()).send());
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             loyaltyContractBank.transferBonuses(selectedCompany._address, credentials.getAddress(),
-                    sumR, BigInteger.ZERO,
-                    "0x0000000000000000000000000000000000000000").send();
-
+                    sumR, bonusSumR,
+                    tokenOwner).send();
 
         }catch (Exception e){
             System.out.println("хуй");
