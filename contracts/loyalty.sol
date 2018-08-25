@@ -29,16 +29,25 @@ contract Loyalty {
     
     struct Request {
         address sender;
-        RequestType _type;
+        //RequestType _type;
     }
     
+    struct Offer {
+        uint256 id;
+        address seller;
+        address sellToken;
+        address wantedToken;
+        uint256 sellAmount;
+        uint256 buyAmount;
+    }
+
     struct Coalition{
         bool exists;
         string name;
         address[] members;
     }
     
-    enum RequestType {INVITE}
+    //enum RequestType {INVITE}
     
     // bank address
     address public owner;
@@ -230,9 +239,9 @@ contract Loyalty {
                                 companyExists(msg.sender)
                                 coalitionExists(msg.sender)
                                 companyExists(company) {
-        Request join_request;
-        join_request.sender = msg.sender;
-        join_request._type = RequestType.INVITE;
+        Request memory join_request = Request(msg.sender);
+        //join_request.sender = msg.sender;
+        //join_request._type = RequestType.INVITE;
         companies[company].request_pool.push(join_request);
         companies[company].request_count++;
     }
@@ -249,7 +258,7 @@ contract Loyalty {
                             returns (address sender)
                             {
             
-        Request request = companies[msg.sender].request_pool[index];
+        Request storage request = companies[msg.sender].request_pool[index];
         return request.sender;
     }
     
@@ -265,16 +274,16 @@ contract Loyalty {
         return coalitions[coalition].members[index];
     }
     
-    function getCompanyCoalitionCount() public view 
-                            companyExists(msg.sender)
+    function getCompanyCoalitionCount(address company) public view 
+                            companyExists(company)
                             returns (uint256 size){
-        return companies[msg.sender].coalitionNames.length;
+        return companies[company].coalitionNames.length;
     }
     
-    function getCompanyCoalition (uint256 index) public view 
-                            companyExists(msg.sender)
+    function getCompanyCoalition (address company,uint256 index) public view 
+                            companyExists(company)
                             returns (address coalition){
-        return companies[msg.sender].coalitionNames[index];
+        return companies[company].coalitionNames[index];
     }
     
     // to whomstd've and what to respond
