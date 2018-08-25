@@ -192,7 +192,7 @@ contract Loyalty {
         return true;
     }
     
-    // calls user
+    // user calls
     function getBalanceOf(Token token) public view returns (uint) {
         return token.balances(msg.sender);
     }
@@ -201,16 +201,16 @@ contract Loyalty {
     // ---------------------------  exchange /don't thead on me/  -------------------------------
     
     function exchangeToken(address customer, Token token1, Token token2, uint amount)
-                                                public onlyOwner customerExists(customer) {
+                                                public onlyOwner customerExists(customer) returns (uint amount2) {
         require(token1.balances(customer) >= amount, "Not enough bonuses");
-        address current_coalition = isMatch(companies[token1.nominal_owner()], 
+        address current_coalition = isMatch(companies[token1.nominal_owner()],
                                                     companies[token2.nominal_owner()]);
         require(current_coalition != address(0), "Not in one coalition");
-        uint amount2 = amount.mul(token1.exchangePrice());
+        amount2 = amount.mul(token1.exchangePrice());
+        amount2 = amount2.div(token2.exchangePrice());
         token1.charge(customer, amount);
         token2.emitToken(customer, amount2);
     }
-    
     
     
 // --------------------------------------------------- NAHUI S MOEGO BOLOTA --------------------------------------------------------------------------    
