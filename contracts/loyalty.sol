@@ -61,11 +61,6 @@ contract Loyalty {
     // for web3 communication
     uint64 public companiesCount;
     Company[] public companySet;
-
-    uint256 offerHistory;
-    
-    uint256 public stockSize;
-    Offer[] private stock;
     
     // cost of asm operations of transferBonuses() func
     uint constant public transferBonuses_transaction_cost = 119290;
@@ -79,7 +74,6 @@ contract Loyalty {
     constructor() public {
         owner = msg.sender;
         companiesCount = 0;
-        offerHistory = 0;
     }
     
     // bank calls
@@ -291,30 +285,6 @@ contract Loyalty {
                             returns (address coalition){
         return companies[company].coalitionNames[index];
     }
-    
-    function getOfferById(uint256 id) public view
-                            returns (uint256 _id,
-                                    address seller,
-                                    address sellToken,
-                                    address wantedToken,
-                                    uint256 sellAmount,
-                                    uint256 buyAmount){
-        uint256 index;
-        require((stock.length == stockSize), "Stock size failed");
-        for (uint256 i = 0; i < stock.length; i++) {
-            if(stock[i].id == id) {
-                index = i;
-            }
-        }
-        require(stock[index].id == id, "Offer does not exist");
-        return (id, 
-                stock[index].seller, 
-                stock[index].sellToken, 
-                stock[index].wantedToken,
-                stock[index].sellAmount,
-                stock[index].buyAmount);
-    }
-
     
     // to whomstd've and what to respond
     function respond (address request_sender,  bool answer) public 
