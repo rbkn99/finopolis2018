@@ -43,9 +43,8 @@ public class Exchange_bonuses extends SceneController {
         SetUpScene();
     }
 
-
     boolean viewingOffers = false;
-
+    boolean tradingInCoalitions = true;
     @Override
     void SetUpScene(){
         super.SetUpScene();
@@ -73,10 +72,13 @@ public class Exchange_bonuses extends SceneController {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // в зависимости от значения isChecked выводим нужное сообщение
                 if (isChecked) {
+                    tradingInCoalitions = false;
                     TradeInStockExchange();
                 } else {
+                    tradingInCoalitions = true;
                     TradeInCoalition();
                 }
+                OnSelected();
             }
         });
 
@@ -128,6 +130,13 @@ public class Exchange_bonuses extends SceneController {
         });
 
         viewOffers = new ViewOffers(offers);
+        viewOffers.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DisplayExchangeWindow();
+            }
+        });
+
     }
 
     void TradeInCoalition(){
@@ -144,7 +153,6 @@ public class Exchange_bonuses extends SceneController {
         makeOffer_button.setVisibility(View.VISIBLE);
         exchangeCount2.setVisibility(View.VISIBLE);
     }
-
 
     @Override
     void OnSelected(){
@@ -257,42 +265,47 @@ public class Exchange_bonuses extends SceneController {
     }
 
     void UpdateBonuses2(){
-        Web3j web3 = ((Office)page.getContext()).web3;
-        Credentials credentials = ((Office)page.getContext()).credentials;
+        if(tradingInCoalitions) {
+            Web3j web3 = ((Office) page.getContext()).web3;
+            Credentials credentials = ((Office) page.getContext()).credentials;
 
-        Loyalty loyaltyContract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+            Loyalty loyaltyContract = Loyalty.load(Config.contractAdress, web3, credentials, Loyalty.GAS_PRICE, Loyalty.GAS_LIMIT);
 
-        TokenWrapperWithBalance bonus =(TokenWrapperWithBalance) bonus1.getItemAtPosition(bonus1.getSelectedItemPosition());
-        System.out.println(bonus.wrapper.name);
-        System.out.println(bonus.balance);
-        String startCompany = bonus.wrapper.ownerAddress;
-        Company company = null;
-        try{
-            company = new Company(loyaltyContract.companies(startCompany).send());
-        }catch (Exception e){
-            e.printStackTrace();
-            return;
-        }
-        System.out.println(company.toString());
-        ArrayList<TokenWrapper> s = Pay_bonuses.CalculatePossibleTokens(web3,credentials,company);
-
-        ArrayList<TokenWrapperWithBalance> tokens= new ArrayList<>();
-
-        for (TokenWrapper token:s) {
-            Token currentToken = Token.load(token.tokenAddress,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
+            TokenWrapperWithBalance bonus = (TokenWrapperWithBalance) bonus1.getItemAtPosition(bonus1.getSelectedItemPosition());
+            System.out.println(bonus.wrapper.name);
+            System.out.println(bonus.balance);
+            String startCompany = bonus.wrapper.ownerAddress;
+            Company company = null;
             try {
-                BigInteger balance = currentToken.balanceOf(credentials.getAddress()).send().divide(
-                        Config.tene18
-                );
-                tokens.add(new TokenWrapperWithBalance(token.tokenAddress,token.name,balance,token.ownerAddress,token.nominalOwner));
-            }catch (Exception e){
-
+                company = new Company(loyaltyContract.companies(startCompany).send());
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
             }
-        }
+            System.out.println(company.toString());
+            ArrayList<TokenWrapper> s = Pay_bonuses.CalculatePossibleTokens(web3, credentials, company);
 
-        ArrayAdapter<TokenWrapperWithBalance> adapter = new ArrayAdapter<>(page.getContext(), android.R.layout.simple_spinner_dropdown_item, tokens);
-        bonus2.setAdapter(adapter);
-        bonus2.setSelection(0);
+            ArrayList<TokenWrapperWithBalance> tokens = new ArrayList<>();
+
+            for (TokenWrapper token : s) {
+                Token currentToken = Token.load(token.tokenAddress, web3, credentials, Token.GAS_PRICE, Token.GAS_LIMIT);
+                try {
+                    BigInteger balance = currentToken.balanceOf(credentials.getAddress()).send().divide(
+                            Config.tene18
+                    );
+                    tokens.add(new TokenWrapperWithBalance(token.tokenAddress, token.name, balance, token.ownerAddress, token.nominalOwner));
+                } catch (Exception e) {
+
+                }
+            }
+
+            ArrayAdapter<TokenWrapperWithBalance> adapter = new ArrayAdapter<>(page.getContext(), android.R.layout.simple_spinner_dropdown_item, tokens);
+            bonus2.setAdapter(adapter);
+            bonus2.setSelection(0);
+        }else {
+            bonus2.setAdapter(bonus1.getAdapter());
+            bonus2.setSelection(0);
+        }
 
     }
 
@@ -301,7 +314,7 @@ public class Exchange_bonuses extends SceneController {
         TokenWrapperWithBalance token1 =(TokenWrapperWithBalance) bonus1.getSelectedItem();
         TokenWrapperWithBalance token2 =(TokenWrapperWithBalance) bonus2.getSelectedItem();
         if(token1.wrapper.name.equals(token2.wrapper.name)){
-            Toast.makeText(page.getContext(),"Нельзя обменивать одинаковые бонусы",Toast.LENGTH_SHORT);
+            Toast.makeText(page.getContext(),"Нельзя обменивать одинаковые бонусы",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -377,7 +390,7 @@ public class Exchange_bonuses extends SceneController {
         TokenWrapperWithBalance token2 =(TokenWrapperWithBalance) bonus2.getSelectedItem();
         if(token1.wrapper.name.equals(token2.wrapper.name)){
 
-            Toast.makeText(page.getContext(),"Нельзя обменивать одинаковые бонусы",Toast.LENGTH_SHORT);
+            Toast.makeText(page.getContext(),"Нельзя обменивать одинаковые бонусы",Toast.LENGTH_SHORT).show();
             return;
         }
         String count1_string,count2_string;
@@ -412,7 +425,14 @@ public class Exchange_bonuses extends SceneController {
 
         Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
-        // И тут должен отпарвляться запрос
+        try {
+            // И тут должен отпарвляться запрос
+            bankContract.placeCustomerOffer(credentials.getAddress(), token1.wrapper.nominalOwner, token2.wrapper.nominalOwner,
+                    count1_18, count2_18).send();
+            System.out.println(bankContract.getStockSize().send());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
