@@ -35,8 +35,8 @@ contract Loyalty {
     struct Offer {
         uint256 id;
         address seller;
-        address sellToken;
-        address wantedToken;
+        address sellTokenCompany;
+        address wantedTokenCompany;
         uint256 sellAmount;
         uint256 buyAmount;
     }
@@ -61,6 +61,10 @@ contract Loyalty {
     // for web3 communication
     uint64 public companiesCount;
     Company[] public companySet;
+
+    uint256 offerHistory;
+    
+    Offer[] private stock;
     
     // cost of asm operations of transferBonuses() func
     uint constant public transferBonuses_transaction_cost = 119290;
@@ -74,6 +78,7 @@ contract Loyalty {
     constructor() public {
         owner = msg.sender;
         companiesCount = 0;
+        offerHistory = 0;
     }
     
     // bank calls
@@ -285,6 +290,74 @@ contract Loyalty {
                             returns (address coalition){
         return companies[company].coalitionNames[index];
     }
+    
+    
+    
+    function placeCustomerOffer(address customer, 
+                                address sellTokenCompany,
+                                address wantedTokenCompany,
+                                uint256 sellAmount,
+                                uint256 buyAmount) public
+                            onlyOwner
+                            customerExists(customer){
+        require(companies[sellTokenCompany].token.balanceOf(customer) >= sellAmount,
+                                                    "Not enough tokens to sell");
+        Offer memory newOffer = Offer(offerHistory, 
+                                   customer,
+                                   sellTokenCompany,
+                                   wantedTokenCompany,
+                                   sellAmount,
+                                   buyAmount);
+        stock.push(newOffer);
+        offerHistory++;
+    }
+    
+    function getStockSize() public view returns (uint256 stockSize) {
+        return stock.length;
+    }
+    
+    function getOfferFromStock(uint256 index) public view
+                            returns (uint256 _id,
+                                    address seller,
+                                    address sellTokenCompany,
+                                    address wantedTokenCompany,
+                                    uint256 sellAmount,
+                                    uint256 buyAmount){
+        return (stock[index].id, 
+                stock[index].seller, 
+                stock[index].sellTokenCompany, 
+                stock[index].wantedTokenCompany,
+                stock[index].sellAmount,
+                stock[index].buyAmount);
+    }
+    
+    function acceptOffer(uint256 id, address acceptor) public
+                            onlyOwner
+                            customerExists(acceptor){
+        Offer memory offer;
+        for(uint256 i = 0; i < stock.length; i++ ) {
+            if(stock[i].id == id) {
+                offer = stock[i];
+            }
+        }
+        Token sellT = companies[offer.sellTokenCompany].token;
+        Token buyT = companies[offer.wantedTokenCompany].token;
+        
+        require(buyT.balanceOf(acceptor) >= offer.buyAmount, "Not enough tokens to buy");
+        
+        sellT.charge(offer.seller, offer.sellAmount);
+        buyT.charge(acceptor, offer.buyAmount);
+        
+        sellT.emitToken(acceptor, offer.sellAmount);
+        buyT.emitToken(offer.seller, offer.buyAmount);
+        
+        delete stock[i];
+        for (uint j = i + 1; j < stock.length; j++) {
+            stock[j-1] = stock[j];
+        }
+        stock.length--;
+    }
+    
     
     // to whomstd've and what to respond
     function respond (address request_sender,  bool answer) public 
