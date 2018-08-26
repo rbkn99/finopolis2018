@@ -249,7 +249,7 @@ class Offer{
         }
         DisplayData();
     }
-
+    //1
     @SuppressLint("SetTextI18n")
     public void DisplayData(){
         offerId_TV.setText(offerId.toString());
