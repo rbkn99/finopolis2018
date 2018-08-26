@@ -28,9 +28,13 @@ public class Exchange_bonuses extends SceneController {
     TextView resultBonus;
     Button changeInCoalition;
 
-    Button makeOffer,viewOffers;
+    Button makeOffer_button, viewOffers_button;
 
     Switch tradeSwitch;
+
+    View exchange_window,offers;
+
+    ViewOffers viewOffers;
 
     public Exchange_bonuses(View _page){
         super();
@@ -39,9 +43,15 @@ public class Exchange_bonuses extends SceneController {
         SetUpScene();
     }
 
+
+    boolean viewingOffers = false;
+
     @Override
     void SetUpScene(){
         super.SetUpScene();
+
+        exchange_window = page.findViewById(R.id.exchange_window);
+        offers = page.findViewById(R.id.offers);
 
         tradeSwitch = page.findViewById(R.id.tradeSwitch);
         bonus1 = page.findViewById(R.id.bonus1);
@@ -51,11 +61,11 @@ public class Exchange_bonuses extends SceneController {
         exchangeCount1 = page.findViewById(R.id.exchangeCount1);
         exchangeCount2 = page.findViewById(R.id.exchangeCount2);
 
-        viewOffers = page.findViewById(R.id.viewOffers);
-        makeOffer = page.findViewById(R.id.makeOffer);
+        viewOffers_button = page.findViewById(R.id.viewOffers);
+        makeOffer_button = page.findViewById(R.id.makeOffer);
         resultBonus = page.findViewById(R.id.resultBonus);
         changeInCoalition = page.findViewById(R.id.changeInCoalition);
-
+        makeOffer_button.setOnClickListener(v -> MakeOffer());
         TradeInCoalition();
         tradeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -69,10 +79,7 @@ public class Exchange_bonuses extends SceneController {
                 }
             }
         });
-        //tradeSwitch.setChecked(false);
-        tradeSwitch.setSelected(false);
 
-        
         changeInCoalition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,37 +120,53 @@ public class Exchange_bonuses extends SceneController {
 
         });
 
+        viewOffers_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DisplayOfferWindow();
+            }
+        });
+
+        viewOffers = new ViewOffers(offers);
     }
 
     void TradeInCoalition(){
         changeInCoalition.setVisibility(View.VISIBLE);
         resultBonus.setVisibility(View.VISIBLE);
-        viewOffers.setVisibility(View.INVISIBLE);
-        makeOffer.setVisibility(View.INVISIBLE);
+        viewOffers_button.setVisibility(View.INVISIBLE);
+        makeOffer_button.setVisibility(View.INVISIBLE);
         exchangeCount2.setVisibility(View.INVISIBLE);
     }
     void TradeInStockExchange(){
         changeInCoalition.setVisibility(View.INVISIBLE);
         resultBonus.setVisibility(View.INVISIBLE);
-        viewOffers.setVisibility(View.VISIBLE);
-        makeOffer.setVisibility(View.VISIBLE);
+        viewOffers_button.setVisibility(View.VISIBLE);
+        makeOffer_button.setVisibility(View.VISIBLE);
         exchangeCount2.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     void OnSelected(){
-        Runnable bonusUpdater = new Runnable() {
-            @Override
-            public void run() {
-                UpdateBonuses1();
-            }
-        };
-        Thread thread = new Thread(bonusUpdater);
-        thread.setPriority(Thread.NORM_PRIORITY);
-        thread.start();
+        if(viewingOffers){
+            exchange_window.setVisibility(View.INVISIBLE);
+            offers.setVisibility(View.VISIBLE);
 
+        }else{
+            exchange_window.setVisibility(View.VISIBLE);
+            offers.setVisibility(View.INVISIBLE);
 
+            Runnable bonusUpdater = new Runnable() {
+                @Override
+                public void run() {
+                    UpdateBonuses1();
+                }
+            };
+            Thread thread = new Thread(bonusUpdater);
+            thread.setPriority(Thread.NORM_PRIORITY);
+            thread.start();
+
+        }
     }
 
     void UpdateBonuses1(){
@@ -278,46 +301,128 @@ public class Exchange_bonuses extends SceneController {
         TokenWrapperWithBalance token1 =(TokenWrapperWithBalance) bonus1.getSelectedItem();
         TokenWrapperWithBalance token2 =(TokenWrapperWithBalance) bonus2.getSelectedItem();
         if(token1.wrapper.name.equals(token2.wrapper.name)){
-
             Toast.makeText(page.getContext(),"Нельзя обменивать одинаковые бонусы",Toast.LENGTH_SHORT);
             return;
         }
-        Web3j web3 = ((Office)page.getContext()).web3;
-        Credentials credentials = ((Office)page.getContext()).credentials;
-        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
-        Loyalty loyalty = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
-        BigInteger exchangeToken = new BigInteger(exchangeCount1.getText().toString());
+        String count1_string = exchangeCount1.getText().toString();
+        if(count1_string.isEmpty()){
+            Toast.makeText(page.getContext(),
+                    "Введите количество бонусов, которые вы хотите обменять", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        BigInteger count = new BigInteger(count1_string);
+        BigInteger count1_18 = count.multiply(Config.tene18);
 
 
         String debug = "";
         debug+="Название первого токена: "+token1.wrapper.name+"\n";
         debug+="Название второго токена: "+token2.wrapper.name+"\n";
-        debug+="Количество первого токена: "+exchangeToken+"\n";
+        debug+="Количество первого токена: "+count+"\n";
         debug+="Адрес первого токена: "+token1.wrapper.tokenAddress+"\n";
         debug+="Адрес второго токена: "+token2.wrapper.tokenAddress+"\n";
         debug+=": "+token1.wrapper.ownerAddress+"\n";
         debug+=": "+token2.wrapper.ownerAddress+"\n";
         debug+="Владелец первого токена: "+token1.wrapper.nominalOwner+"\n";
         debug+="Владелец второго токена: "+token2.wrapper.nominalOwner+"\n";
-
-
-
         System.out.println(debug);
 
-        BigInteger exchangeTokenR = exchangeToken.multiply(new BigInteger("1000000000000000000"));
+        Web3j web3 = ((Office)page.getContext()).web3;
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
+        Loyalty bankLoyalty = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
-        try{
-            String tokenOwner1 = token1.wrapper.nominalOwner;
-            String tokenOwner2 = token2.wrapper.nominalOwner;
 
-            loyalty.exchangeToken(credentials.getAddress(),tokenOwner1,tokenOwner2,exchangeTokenR).send();
-        }catch (Exception e){
-            e.printStackTrace();
+
+        Runnable bonusUpdater = new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String tokenOwner1 = token1.wrapper.nominalOwner;
+                    String tokenOwner2 = token2.wrapper.nominalOwner;
+                    bankLoyalty.exchangeToken(credentials.getAddress(),tokenOwner1,tokenOwner2,count1_18).send();
+
+                    Toast(() -> Toast.makeText(page.getContext(),"Обмен прошел успешно!",Toast.LENGTH_SHORT).show());
+
+                }catch (Exception e){
+                    Toast(() -> {
+                        Toast.makeText(page.getContext(),"Ошибка!",Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    });
+
+                }
+            }
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.NORM_PRIORITY);
+        thread.start();
+
+
+
+    }
+
+    void Toast(Runnable runnable){
+        ((Office)page.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+        });
+    }
+
+    void MakeOffer(){
+        // Собираем всю интересующую нас информацию для публикации предложения
+        TokenWrapperWithBalance token1 =(TokenWrapperWithBalance) bonus1.getSelectedItem();
+        TokenWrapperWithBalance token2 =(TokenWrapperWithBalance) bonus2.getSelectedItem();
+        if(token1.wrapper.name.equals(token2.wrapper.name)){
+
+            Toast.makeText(page.getContext(),"Нельзя обменивать одинаковые бонусы",Toast.LENGTH_SHORT);
+            return;
         }
+        String count1_string,count2_string;
+        count1_string = exchangeCount1.getText().toString();
+        count2_string = exchangeCount2.getText().toString();
+        if(count1_string.isEmpty() || count2_string.isEmpty()){
+            Toast.makeText(page.getContext(),"Заполните оба поля",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        BigInteger count1,count2;
+        count1 = new BigInteger(count1_string);
+        count2 = new BigInteger(count2_string);
+
+
+        // Проверяем есть ли у пользователя введенная сумма
+        // Для второго откена такого нет, т.к. он их не отдает
+        if(token1.balance.compareTo(count1) == -1){
+            Toast.makeText(page.getContext(),"Количество первого бонуса не может превышать его текущий баланс",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        BigInteger count1_18,count2_18;
+        count1_18 = count1.multiply(Config.tene18);
+        count2_18 = count2.multiply(Config.tene18);
+
+
+        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Web3j web3 = ((Office)page.getContext()).web3;
+
+        Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        // И тут должен отпарвляться запрос
 
     }
 
 
-
+    void DisplayOfferWindow(){
+        viewingOffers = true;
+        OnSelected();
+    }
+    void DisplayExchangeWindow(){
+        viewingOffers = false;
+        OnSelected();
+    }
 }

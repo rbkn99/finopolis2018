@@ -6,145 +6,166 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
+        android:id="@+id/exchange_window"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Spinner
-            android:id="@+id/bonus1"
-            android:layout_width="150dp"
-            android:layout_height="62dp"
-            android:layout_marginTop="18dp"
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="72dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/balance1" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/balance1"
-            android:layout_width="96dp"
-            android:layout_height="55dp"
-            android:layout_marginLeft="27dp"
-            android:layout_marginStart="27dp"
-            android:layout_marginTop="1dp"
-            android:gravity="center"
-            android:text="1000"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <Spinner
+                android:id="@+id/bonus1"
+                android:layout_width="150dp"
+                android:layout_height="62dp"
+                android:layout_marginTop="18dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/balance1" />
 
-        <EditText
-            android:id="@+id/exchangeCount1"
-            android:layout_width="129dp"
-            android:layout_height="55dp"
-            android:layout_marginLeft="11dp"
-            android:layout_marginStart="11dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="5000"
-            android:inputType="number"
+            <TextView
+                android:id="@+id/balance1"
+                android:layout_width="96dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginStart="27dp"
+                android:layout_marginTop="1dp"
+                android:gravity="center"
+                android:text="1000"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/exchangeCount1"
+                android:layout_width="129dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="5000"
+                android:inputType="number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bonus1" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="72dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/exchangeCount2"
+                android:layout_width="129dp"
+                android:layout_height="55dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="5000"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bonus2" />
+
+            <Spinner
+                android:id="@+id/bonus2"
+                android:layout_width="150dp"
+                android:layout_height="62dp"
+                android:layout_marginTop="17dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/balance2" />
+
+            <TextView
+                android:id="@+id/balance2"
+                android:layout_width="96dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginStart="27dp"
+                android:layout_marginTop="1dp"
+                android:gravity="center"
+                android:text="1000"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/resultBonus"
+                android:layout_width="129dp"
+                android:layout_height="55dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="TextView"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bonus2" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="306dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="150dp"
+            android:layout_marginLeft="52dp"
+            android:layout_marginStart="52dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/changeInCoalition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Обменять в коалиции" />
+
+            <Button
+                android:id="@+id/makeOffer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Выставить предложение" />
+
+            <Button
+                android:id="@+id/viewOffers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Посмотреть предложение" />
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/tradeSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:text="Обменивать на бирже"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bonus1" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:id="@+id/offers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
-        <EditText
-            android:id="@+id/exchangeCount2"
-            android:layout_width="129dp"
-            android:layout_height="55dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="5000"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bonus2" />
-
-        <Spinner
-            android:id="@+id/bonus2"
-            android:layout_width="150dp"
-            android:layout_height="62dp"
-            android:layout_marginTop="17dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/balance2" />
-
-        <TextView
-            android:id="@+id/balance2"
-            android:layout_width="96dp"
-            android:layout_height="55dp"
-            android:layout_marginLeft="27dp"
-            android:layout_marginStart="27dp"
-            android:layout_marginTop="1dp"
-            android:gravity="center"
-            android:text="1000"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/resultBonus"
-            android:layout_width="129dp"
-            android:layout_height="55dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="TextView"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bonus2" />
-
+        <include
+            layout="@layout/view_offers"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
     </android.support.constraint.ConstraintLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="306dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="150dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginStart="52dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button
-            android:id="@+id/changeInCoalition"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Обменять в коалиции" />
-
-        <Button
-            android:id="@+id/makeOffer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Выставить предложение" />
-
-        <Button
-            android:id="@+id/viewOffers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Посмотреть предложение" />
-    </LinearLayout>
-
-    <Switch
-        android:id="@+id/tradeSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
-        android:text="Обменивать на бирже"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
 </android.support.constraint.ConstraintLayout>
