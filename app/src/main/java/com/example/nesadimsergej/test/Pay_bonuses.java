@@ -98,13 +98,33 @@ public class Pay_bonuses extends SceneController {
         if(selectedItem >=0)
             selectedCompanyName =(String) companySelector.getItemAtPosition(selectedItem);
 
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(office, android.R.layout.simple_spinner_dropdown_item, companyNames);
-        companySelector.setAdapter(adapter);
+        ((Office)page.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                companySelector.setAdapter(adapter);
+                // Stuff that updates the UI
+
+            }
+        });
+
+
+
 
         int newSelectedItem = 0;
         if(!selectedCompanyName.equals(""))
             newSelectedItem = companyNames.indexOf(selectedCompanyName);
-        companySelector.setSelection(newSelectedItem);
+        int newSI = newSelectedItem;
+        ((Office)page.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                companySelector.setSelection(newSI);
+                // Stuff that updates the UI
+
+            }
+        });
+
     }
 
     void CompanySelected(AdapterView<?> parent, View view, int position, long id){
