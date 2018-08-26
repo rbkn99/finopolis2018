@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgrnd"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
     tools:context=".Register">
 
     <TextView
@@ -12,33 +14,27 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="104dp"
-        android:layout_marginLeft="105dp"
-        android:layout_marginRight="104dp"
-        android:layout_marginStart="105dp"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="28dp"
         android:text="Страница Регистрации"
         android:textColor="@color/textColor"
         android:textSize="25dp"
-        app:fontFamily="monospace"
+        app:fontFamily="@font/cairo_bold"
+        app:layout_constrainedHeight="false"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/userSelector"
-        android:layout_width="344dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="443dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="22dp"
+        android:layout_width="300dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="24dp"
         android:background="@color/backgrnd"
+        android:gravity="center_horizontal|center"
         android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -47,39 +43,39 @@
         android:id="@+id/TCP"
         android:layout_width="fill_parent"
         android:layout_height="380dp"
-        android:layout_marginTop="77dp"
+        android:layout_marginTop="110dp"
         android:background="@color/backgrnd"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:layout_editor_absoluteX="78dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <EditText
             android:id="@+id/phoneTCP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="99dp"
-            android:layout_marginStart="99dp"
             android:layout_marginTop="32dp"
             android:background="#EEE"
             android:ems="10"
             android:hint="Phone"
             android:inputType="phone"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/nameTCP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="99dp"
-            android:layout_marginStart="99dp"
-            android:layout_marginTop="43dp"
+            android:layout_marginTop="40dp"
             android:background="#EEE"
             android:ems="10"
             android:hint="Name"
             android:inputType="textPersonName"
             android:text=""
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/phoneTCP" />
 
         <Button
@@ -87,15 +83,14 @@
             android:layout_width="256dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="77dp"
-            android:layout_marginStart="77dp"
-            android:layout_marginTop="149dp"
+            android:layout_marginTop="180dp"
             android:background="@color/buttonBckgrnd"
             android:padding="10sp"
             android:text="Register"
             android:textColor="@color/backgrnd"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameTCP" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneTCP" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -103,24 +98,25 @@
         android:id="@+id/User"
         android:layout_width="fill_parent"
         android:layout_height="380dp"
-        android:layout_marginTop="77dp"
+        android:layout_marginTop="110dp"
         android:background="@color/backgrnd"
         android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:layout_editor_absoluteX="78dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <EditText
             android:id="@+id/phoneUSER"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="99dp"
-            android:layout_marginStart="99dp"
             android:layout_marginTop="32dp"
             android:background="#EEE"
             android:ems="10"
             android:hint="Phone"
             android:inputType="phone"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -128,14 +124,13 @@
             android:layout_width="256dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="77dp"
-            android:layout_marginStart="77dp"
-            android:layout_marginTop="218dp"
+            android:layout_marginTop="180dp"
             android:background="@color/buttonBckgrnd"
             android:padding="10sp"
             android:text="Register"
             android:textColor="@color/backgrnd"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/phoneUSER" />
 
     </android.support.constraint.ConstraintLayout>

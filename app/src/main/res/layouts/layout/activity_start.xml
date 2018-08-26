@@ -7,45 +7,57 @@
     android:background="@color/backgrnd"
     tools:context=".start">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="293dp"
+        android:layout_height="157dp"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="88dp"
+        android:gravity="top|bottom|left|right"
+        android:text="Blockchain\n                Loyalty\n                              Program"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:fontFamily="@font/cairo_bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="114dp"
-        android:layout_marginStart="114dp"
-        android:layout_marginTop="170dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
         android:background="@color/buttonBckgrnd"
+        android:gravity="center_vertical|center"
         android:padding="10sp"
         android:shadowRadius="5000"
         android:text="Зарегистрироваться"
         android:textColor="#dadee5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="160dp"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="59dp"
 
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
         android:background="@color/buttonBckgrnd"
+        android:gravity="center_vertical|center"
         android:padding="10sp"
         android:text="Войти"
         android:textColor="#dadee5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerBtn" />
-
-    <Button
-        android:id="@+id/goToRbkn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="147dp"
-        android:layout_marginStart="147dp"
-        android:layout_marginTop="74dp"
-        android:text="go to rybkin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

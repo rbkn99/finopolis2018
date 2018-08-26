@@ -33,6 +33,10 @@
         <activity
             android:name=".OrdersViewActivity"
             android:label="@string/title_activity_orders_view"></activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
