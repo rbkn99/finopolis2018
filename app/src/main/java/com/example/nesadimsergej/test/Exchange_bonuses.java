@@ -5,9 +5,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -21,9 +24,13 @@ public class Exchange_bonuses extends SceneController {
 
     TextView balance1,balance2;
 
-    EditText exchangeCount;
+    EditText exchangeCount1,exchangeCount2;
     TextView resultBonus;
     Button changeInCoalition;
+
+    Button makeOffer,viewOffers;
+
+    Switch tradeSwitch;
 
     public Exchange_bonuses(View _page){
         super();
@@ -36,13 +43,36 @@ public class Exchange_bonuses extends SceneController {
     void SetUpScene(){
         super.SetUpScene();
 
+        tradeSwitch = page.findViewById(R.id.tradeSwitch);
         bonus1 = page.findViewById(R.id.bonus1);
         bonus2 = page.findViewById(R.id.bonus2);
         balance1 = page.findViewById(R.id.balance1);
         balance2 = page.findViewById(R.id.balance2);
-        exchangeCount = page.findViewById(R.id.exchangeCount);
+        exchangeCount1 = page.findViewById(R.id.exchangeCount1);
+        exchangeCount2 = page.findViewById(R.id.exchangeCount2);
+
+        viewOffers = page.findViewById(R.id.viewOffers);
+        makeOffer = page.findViewById(R.id.makeOffer);
         resultBonus = page.findViewById(R.id.resultBonus);
         changeInCoalition = page.findViewById(R.id.changeInCoalition);
+
+        TradeInCoalition();
+        tradeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // в зависимости от значения isChecked выводим нужное сообщение
+                if (isChecked) {
+                    TradeInStockExchange();
+                } else {
+                    TradeInCoalition();
+                }
+            }
+        });
+        //tradeSwitch.setChecked(false);
+        tradeSwitch.setSelected(false);
+
+        
         changeInCoalition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +114,22 @@ public class Exchange_bonuses extends SceneController {
         });
 
     }
+
+    void TradeInCoalition(){
+        changeInCoalition.setVisibility(View.VISIBLE);
+        resultBonus.setVisibility(View.VISIBLE);
+        viewOffers.setVisibility(View.INVISIBLE);
+        makeOffer.setVisibility(View.INVISIBLE);
+        exchangeCount2.setVisibility(View.INVISIBLE);
+    }
+    void TradeInStockExchange(){
+        changeInCoalition.setVisibility(View.INVISIBLE);
+        resultBonus.setVisibility(View.INVISIBLE);
+        viewOffers.setVisibility(View.VISIBLE);
+        makeOffer.setVisibility(View.VISIBLE);
+        exchangeCount2.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     void OnSelected(){
@@ -231,12 +277,17 @@ public class Exchange_bonuses extends SceneController {
 
         TokenWrapperWithBalance token1 =(TokenWrapperWithBalance) bonus1.getSelectedItem();
         TokenWrapperWithBalance token2 =(TokenWrapperWithBalance) bonus2.getSelectedItem();
+        if(token1.wrapper.name.equals(token2.wrapper.name)){
+
+            Toast.makeText(page.getContext(),"Нельзя обменивать одинаковые бонусы",Toast.LENGTH_SHORT);
+            return;
+        }
         Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
         Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
         Loyalty loyalty = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
-        BigInteger exchangeToken = new BigInteger(exchangeCount.getText().toString());
+        BigInteger exchangeToken = new BigInteger(exchangeCount1.getText().toString());
 
 
         String debug = "";
@@ -249,6 +300,7 @@ public class Exchange_bonuses extends SceneController {
         debug+=": "+token2.wrapper.ownerAddress+"\n";
         debug+="Владелец первого токена: "+token1.wrapper.nominalOwner+"\n";
         debug+="Владелец второго токена: "+token2.wrapper.nominalOwner+"\n";
+
 
 
         System.out.println(debug);
