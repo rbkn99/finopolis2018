@@ -250,6 +250,7 @@ class Offer{
         DisplayData();
     }
     //1
+    //2
     @SuppressLint("SetTextI18n")
     public void DisplayData(){
         offerId_TV.setText(offerId.toString());
