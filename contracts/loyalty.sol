@@ -338,6 +338,7 @@ contract Loyalty {
         for(uint256 i = 0; i < stock.length; i++ ) {
             if(stock[i].id == id) {
                 offer = stock[i];
+                break;
             }
         }
         Token sellT = companies[offer.sellTokenCompany].token;
