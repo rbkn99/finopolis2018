@@ -87,7 +87,17 @@ public class Exchange_bonuses extends SceneController {
 
     @Override
     void OnSelected(){
-        UpdateBonuses1();
+        Runnable bonusUpdater = new Runnable() {
+            @Override
+            public void run() {
+                UpdateBonuses1();
+            }
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.NORM_PRIORITY);
+        thread.start();
+
+
     }
 
     void UpdateBonuses1(){
@@ -146,7 +156,15 @@ public class Exchange_bonuses extends SceneController {
         }
 
         ArrayAdapter<TokenWrapperWithBalance> adapter = new ArrayAdapter<>(office, android.R.layout.simple_spinner_dropdown_item,tokens );
-        bonus1.setAdapter(adapter);
+
+        ((Office)page.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bonus1.setAdapter(adapter);
+                // Stuff that updates the UI
+
+            }
+        });
 
 
 
@@ -154,7 +172,19 @@ public class Exchange_bonuses extends SceneController {
         int newSelectedItem = 0;
         if(selectedCompanyName1!=null)
             newSelectedItem = tokens.indexOf(selectedCompanyName1);
-        bonus1.setSelection(newSelectedItem);
+
+        final int newSI = newSelectedItem;
+        ((Office)page.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                bonus1.setSelection(newSI);
+                // Stuff that updates the UI
+
+            }
+        });
+
+
     }
 
     void UpdateBonuses2(){

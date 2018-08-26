@@ -34,7 +34,16 @@ public class User_bonuses extends SceneController {
         ((Office)page.getContext()).AddCompanyUpdatedListener(new CompanyListUpdatedListener() {
             @Override
             public void f(Office office) {
-                UpdateBonuses(office);
+
+                Runnable bonusUpdater = new Runnable() {
+                    @Override
+                    public void run() {
+                        UpdateBonuses();
+                    }
+                };
+                Thread thread = new Thread(bonusUpdater);
+                thread.setPriority(Thread.MIN_PRIORITY);
+                thread.start();
             }
         });
     }
@@ -42,7 +51,8 @@ public class User_bonuses extends SceneController {
     public String tene18 = "1000000000000000000";
 
     // Функция обновляет список компанием с указанием количества бонусов
-    void UpdateBonuses(Office office){
+    void UpdateBonuses(){
+        Office office = (Office)page.getContext();
         // Стираем все старое
         RemoveAllBonusRows();
         Web3j web3 = ((Office)page.getContext()).web3;
@@ -84,7 +94,16 @@ public class User_bonuses extends SceneController {
                 // нужно домножить его на 10^18
                 userBalance = userBalance.divide(new BigInteger(tene18));
                 // Записываем это число в нашу строчку
-                r.SetNumber1(userBalance.toString());
+                final BigInteger uB = userBalance;
+                ((Office)page.getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        r.SetNumber1(uB.toString());
+                        // Stuff that updates the UI
+
+                    }
+                });
+
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -96,15 +115,40 @@ public class User_bonuses extends SceneController {
     // Устанавливает название компании равное text
     BonusRow AddRow(String text){
         View view = View.inflate(page.getContext(),R.layout.bonus_row,null);
-        bonusesTable.addView(view);
+
+
+        ((Office)page.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bonusesTable.addView(view);
+                // Stuff that updates the UI
+
+            }
+        });
+
         BonusRow r = new BonusRow(view);
-        r.SetText(text);
+        ((Office)page.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                r.SetText(text);
+                // Stuff that updates the UI
+            }
+        });
+
         return r;
     }
 
     void RemoveAllBonusRows(){
 
-        bonusesTable.removeAllViews();
+        ((Office)page.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bonusesTable.removeAllViews();
+                // Stuff that updates the UI
+
+            }
+        });
+
 
     }
 

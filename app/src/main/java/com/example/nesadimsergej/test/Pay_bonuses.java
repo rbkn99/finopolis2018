@@ -67,12 +67,22 @@ public class Pay_bonuses extends SceneController {
         ((Office)page.getContext()).AddCompanyUpdatedListener(new CompanyListUpdatedListener() {
             @Override
             public void f(Office office) {
-                UpdateCompaniesDropdowns(office);
+                Runnable bonusUpdater = new Runnable() {
+                    @Override
+                    public void run() {
+                        UpdateCompaniesDropdowns();
+                    }
+                };
+                Thread thread = new Thread(bonusUpdater);
+                thread.setPriority(Thread.MIN_PRIORITY);
+                thread.start();
+
             }
         });
     }
     ArrayList<Company> companies;
-    void UpdateCompaniesDropdowns(Office office){
+    void UpdateCompaniesDropdowns(){
+        Office office = (Office)page.getContext();
         companies = office.companies;
         if(office.companies.isEmpty())
             return;
