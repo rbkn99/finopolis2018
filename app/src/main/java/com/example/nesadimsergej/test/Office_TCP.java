@@ -102,13 +102,6 @@ public class Office_TCP extends Office {
             }
         });
 
-        contractTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //System.out.println("called1488");
-                Contract();
-            }
-        });
         deployContractBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

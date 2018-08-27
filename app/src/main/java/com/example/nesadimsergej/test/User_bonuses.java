@@ -35,12 +35,7 @@ public class User_bonuses extends SceneController {
             @Override
             public void f(Office office) {
 
-                Runnable bonusUpdater = new Runnable() {
-                    @Override
-                    public void run() {
-                        UpdateBonuses();
-                    }
-                };
+                Runnable bonusUpdater = () -> UpdateBonuses();
                 Thread thread = new Thread(bonusUpdater);
                 thread.setPriority(Thread.MIN_PRIORITY);
                 thread.start();
@@ -48,7 +43,6 @@ public class User_bonuses extends SceneController {
         });
     }
 
-    public String tene18 = "1000000000000000000";
 
     // Функция обновляет список компанием с указанием количества бонусов
     void UpdateBonuses(){
@@ -92,18 +86,11 @@ public class User_bonuses extends SceneController {
                 BigInteger userBalance = contract.balanceOf(credentials.getAddress()).send();
                 // Делим userBalance на 10^18 так как в solidity только целые числа и что бы передать туда вещ число
                 // нужно домножить его на 10^18
-                userBalance = userBalance.divide(new BigInteger(tene18));
+                userBalance = userBalance.divide(Config.tene18);
                 // Записываем это число в нашу строчку
                 final BigInteger uB = userBalance;
-                ((Office)page.getContext()).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        r.SetNumber1(uB.toString());
-                        // Stuff that updates the UI
 
-                    }
-                });
-
+                ((Office)page.getContext()).runOnUiThread(() -> r.SetNumber1(uB.toString()));
 
             }catch (Exception e){
                 e.printStackTrace();

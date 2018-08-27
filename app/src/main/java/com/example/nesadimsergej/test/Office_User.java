@@ -98,18 +98,8 @@ public class Office_User extends Office {
 
         // Обработчик для кнопки выхода
         // Стирает всю информацию о пользователе и переходит на стартовую сцену
-        exitOfficeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Exit();
-            }
-        });
-        contractTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Contract();
-            }
-        });
+        exitOfficeBtn.setOnClickListener(v -> Exit());
+
         deployContractBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -80,7 +80,7 @@ public class Register extends AppCompatActivity {
     void RegisterUser(){
         String s = checkUserFields();
         if(!s.equals("")) {
-            Toast.makeText(this,s,Toast.LENGTH_SHORT);
+            Toast.makeText(this,s,Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -118,6 +118,7 @@ public class Register extends AppCompatActivity {
                         );
                         newFileName = phoneHash.toString()+".json";
                         Boolean s = crFile.renameTo(new File(folder.getAbsolutePath() + "/"+newFileName));
+
                         File crFile1 = new File(folder.getAbsolutePath() + "/" +str);
                         System.out.println(phoneNumber);
                         System.out.println(phoneHash);
@@ -157,7 +158,7 @@ public class Register extends AppCompatActivity {
     void RegisterTCP(){
         String s = checkTCPFields();
         if(!s.equals("")) {
-            Toast.makeText(this,s,Toast.LENGTH_SHORT);
+            Toast.makeText(this,s,Toast.LENGTH_SHORT).show();
             return;
         }
         userRegisterButton.setEnabled(false);
@@ -261,7 +262,7 @@ public class Register extends AppCompatActivity {
         String companyName = nameTCP.getText().toString();
 
         if(companyName.length() == 0){
-            return "Не введен номер телефона";
+            return "Не введено имя компании";
         }
 
         return "";
