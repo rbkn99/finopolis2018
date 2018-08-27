@@ -307,7 +307,7 @@ public class Office extends AppCompatActivity {
 
             try {
                 Loyalty contract = Loyalty
-                        .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT.add(new BigInteger("8000000"))).send();
+                        .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT.add(new BigInteger("1000000"))).send();
                 String contractAddress = contract.getContractAddress();
                 context.runOnUiThread(() -> deployContractBtn.setEnabled(true));
                 System.out.println("Contract address1: "+contractAddress);
