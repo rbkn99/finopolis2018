@@ -26,20 +26,13 @@ public class User_bonuses extends SceneController {
         super.SetUpScene();
 
         bonusesTable = page.findViewById(R.id.bonusesTable);
+        ((Office)page.getContext()).AddCompanyUpdatedListener(office -> {
 
-        //UpdateBonuses();
+            Runnable bonusUpdater = () -> UpdateBonuses();
+            Thread thread = new Thread(bonusUpdater);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
 
-        //Timer timer = new Timer();
-        //timer.schedule(new BonusUpdater(), 0, 15000);
-        ((Office)page.getContext()).AddCompanyUpdatedListener(new CompanyListUpdatedListener() {
-            @Override
-            public void f(Office office) {
-
-                Runnable bonusUpdater = () -> UpdateBonuses();
-                Thread thread = new Thread(bonusUpdater);
-                thread.setPriority(Thread.MIN_PRIORITY);
-                thread.start();
-            }
         });
     }
 
@@ -138,7 +131,6 @@ public class User_bonuses extends SceneController {
 
 
     }
-
 
 }
 

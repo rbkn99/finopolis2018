@@ -14,7 +14,9 @@ import org.web3j.tuples.generated.Tuple2;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Pay_bonuses extends SceneController {
@@ -35,11 +37,9 @@ public class Pay_bonuses extends SceneController {
     void SetUpScene(){
         super.SetUpScene();
         companySelector = page.findViewById(R.id.companySelector);
-        //bonusSelector = page.findViewById(R.id.bonusSelector);
         paySum = page.findViewById(R.id.paySum);
         bonusesSum = page.findViewById(R.id.bonusesSum);
         payBtn = page.findViewById(R.id.payBtn);
-        //tokenName = page.findViewById(R.id.tokenName);
         tokenSelector = page.findViewById(R.id.tokenSelector);
 
         companySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
@@ -55,30 +55,16 @@ public class Pay_bonuses extends SceneController {
             }
 
         });
-        //ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        //companySelector.setAdapter(adapter);
-        payBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Pay();
-            }
-        });
-        //dropdown.setSelection(0);
-        ((Office)page.getContext()).AddCompanyUpdatedListener(new CompanyListUpdatedListener() {
-            @Override
-            public void f(Office office) {
-                Runnable bonusUpdater = new Runnable() {
-                    @Override
-                    public void run() {
-                        UpdateCompaniesDropdowns();
-                    }
-                };
-                Thread thread = new Thread(bonusUpdater);
-                thread.setPriority(Thread.MIN_PRIORITY);
-                thread.start();
 
-            }
+        payBtn.setOnClickListener(v -> Pay());
+        //dropdown.setSelection(0);
+        ((Office)page.getContext()).AddCompanyUpdatedListener(office -> {
+            Runnable bonusUpdater = () -> UpdateCompaniesDropdowns();
+            Thread thread = new Thread(bonusUpdater);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
         });
+        
     }
     ArrayList<Company> companies;
     void UpdateCompaniesDropdowns(){
@@ -243,7 +229,13 @@ public class Pay_bonuses extends SceneController {
     }
 
 
+    public static Map<String, TokenWrapper> tokens = new HashMap<>();
+
     public static TokenWrapper getToken(Web3j web3,Credentials credential,String address){
+
+        if(tokens.containsKey(address))
+            return tokens.get(address);
+
         Token tokenContract = Token.load(address,web3,credential,Token.GAS_PRICE,Token.GAS_LIMIT);
         String tokenName = "ERROR";
         String owner = "ERROR";
@@ -255,9 +247,10 @@ public class Pay_bonuses extends SceneController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new TokenWrapper(address,tokenName,owner,nominal_owner);
+        TokenWrapper token  = new TokenWrapper(address,tokenName,owner,nominal_owner);
+        tokens.put(address,token);
+        return token;
     }
-
 
 
     void Pay(){
