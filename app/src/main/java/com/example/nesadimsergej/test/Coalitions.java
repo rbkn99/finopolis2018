@@ -74,7 +74,7 @@ public class Coalitions extends SceneController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println(coalitionCount);
+        //System.out.println(coalitionCount);
 
         ArrayList<CoalitionWrapper> coalitions = new ArrayList<>();
 
@@ -140,7 +140,7 @@ public class Coalitions extends SceneController {
         });
         //}
         DisplaySelectedCoalition();
-        System.out.println(row.wrapper.name);
+        //System.out.println(row.wrapper.name);
 
     }
 

@@ -90,19 +90,19 @@ public class Queries extends SceneController {
         try {
             Company s =Utils.getCompany(web3,credentials,credentials.getAddress());//  contract.companies(credentials.getAddress()).send());
             requestCount = s.requestCount;//contract.getRequestCount().send();//(new Company(s)).requestCount;
-            System.out.println(s);
+            //System.out.println(s);
         }catch (Exception e){
 
         }
 
         ArrayList<Tuple2<String,String>> resultQueries = new ArrayList<>();
-        System.out.println("Request count: "+requestCount);
+
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(requestCount) == -1 ; i = i.add( BigInteger.ONE)) {
             try {
 
                 String s = contract.getRequestOnIndex(i).sendAsync().get();
                 resultQueries.add(new Tuple2<>(s,s));
-                System.out.println(s);
+                //System.out.println(s);
 
             }catch (Exception e){
                 e.printStackTrace();

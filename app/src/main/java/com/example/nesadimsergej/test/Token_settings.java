@@ -126,7 +126,7 @@ public class Token_settings extends SceneController {
     void PayForToken(){
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
-        System.out.println(credentials.getAddress());
+        //System.out.println(credentials.getAddress());
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         try {
             contract.addEther(Config.AddToToken).send();

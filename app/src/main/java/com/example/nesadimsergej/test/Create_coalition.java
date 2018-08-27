@@ -48,24 +48,25 @@ public class Create_coalition extends SceneController {
     @Override
     void OnSelected() {
         super.OnSelected();
-        //if(isCoalitionExists()){
-        //    CoaltionExists();
-        //    coalitionPage.OnSelected();
-        //}else{
-
-        //}
+        if(isCoalitionExists()){
+            CoaltionExists();
+            coalitionPage.OnSelected();
+        }else{
+            CoalitionNotExists();
+        }
     }
 
     void CoalitionNotExists(){
         createCoalitionPart.setVisibility(View.VISIBLE);
-        coalitionCreated.setVisibility(View.GONE);
+        coalitionCreated.setVisibility(View.INVISIBLE);
     }
 
     void CoaltionExists(){
-        createCoalitionPart.setVisibility(View.GONE);
+        createCoalitionPart.setVisibility(View.INVISIBLE);
         coalitionCreated.setVisibility(View.VISIBLE);
         if(coalitionPage == null) {
             coalitionPage = new CoalitionPage(coalitionCreated, ((Office) page.getContext()).credentials.getAddress());
+            coalitionPage.back.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -76,10 +77,12 @@ public class Create_coalition extends SceneController {
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,
                 credentials,
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+        String address = credentials.getAddress();
         try {
-            Company s =new Company( contract.companies(credentials.getAddress()).send());
+            //Company s =new Company( contract.companies(credentials.getAddress()).send());
+            CoalitionWrapper coalition = new CoalitionWrapper(contract.coalitions(address).send(),address);
             //System.out.println(s);
-            return s.hasCoalition;
+            return coalition.exists;
 
         }catch (Exception e){
             e.printStackTrace();
@@ -101,6 +104,7 @@ public class Create_coalition extends SceneController {
            contract.addCoalition(credentials.getAddress(), cName).send();
            Toast.makeText(page.getContext(), "Коалиция создана",
                    Toast.LENGTH_SHORT).show();
+           OnSelected();
         }catch (Exception e){
             e.printStackTrace();
         }

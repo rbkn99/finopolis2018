@@ -56,8 +56,6 @@ public class CoalitionPage extends SceneController {
         DisplayCoalitionInfo();
 
         if(coalitionAddress.equals(((Office)page.getContext()).credentials.getAddress())) {
-            System.out.println("here");
-
             inviteButton.setVisibility(View.VISIBLE);
             inviteAddress.setVisibility(View.VISIBLE);
             inviteButton.setOnClickListener(v -> Invite());
@@ -66,18 +64,16 @@ public class CoalitionPage extends SceneController {
             inviteButton.setVisibility(View.INVISIBLE);
             inviteAddress.setVisibility(View.INVISIBLE);
         }
-        OnSelected();
+        //OnSelected();
     }
 
     @Override
     void OnSelected() {
         super.OnSelected();
-
         Runnable bonusUpdater = () -> UpdateCoalitionMembers();
         Thread thread = new Thread(bonusUpdater);
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
-
     }
 
     void Invite(){
@@ -91,16 +87,16 @@ public class CoalitionPage extends SceneController {
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         try {
 
-            System.out.println( Utils.getCompany(web3,credentials,credentials.getAddress()));
-            System.out.println( contract.coalitions(credentials.getAddress()).send());
+            //System.out.println( Utils.getCompany(web3,credentials,credentials.getAddress()));
+            //System.out.println( contract.coalitions(credentials.getAddress()).send());
 
         }catch (Exception e){
             e.printStackTrace();
         }
 
         try {
-            System.out.println(credentials.getAddress());
-            System.out.println(cAddress);
+            //System.out.println(credentials.getAddress());
+            //System.out.println(cAddress);
             contract.inviteToCoalition(cAddress).sendAsync().get();
 
 
@@ -136,6 +132,11 @@ public class CoalitionPage extends SceneController {
     }
 
     void UpdateCoalitionMembers(){
+        ((Office)page.getContext()).runOnUiThread(() -> {
+            coalitionMembers.removeAllViews();
+            System.out.println("removed");
+        });
+
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
 
@@ -148,8 +149,6 @@ public class CoalitionPage extends SceneController {
         }catch (Exception e){
 
         }
-
-        ((Office)page.getContext()).runOnUiThread(() -> coalitionMembers.removeAllViews());
 
         ArrayList<String> userAddresses = new ArrayList<>();
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(coalitionSize) == -1 ; i = i.add( BigInteger.ONE)) {
@@ -168,6 +167,7 @@ public class CoalitionPage extends SceneController {
     }
 
     void AddRow(Web3j web3, Credentials credentials,String companyAddress){
+        System.out.println("add");
         ((Office)page.getContext()).runOnUiThread(() -> {
             View view = View.inflate(page.getContext(),R.layout.company_coalition,null);
             coalitionMembers.addView(view);
