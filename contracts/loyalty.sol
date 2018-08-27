@@ -8,13 +8,13 @@ contract Loyalty {
     
     struct Customer {
         bool exists;
-        uint phoneNumber;
+        int phoneNumber;
         mapping (address => bool) tokens;
     }
     
     struct Company {
         bool exists;
-        uint phoneNumber;
+        int phoneNumber;
         string name;
         address _address;
         
@@ -66,15 +66,15 @@ contract Loyalty {
     
     Offer[] private stock;
     
-    uint256[] phoneNumberHashes;
+    int256[] phoneNumberHashes;
     
     // cost of asm operations of transferBonuses() func
     uint constant public transferBonuses_transaction_cost = 119290;
     
     // events for debug and output
-    event AddCompany(address companyAddress, string name, uint phoneNumber);
-    event AddCustomer(address customerAddress, uint number);
-    event LoggedIn(address _address, uint number);
+    event AddCompany(address companyAddress, string name, int phoneNumber);
+    event AddCustomer(address customerAddress, int number);
+    event LoggedIn(address _address, int number);
     event Log(address _address);
     
     constructor() public {
@@ -84,7 +84,7 @@ contract Loyalty {
     }
     
     // bank calls
-    function addCustomer(address customer, uint _phoneNumber) public
+    function addCustomer(address customer, int _phoneNumber) public
                 onlyOwner
                 customerNotExists(customer)
                 companyNotExists(customer)
@@ -96,7 +96,7 @@ contract Loyalty {
     }
     
     // bank calls
-    function addCompany(address company, string _name, uint _phoneNumber) public
+    function addCompany(address company, string _name, int _phoneNumber) public
                 onlyOwner
                 companyNotExists(company)
                 customerNotExists(company) 
@@ -316,6 +316,7 @@ contract Loyalty {
                                    buyAmount);
         stock.push(newOffer);
         offerHistory++;
+        companies[sellTokenCompany].token.charge(customer, sellAmount);
     }
     
     function getStockSize() public view returns (uint256 stockSize) {
@@ -347,17 +348,39 @@ contract Loyalty {
                 break;
             }
         }
+        require(i < stock.length, "Offer not found");
+        require(stock[i].id == id, "Offer not found");
+        
         Token sellT = companies[offer.sellTokenCompany].token;
         Token buyT = companies[offer.wantedTokenCompany].token;
         
         require(buyT.balanceOf(acceptor) >= offer.buyAmount, "Not enough tokens to buy");
         
-        sellT.charge(offer.seller, offer.sellAmount);
+        //sellT.charge(offer.seller, offer.sellAmount);
         buyT.charge(acceptor, offer.buyAmount);
         
         sellT.emitToken(acceptor, offer.sellAmount);
         buyT.emitToken(offer.seller, offer.buyAmount);
         
+        delete stock[i];
+        for (uint j = i + 1; j < stock.length; j++) {
+            stock[j-1] = stock[j];
+        }
+        stock.length--;
+    }
+    
+    function recallOffer (uint256 id, address acceptor) public 
+                            onlyOwner{
+        
+        for(uint256 i = 0; i < stock.length; i++ ) {
+            if(stock[i].id == id) {
+                break;
+            }
+        }
+        require(i < stock.length, "Offer not found");
+        require(stock[i].id == id, "Offer not found");
+        require(stock[i].seller == acceptor, "Deleting unowned offer");
+        companies[stock[i].sellTokenCompany].token.emitToken(acceptor, stock[i].sellAmount);
         delete stock[i];
         for (uint j = i + 1; j < stock.length; j++) {
             stock[j-1] = stock[j];
@@ -402,7 +425,7 @@ contract Loyalty {
         _;
     }
     
-    modifier uniquePhone(uint256 number) {
+    modifier uniquePhone(int256 number) {
         for(uint256 i = 0; i < phoneNumberHashes.length; i++){
             require(number != phoneNumberHashes[i], "Phone number already registered");
         }
