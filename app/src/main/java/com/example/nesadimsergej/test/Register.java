@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.AdapterView;
+
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
@@ -89,7 +90,10 @@ public class Register extends AppCompatActivity {
             return;
 
         userRegisterButton.setEnabled(false);
-        new Handler().post(new Runnable() {
+        tcpRegisterButton.setEnabled(false);
+        Utils.longLoadingNotification(this, "создание кошелька", 1);
+        new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     //Заводин новый адресс, публичный ключ и приватный ключ
@@ -108,11 +112,10 @@ public class Register extends AppCompatActivity {
                     String newFileName = str;
                     File crFile = new File(folder.getAbsolutePath() + "/" +str);
                     if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
-
                         Loyalty contract = Loyalty.load(
                                 Config.contractAdress,
-                                web3,/* */
-                                Credentials.create(Config.bankPrivateKey, Config.bankPublicKey),/**/
+                                web3,
+                                Credentials.create(Config.bankPrivateKey, Config.bankPublicKey),
                                 Loyalty.GAS_PRICE,
                                 Loyalty.GAS_LIMIT);
 
@@ -127,7 +130,7 @@ public class Register extends AppCompatActivity {
                         System.out.println(phoneHash);
                         System.out.println(phoneHash.bitLength());
                         //crFile1.
-                        /*if(crFile1.delete())
+                        if(crFile1.delete())
                         {
                             System.out.println("File deleted successfully");
                         }
@@ -135,7 +138,7 @@ public class Register extends AppCompatActivity {
                         {
                             System.out.println("Failed to delete the file");
                         }
-                        */
+
 
                         // Регистрируем пользователя
                         RemoteCall<TransactionReceipt> c = contract.addCustomer(
@@ -158,23 +161,29 @@ public class Register extends AppCompatActivity {
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
 
-                    // Переходим на сцену с личным кабинетом пользователя
-                    Intent intent = new Intent(getBaseContext(), Office_User.class);
-                    startActivity(intent);
+                    // Перезагружаемся, иначе вылетает
+                    Intent i = getBaseContext().getPackageManager()
+                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    //Intent intent = new Intent(getBaseContext(), Office_User.class);
+                    //startActivity(intent);
                 }catch(Exception e){
                     userRegisterButton.setEnabled(true);
                     ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
                     e.printStackTrace();
                 }
             }
-        });
+        }).start();
     }
     void RegisterTCP(){
         if(!checkTCPFields())
             return;
 
         userRegisterButton.setEnabled(false);
-        new Handler().post(new Runnable() {
+        tcpRegisterButton.setEnabled(false);
+        Utils.longLoadingNotification(this, "создание кошелька", 1);
+        new Thread(new Runnable() {
             public void run() {
                 try {
                     //Заводин новый адресс, публичный ключ и приватный ключ
@@ -245,9 +254,13 @@ public class Register extends AppCompatActivity {
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
 
+                    Intent i = getBaseContext().getPackageManager()
+                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
                     // Переходим на сцену с личным кабинетом компании
-                    Intent intent = new Intent(getBaseContext(), Office_TCP.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(getBaseContext(), Office_TCP.class);
+                    //startActivity(intent);
 
                 }catch(Exception e){
                     userRegisterButton.setEnabled(true);
@@ -255,7 +268,7 @@ public class Register extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        });
+        }).start();
 
     }
     boolean checkUserFields(){
