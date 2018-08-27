@@ -151,7 +151,7 @@ public class Register extends AppCompatActivity {
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
 
-                    Utils.sendNotification(context, String.format(Utils.longLoadingMsg, "создание кошелька"), 1);
+                    Utils.sendNotification(context, "Создание кошелька завершено, теперь вы можете войти!", 2);
                     // Перезагружаемся, иначе вылетает
                     Intent i = getBaseContext().getPackageManager()
                             .getLaunchIntentForPackage( getBaseContext().getPackageName() );
@@ -247,7 +247,7 @@ public class Register extends AppCompatActivity {
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
 
-                    Utils.sendNotification(context, String.format(Utils.longLoadingMsg, "создание кошелька"), 1);
+                    Utils.sendNotification(context, "Создание кошелька завершено, теперь вы можете войти!", 2);
                     Intent i = getBaseContext().getPackageManager()
                             .getLaunchIntentForPackage( getBaseContext().getPackageName() );
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
