@@ -54,8 +54,6 @@ public class Office_User extends Office {
     Exchange_bonuses exchange_bonuses;
     Pay_bonuses pay_bonuses;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,57 +70,26 @@ public class Office_User extends Office {
         HideAllPgs();
         SetUpDrawerLayout();
 
-        updateBalanceBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                UpdateBalance();
-            }
-        });
-        addEth.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                AddEth();
-            }
-        });
-        sendEth.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                SendEth();
-            }
-        });
-
-
-        infoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InfoPopUP();
-            }
-        });
-
-        // Обработчик для кнопки выхода
-        // Стирает всю информацию о пользователе и переходит на стартовую сцену
+        updateBalanceBtn.setOnClickListener(v -> UpdateBalance());
+        addEth.setOnClickListener(v -> AddEth());
+        sendEth.setOnClickListener(v -> SendEth());
+        infoBtn.setOnClickListener(v -> InfoPopUP());
         exitOfficeBtn.setOnClickListener(v -> Exit());
-
-        deployContractBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UploadContract();
-            }
-        });
+        deployContractBtn.setOnClickListener(v -> UploadContract());
 
         UpdateBalance();
 
-
-        LoadAllCompanies();
         Timer timer = new Timer();
         timer.schedule(new CompanyUpdater(), 0, 30000);
         timers.add(timer);
+
     }
     class CompanyUpdater extends TimerTask {
         @Override
         public void run() {
-            ((Activity)context).runOnUiThread(() -> LoadAllCompanies());
+            context.runOnUiThread(() -> LoadAllCompanies());
         }
     }
-
-
 
     @Override
     protected void LoadAll(){
@@ -148,7 +115,6 @@ public class Office_User extends Office {
         idToScene.put(R.id.pay_bonusesP,pay_bonuses);
         //AddEth1();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
