@@ -66,6 +66,8 @@ contract Loyalty {
     
     Offer[] private stock;
     
+    uint256[] phoneNumberHashes;
+    
     // cost of asm operations of transferBonuses() func
     uint constant public transferBonuses_transaction_cost = 119290;
     
@@ -85,9 +87,11 @@ contract Loyalty {
     function addCustomer(address customer, uint _phoneNumber) public
                 onlyOwner
                 customerNotExists(customer)
-                companyNotExists(customer) {
+                companyNotExists(customer)
+                uniquePhone(_phoneNumber){
         customers[customer].exists = true;
         customers[customer].phoneNumber = _phoneNumber;
+        phoneNumberHashes.push(_phoneNumber);
         emit AddCustomer(customer, customers[customer].phoneNumber);
     }
     
@@ -95,12 +99,14 @@ contract Loyalty {
     function addCompany(address company, string _name, uint _phoneNumber) public
                 onlyOwner
                 companyNotExists(company)
-                customerNotExists(company) {
+                customerNotExists(company) 
+                uniquePhone(_phoneNumber){
         companiesCount++;
         companies[company]._address = company;
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
+        phoneNumberHashes.push(_phoneNumber);
         companies[company].request_count = 0;
         companySet.push(companies[company]);
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
@@ -393,6 +399,13 @@ contract Loyalty {
     
     modifier onlyOwner() {
         require(msg.sender == owner);
+        _;
+    }
+    
+    modifier uniquePhone(uint256 number) {
+        for(uint256 i = 0; i < phoneNumberHashes.length; i++){
+            require(number != phoneNumberHashes[i], "Phone number already registered");
+        }
         _;
     }
     
