@@ -238,17 +238,25 @@ public class Pay_bonuses extends SceneController {
         String owner = "ERROR";
         String nominal_owner = "ERROR";
         boolean had_error = false;
+
+        BigInteger inPrice = BigInteger.ZERO;
+        BigInteger outPrice = BigInteger.ZERO;
+        BigInteger exchangePrice = BigInteger.ZERO;
+
         try{
             tokenName = tokenContract.name().send();
             owner = tokenContract.owner().send();
             nominal_owner = tokenContract.nominal_owner().send();
-
-
+            inPrice = tokenContract.inPrice().send();
+            outPrice = tokenContract.outPrice().send();
+            exchangePrice = tokenContract.exchangePrice().send();
         }catch (Exception e){
             had_error = true;
             e.printStackTrace();
         }
-        TokenWrapper token  = new TokenWrapper(address,tokenName,owner,nominal_owner);
+
+
+        TokenWrapper token  = new TokenWrapper(address,tokenName,owner,nominal_owner,inPrice,outPrice,exchangePrice);
         if(!had_error){
             tokens.put(address,token);
         }

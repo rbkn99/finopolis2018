@@ -273,8 +273,9 @@ public class Office extends AppCompatActivity {
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }catch (Exception e){
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Error!",
-                        Toast.LENGTH_SHORT).show();
+                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error!",
+                        Toast.LENGTH_SHORT).show());
+
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }
         };
@@ -508,11 +509,18 @@ class TokenWrapper{
     String name;
     String ownerAddress;
     String nominalOwner;
-    public TokenWrapper(String _tokenAddress,String _tokenName,String _ownerAddress,String _nominalOwner){
+    BigInteger inPrice;
+    BigInteger outPrice;
+    BigInteger exchangePrice;
+    public TokenWrapper(String _tokenAddress,String _tokenName,String _ownerAddress,String _nominalOwner
+            ,BigInteger _inPrice,BigInteger _outPrice,BigInteger _exchangePrice){
         tokenAddress = _tokenAddress;
         name = _tokenName;
         ownerAddress = _ownerAddress;
         nominalOwner = _nominalOwner;
+        inPrice = _inPrice;
+        outPrice = _outPrice;
+        exchangePrice = _exchangePrice;
     }
 
     @Override

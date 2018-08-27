@@ -55,6 +55,8 @@ public class Token_settings extends SceneController {
             if(currentCompany.hasToken){
                 TokenWrapper companyToken = Pay_bonuses.getToken(web3,credentials,currentCompany.token);
 
+
+
             }
 
         }catch (Exception e){
