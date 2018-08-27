@@ -79,6 +79,8 @@
             android:id="@+id/payBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Оплатить" />
+            android:background="@color/buttonBckgrnd"
+            android:text="Оплатить"
+            android:textColor="@color/backgrnd" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

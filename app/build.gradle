@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword '12345678'
-            storeFile file('app/release.keystore')
+            storeFile file('release.keystore')
             storePassword '12345678'
         }
     }

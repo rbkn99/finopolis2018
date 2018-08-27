@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static android.support.v4.app.NotificationCompat.DEFAULT_ALL;
+import static android.support.v4.app.NotificationCompat.DEFAULT_VIBRATE;
 
 public class Utils {
     public static final String CHANNEL_ID = "1";
@@ -45,13 +46,18 @@ public class Utils {
     public static void sendNotification(Context ctx, String msg, int not_id) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon)
-                .setDefaults(DEFAULT_ALL)
+                .setDefaults(DEFAULT_VIBRATE)
                 .setContentTitle("Blockchain loyalty")
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(msg))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setAutoCancel(true);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mBuilder.setPriority(NotificationManager.IMPORTANCE_HIGH);
+        }
+        else {
+            mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
         notificationManager.notify(not_id, mBuilder.build());
     }

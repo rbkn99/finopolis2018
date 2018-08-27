@@ -18,10 +18,4 @@
         android:text="14"
         android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/bonusNumber2"
-        android:gravity="right"
-        android:paddingRight="30dp"
-        android:text="88"
-        android:textSize="25sp" />
 </TableRow>

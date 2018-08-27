@@ -138,7 +138,6 @@ class BonusRow{
 
     TextView bonusCompanyName;
     TextView bonusNumber1;
-    TextView bonusNumber2;
 
     public void SetText(String text){
         bonusCompanyName.setText(text);
@@ -148,7 +147,6 @@ class BonusRow{
 
         bonusCompanyName = row.findViewById(R.id.bonusCompanyName);
         bonusNumber1 = row.findViewById(R.id.bonusNumber1);
-        bonusNumber2 = row.findViewById(R.id.bonusNumber2);
     }
 
     public void SetNumber1(String s){

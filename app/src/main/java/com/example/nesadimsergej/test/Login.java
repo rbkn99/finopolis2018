@@ -71,7 +71,12 @@ public class Login extends AppCompatActivity {
                         credentials = WalletUtils.loadCredentials(" ",
                                 pathToFile + "/" + fileName);
                     } catch (Exception e) {
-                        Toast.makeText(context, "Неверный номер телефона", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "Неверный номер телефона", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         e.printStackTrace();
                         return;
                     }
@@ -109,7 +114,12 @@ public class Login extends AppCompatActivity {
                             Intent intent = new Intent(context, Office_TCP.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(context, "Такой номер не зарегистрирован в системе", Toast.LENGTH_SHORT).show();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, "Такой номер не зарегистрирован в системе", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
                 } catch (Exception e) {
