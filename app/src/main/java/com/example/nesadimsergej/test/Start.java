@@ -24,7 +24,7 @@ public class Start extends AppCompatActivity {
         registerBtn = findViewById(R.id.registerBtn);
         sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
 
-
+        Utils.createNotificationChannel(this);
         if(sharedPref.contains("PATH") &&
                 sharedPref.contains("NAME")){
         }else{
