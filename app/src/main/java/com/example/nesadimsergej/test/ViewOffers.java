@@ -181,10 +181,10 @@ class Offer{
 
     public void LoadTokenData(Web3j web3, Credentials credentials, Loyalty contract){
         try {
-            Company sell_company = new Company( contract.companies(sellTokenCompany).send());
-            Company buy_company = new Company( contract.companies(wantedTokenCompany).send());
-            buyToken = Pay_bonuses.getToken(web3,credentials,buy_company.token);
-            sellToken = Pay_bonuses.getToken(web3,credentials,sell_company.token);
+            Company sell_company = Utils.getCompany(web3,credentials,sellTokenCompany); //new Company( contract.companies(sellTokenCompany).send());
+            Company buy_company = Utils.getCompany(web3,credentials,wantedTokenCompany); //new Company( contract.companies(wantedTokenCompany).send());
+            buyToken = Utils.getToken(web3,credentials,buy_company.token);
+            sellToken = Utils.getToken(web3,credentials,sell_company.token);
 
         }catch (Exception e){
             e.printStackTrace();

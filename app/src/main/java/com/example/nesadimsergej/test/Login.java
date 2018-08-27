@@ -99,8 +99,9 @@ public class Login extends AppCompatActivity {
                         startActivity(intent);
                     } else {
 
-                        Company cmp = new Company(contract.companies(credentials.getAddress()).sendAsync().get());
-                        targetHash = cmp.phoneNumber;
+                    Company cmp = Utils.getCompany(web3,credentials,credentials.getAddress());// new Company(contract.companies(credentials.getAddress()).sendAsync().get());
+
+                    targetHash = cmp.phoneNumber;
 
                         if (phoneHash.equals(targetHash)) {
                             editor.apply();

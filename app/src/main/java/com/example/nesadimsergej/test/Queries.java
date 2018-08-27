@@ -55,15 +55,25 @@ public class Queries extends SceneController {
     }
 
 
-    void AddQueri(String text, String secreteCode){
-        View view = View.inflate(page.getContext(),R.layout.queri,null);
-        ((TextView)view.findViewById(R.id.QueriText)).setText(text);
-        queriList.addView(view);
+    void AddQueri(Web3j web3,Credentials credentials,String senderAddress, String secreteCode){
 
-        Queri q = new Queri(view,secreteCode,
-                qu -> OnQueriAccepted(qu),
-                qu -> OnQueriDeclined(qu)
-        );
+        String companyName = Utils.getLastRequestedCompany(web3,credentials,senderAddress).companyName;
+        String coalitionName = Utils.getCoalition(web3,credentials,senderAddress).name;
+
+        ((Office)page.getContext()).runOnUiThread(() -> {
+            View view = View.inflate(page.getContext(),R.layout.queri,null);
+            String queryText ="";
+            queryText = queryText + companyName;
+            queryText = queryText +" приглашает вас вступить в коалицию ";
+            queryText = queryText + coalitionName;
+
+            ((TextView)view.findViewById(R.id.QueriText)).setText(queryText);
+            queriList.addView(view);
+            Queri q = new Queri(view,secreteCode,
+                    qu -> OnQueriAccepted(qu),
+                    qu -> OnQueriDeclined(qu)
+            );
+        });
     }
 
 
@@ -78,35 +88,35 @@ public class Queries extends SceneController {
 
         BigInteger requestCount = BigInteger.ZERO;
         try {
-            Company s =new Company( contract.companies(credentials.getAddress()).send());
+            Company s =Utils.getCompany(web3,credentials,credentials.getAddress());//  contract.companies(credentials.getAddress()).send());
             requestCount = s.requestCount;//contract.getRequestCount().send();//(new Company(s)).requestCount;
-            System.out.println(s);
+            //System.out.println(s);
         }catch (Exception e){
 
         }
 
         ArrayList<Tuple2<String,String>> resultQueries = new ArrayList<>();
-        System.out.println("Request count: "+requestCount);
+
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(requestCount) == -1 ; i = i.add( BigInteger.ONE)) {
             try {
 
                 String s = contract.getRequestOnIndex(i).sendAsync().get();
                 resultQueries.add(new Tuple2<>(s,s));
-                System.out.println(s);
-                //System.out.println("UpdateQueries3");
-                //System.out.println("hui");
+                //System.out.println(s);
 
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
 
-        queriList.removeAllViews();
+
+        ((Office)page.getContext()).runOnUiThread(() ->queriList.removeAllViews());
+
         for (Tuple2<String,String> t: resultQueries
              ) {
             String queriText = t.getValue1();
             String secreteCode = t.getValue2();
-            AddQueri(queriText,secreteCode);
+            AddQueri(web3,credentials,queriText,secreteCode);
         }
 
 
@@ -114,6 +124,13 @@ public class Queries extends SceneController {
 
 
     private void AnswerRequest(Queri q, boolean answer){
+
+        String message;
+        if(answer){
+            message = "Приглашение принято";
+        }else {
+            message = "Приглашение отклонено";
+        }
 
         String requestAddress = q.secreteCode;
         Credentials credentials = ((Office)page.getContext()).credentials;
@@ -124,22 +141,35 @@ public class Queries extends SceneController {
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
         try {
+
             contract.respond(requestAddress, answer).send();
-            Toast.makeText(page.getContext(), "движж???0)",
-                    Toast.LENGTH_SHORT).show();
-            q.Destroy();
+            ((Office)page.getContext()).runOnUiThread(() -> {
+                Toast.makeText(page.getContext(), message,
+                        Toast.LENGTH_SHORT).show();
+                q.Destroy();
+            });
+
+
         }catch (Exception e) {
 
         }
     }
 
     void OnQueriAccepted(Queri q){
-        AnswerRequest(q,true);
+        Runnable bonusUpdater = () -> AnswerRequest(q,true);;
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+
+
     }
     void OnQueriDeclined(Queri q){
 
+        Runnable bonusUpdater = () -> AnswerRequest(q,false);;
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
 
-        AnswerRequest(q,false);
     }
 
 
@@ -148,17 +178,17 @@ public class Queries extends SceneController {
         public void run() {
             ((Activity)page.getContext()).runOnUiThread(new Runnable() {
                 public void run() {
-                    UpdateQueries();
+
+                    Runnable bonusUpdater = () -> UpdateQueries();;
+                    Thread thread = new Thread(bonusUpdater);
+                    thread.setPriority(Thread.MIN_PRIORITY);
+                    thread.start();
+
                 }
             });
         }
     }
 
-
-    String[] wordList = new String[]{"Школа взоравалась","Привет всем, кто первый день на крокодиле"};
-    String QueriGenerator(){
-        return wordList[new Random().nextInt(wordList.length)];
-    }
 
 
 }

@@ -40,13 +40,13 @@ public class Register extends AppCompatActivity {
     String[] items = new String[]{"Клиент-покупатель","ТСП"};
 
     Context context;
-
+    Register _this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         LoadAll();
-
+        _this = this;
         // Настраиваем список для выбора роли
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
@@ -78,6 +78,8 @@ public class Register extends AppCompatActivity {
         tcpRegisterButton.setOnClickListener(v -> RegisterTCP());
 
         context = this;
+        //_this = ;
+
     }
 
 
@@ -160,8 +162,8 @@ public class Register extends AppCompatActivity {
                     //Intent intent = new Intent(getBaseContext(), Office_User.class);
                     //startActivity(intent);
                 }catch(Exception e){
-                    userRegisterButton.setEnabled(true);
-                    ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
+                    _this.runOnUiThread(() -> userRegisterButton.setEnabled(true));
+                    _this.runOnUiThread(() -> ((TextView)(findViewById(R.id.textView2))).setText(e.toString()));
                     e.printStackTrace();
                 }
             }
