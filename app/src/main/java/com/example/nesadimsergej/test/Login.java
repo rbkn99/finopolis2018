@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
@@ -65,7 +66,7 @@ public class Login extends AppCompatActivity {
                     );
 
                     String fileName = phoneHash.toString() + ".json";
-                    org.web3j.crypto.Credentials credentials;
+                    Credentials credentials;
                     Utils.sendNotification(ctx, "Подождите, выполняется вход...", 3);
                     try {
                         credentials = WalletUtils.loadCredentials(" ",
@@ -114,12 +115,7 @@ public class Login extends AppCompatActivity {
                             Intent intent = new Intent(context, Office_TCP.class);
                             startActivity(intent);
                         } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(context, "Такой номер не зарегистрирован в системе", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            context.runOnUiThread(()-> Toast.makeText(context, "Такой номер не зарегистрирован в системе", Toast.LENGTH_SHORT).show());
                         }
                     }
                 } catch (Exception e) {

@@ -127,6 +127,12 @@
             android:layout_height="wrap_content"
             android:text="Принять" />
 
+        <Button
+            android:id="@+id/declineOffer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Отозвать" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

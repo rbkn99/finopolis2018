@@ -155,12 +155,16 @@ public class Register extends AppCompatActivity {
 
                     Utils.sendNotification(context, "Создание кошелька завершено, теперь вы можете войти!", 2);
                     // Перезагружаемся, иначе вылетает
-                    Intent i = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    //Intent intent = new Intent(getBaseContext(), Office_User.class);
-                    //startActivity(intent);
+
+                    if(!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
+                        Intent i = getBaseContext().getPackageManager()
+                                .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                    }else {
+                        Intent intent = new Intent(getBaseContext(), Office_User.class);
+                        startActivity(intent);
+                    }
                 }catch(Exception e){
                     _this.runOnUiThread(() -> userRegisterButton.setEnabled(true));
                     _this.runOnUiThread(() -> ((TextView)(findViewById(R.id.textView2))).setText(e.toString()));
