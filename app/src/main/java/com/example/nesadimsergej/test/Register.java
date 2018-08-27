@@ -148,12 +148,12 @@ public class Register extends AppCompatActivity {
                     editor.apply();
 
                     // Перезагружаемся, иначе вылетает
-                    Intent i = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    //Intent intent = new Intent(getBaseContext(), Office_User.class);
-                    //startActivity(intent);
+                    //Intent i = getBaseContext().getPackageManager()
+                    //        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    //startActivity(i);
+                    Intent intent = new Intent(getBaseContext(), Office_User.class);
+                    startActivity(intent);
                 }catch(Exception e){
                     userRegisterButton.setEnabled(true);
                     ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
@@ -242,13 +242,13 @@ public class Register extends AppCompatActivity {
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
 
-                    Intent i = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
+                    //Intent i = getBaseContext().getPackageManager()
+                    //        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    //startActivity(i);
                     // Переходим на сцену с личным кабинетом компании
-                    //Intent intent = new Intent(getBaseContext(), Office_TCP.class);
-                    //startActivity(intent);
+                    Intent intent = new Intent(getBaseContext(), Office_TCP.class);
+                    startActivity(intent);
 
                 }catch(Exception e){
                     userRegisterButton.setEnabled(true);

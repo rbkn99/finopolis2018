@@ -1,5 +1,6 @@
 package com.example.nesadimsergej.test;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -116,15 +117,12 @@ public class Office extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setCheckedItem(R.id.Balance);
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem item) {
-                        HideAllPgs();
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
-                        UnHidePage(map.get(item.getItemId()));
+                item -> {
+                    HideAllPgs();
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                    UnHidePage(map.get(item.getItemId()));
 
-                        return true;
-                    }
+                    return true;
                 });
 
         navigationView.getMenu().performIdentifierAction(R.id.Balance,0);
@@ -175,6 +173,7 @@ public class Office extends AppCompatActivity {
         return b;
     }
 
+    @SuppressLint("SetTextI18n")
     protected  void InfoPopUP(){
         myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
         Dialog dialog = new Dialog(this);
@@ -201,15 +200,12 @@ public class Office extends AppCompatActivity {
         pathTV.setText(sharedPref.getString("PATH", "NA"));
         nameTV.setText(sharedPref.getString("NAME", "NA"));
 
-        View.OnClickListener o = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = ((TextView)v).getText().toString();
-                myClip = ClipData.newPlainText("text", text);
-                myClipboard.setPrimaryClip(myClip);
-                Toast.makeText(getApplicationContext(), "Text Copied",
-                        Toast.LENGTH_SHORT).show();
-            }
+        View.OnClickListener o = v -> {
+            String text = ((TextView)v).getText().toString();
+            myClip = ClipData.newPlainText("text", text);
+            myClipboard.setPrimaryClip(myClip);
+            Toast.makeText(getApplicationContext(), "Text Copied",
+                    Toast.LENGTH_SHORT).show();
         };
 
         addressInfo.setOnClickListener(o);
