@@ -41,6 +41,27 @@ public class Token_settings extends SceneController {
         payForToken = page.findViewById(R.id.payForToken);
         payForToken.setOnClickListener(v -> PayForToken());
     }
+    Company currentCompany = null;
+    @Override
+    void OnSelected() {
+        super.OnSelected();
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Web3j web3 = ((Office)page.getContext()).web3;
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        try {
+            currentCompany = new Company(contract.companies(credentials.getAddress()).send());
+
+            if(currentCompany.hasToken){
+                TokenWrapper companyToken = Pay_bonuses.getToken(web3,credentials,currentCompany.token);
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
     String f(String s){
         if(s.equals(""))
@@ -49,31 +70,55 @@ public class Token_settings extends SceneController {
 
     }
     void CreateToken(){
+
         String name = tokenName.getText().toString();
-        BigInteger in_prince = new BigInteger(f(purchasePrise.getText().toString()));
-        BigInteger out_price = new BigInteger(f(price_when_using.getText().toString()));
-        BigInteger swap_price = new BigInteger(f(swapPrice.getText().toString()));
+        String in_price_string = purchasePrise.getText().toString();
+        String out_price_string = price_when_using.getText().toString();
+        String swap_price_string = swapPrice.getText().toString();
+
+        if(name.equals("")){
+            Toast.makeText(page.getContext(),"Введите название бонусной валюты",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(in_price_string.equals("")){
+            Toast.makeText(page.getContext(),"Введите цену при покупке",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(out_price_string.equals("")){
+            Toast.makeText(page.getContext(),"Введите цену при использовании",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(swap_price_string.equals("")){
+            Toast.makeText(page.getContext(),"Введите цену при обмене",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        BigInteger in_price = new BigInteger(in_price_string);
+        BigInteger out_price = new BigInteger(out_price_string);
+        BigInteger swap_price = new BigInteger(swap_price_string);
 
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
-        System.out.println(credentials.getAddress());
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
-        RemoteCall<TransactionReceipt> s =contract.setToken(name,in_prince,out_price,swap_price);
+        RemoteCall<TransactionReceipt> s =contract.setToken(name,in_price,out_price,swap_price);
 
-        try {
-            s.send();
-            Toast.makeText(page.getContext(), "Что-то произошло",
-                    Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
-            Toast.makeText(page.getContext(), "Недостаточно средств для создания",
-                            Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+        Runnable bonusUpdater = () -> {
+            try {
+                s.send();
+                ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
+                        "Что-то произошло",
+                        Toast.LENGTH_SHORT).show());
+            }catch (Exception e){
+                ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
+                        "Недостаточно средств для создания",
+                        Toast.LENGTH_SHORT).show());
+                e.printStackTrace();
+            }
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
 
-        //System.out.println("here");
-        //Toast.makeText(page.getContext(), "Жду Рыбкина",
-        //        Toast.LENGTH_SHORT).show();
     }
 
     void PayForToken(){
@@ -84,7 +129,6 @@ public class Token_settings extends SceneController {
         try {
             contract.addEther(Config.AddToToken).send();
         }catch (Exception e){
-            System.out.println("Ну охуеть теперь");
             e.printStackTrace();
         }
     }

@@ -46,12 +46,14 @@ public class Pay_bonuses extends SceneController {
         {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
             {
-                CompanySelected(parent,view,pos,id);
+                Runnable bonusUpdater = () -> CompanySelected(parent,view,pos,id);;
+                Thread thread = new Thread(bonusUpdater);
+                thread.setPriority(Thread.MIN_PRIORITY);
+                thread.start();
             }
 
             public void onNothingSelected(AdapterView<?> parent)
             {
-
             }
 
         });
@@ -64,9 +66,10 @@ public class Pay_bonuses extends SceneController {
             thread.setPriority(Thread.MIN_PRIORITY);
             thread.start();
         });
-        
+
     }
     ArrayList<Company> companies;
+
     void UpdateCompaniesDropdowns(){
         Office office = (Office)page.getContext();
         companies = office.companies;
@@ -86,14 +89,7 @@ public class Pay_bonuses extends SceneController {
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(office, android.R.layout.simple_spinner_dropdown_item, companyNames);
-        ((Office)page.getContext()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                companySelector.setAdapter(adapter);
-                // Stuff that updates the UI
-
-            }
-        });
+        ((Office)page.getContext()).runOnUiThread(() -> companySelector.setAdapter(adapter));
 
 
 
@@ -127,7 +123,6 @@ public class Pay_bonuses extends SceneController {
             Company normalCompany = new Company(loyaltyContract.companies(selectedCompany._address).send());
             if(normalCompany.hasToken){
 
-                //CalculatePossibleTokens(web3,credentials,normalCompany);
                 ArrayList<TokenWrapper> tokens = CalculatePossibleTokens(web3,credentials,normalCompany);
 
                 TokenWrapper selected =(TokenWrapper) tokenSelector.getSelectedItem();
@@ -135,14 +130,16 @@ public class Pay_bonuses extends SceneController {
                 int i = tokens.indexOf(selected);
 
                 ArrayAdapter<TokenWrapper> adapter = new ArrayAdapter<>(page.getContext(), android.R.layout.simple_spinner_dropdown_item, tokens);
-                tokenSelector.setAdapter(adapter);
-                tokenSelector.setSelection(i);
 
+                ((Office)page.getContext()).runOnUiThread(() -> {
+                    tokenSelector.setAdapter(adapter);
+                    tokenSelector.setSelection(i);
+                });
             }else{
 
             }
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 
@@ -188,7 +185,7 @@ public class Pay_bonuses extends SceneController {
         try {
             coalitionSize = contract.getCoalitionSize(coalitionAddress).send();
         }catch (Exception e){
-
+            e.printStackTrace();
         }
 
         ArrayList<String> coalitionMembers = new ArrayList<>();
@@ -240,15 +237,21 @@ public class Pay_bonuses extends SceneController {
         String tokenName = "ERROR";
         String owner = "ERROR";
         String nominal_owner = "ERROR";
+        boolean had_error = false;
         try{
             tokenName = tokenContract.name().send();
             owner = tokenContract.owner().send();
             nominal_owner = tokenContract.nominal_owner().send();
+
+
         }catch (Exception e){
+            had_error = true;
             e.printStackTrace();
         }
         TokenWrapper token  = new TokenWrapper(address,tokenName,owner,nominal_owner);
-        tokens.put(address,token);
+        if(!had_error){
+            tokens.put(address,token);
+        }
         return token;
     }
 
@@ -294,7 +297,7 @@ public class Pay_bonuses extends SceneController {
             bonusCount = tokenContract.balanceOf(credentials.getAddress()).send().divide(Config.tene18);
             tokenOwner = tokenContract.nominal_owner().send();
         }catch (Exception e){
-            Toast.makeText(page.getContext(),"Error!",Toast.LENGTH_SHORT);
+            Toast.makeText(page.getContext(),"Error!",Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -326,10 +329,29 @@ public class Pay_bonuses extends SceneController {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            Company sC = selectedCompany;
+            String tO = tokenOwner;
 
-            loyaltyContractBank.transferBonuses(selectedCompany._address, credentials.getAddress(),
-                    sumR, bonusSumR,
-                    tokenOwner).send();
+            Runnable bonusUpdater = () -> {
+                try {
+
+                    loyaltyContractBank.transferBonuses(sC._address, credentials.getAddress(),
+                            sumR, bonusSumR,
+                            tO).send();
+                    ((Office)page.getContext()).runOnUiThread(() ->
+                            Toast.makeText(page.getContext(),"Оплата прошла успешно",Toast.LENGTH_SHORT).show());
+
+                }catch (Exception e){
+                    ((Office)page.getContext()).runOnUiThread(() ->
+                            Toast.makeText(page.getContext(),"Во время проведения оплаты произошла ошибка",Toast.LENGTH_SHORT).show());
+
+                    e.printStackTrace();
+                }
+            };
+            Thread thread = new Thread(bonusUpdater);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
+
 
         }catch (Exception e){
             e.printStackTrace();

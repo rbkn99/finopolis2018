@@ -191,7 +191,7 @@ public class Exchange_bonuses extends SceneController {
                     e.printStackTrace();
                 }
 
-                TokenWrapperWithBalance tokenWithBalance = new TokenWrapperWithBalance(token.tokenAddress, token.name,balance,normalCompany._address,nominalOwner);
+                TokenWrapperWithBalance tokenWithBalance = new TokenWrapperWithBalance(token,balance);
                 tokens.add(tokenWithBalance);
             }catch (Exception e){
                 e.printStackTrace();
@@ -233,7 +233,8 @@ public class Exchange_bonuses extends SceneController {
             TokenWrapperWithBalance bonus = (TokenWrapperWithBalance) bonus1.getItemAtPosition(bonus1.getSelectedItemPosition());
             System.out.println(bonus.wrapper.name);
             System.out.println(bonus.balance);
-            String startCompany = bonus.wrapper.ownerAddress;
+            String startCompany = bonus.wrapper.nominalOwner;
+            System.out.println(bonus.wrapper.ownerAddress);
             Company company = null;
             try {
                 company = new Company(loyaltyContract.companies(startCompany).send());
@@ -252,7 +253,7 @@ public class Exchange_bonuses extends SceneController {
                     BigInteger balance = currentToken.balanceOf(credentials.getAddress()).send().divide(
                             Config.tene18
                     );
-                    tokens.add(new TokenWrapperWithBalance(token.tokenAddress, token.name, balance, token.ownerAddress, token.nominalOwner));
+                    tokens.add(new TokenWrapperWithBalance(token,balance));
                 } catch (Exception e) {
 
                 }

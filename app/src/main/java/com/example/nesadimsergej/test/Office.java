@@ -445,9 +445,6 @@ public class Office extends AppCompatActivity {
             t.cancel();
         }
         SharedPreferences.Editor e = sharedPref.edit();
-        //e.clear();
-        //e.remove("PATH");
-        //e.remove("NAME");
         e.apply();
         Intent intent = new Intent(this, Start.class);
         startActivity(intent);
@@ -515,9 +512,9 @@ class TokenWrapper{
     String name;
     String ownerAddress;
     String nominalOwner;
-    public TokenWrapper(String _address,String _name,String _ownerAddress,String _nominalOwner){
-        tokenAddress = _address;
-        name = _name;
+    public TokenWrapper(String _tokenAddress,String _tokenName,String _ownerAddress,String _nominalOwner){
+        tokenAddress = _tokenAddress;
+        name = _tokenName;
         ownerAddress = _ownerAddress;
         nominalOwner = _nominalOwner;
     }
@@ -545,8 +542,9 @@ class TokenWrapper{
 class TokenWrapperWithBalance{
     TokenWrapper wrapper;
     BigInteger balance;
-    public TokenWrapperWithBalance(String _address,String _name, BigInteger _balance, String ownerAddress,String _nominalAddress){
-        wrapper = new TokenWrapper(_address,_name,ownerAddress,_nominalAddress);
+
+    public TokenWrapperWithBalance(TokenWrapper _wrapper, BigInteger _balance){
+        wrapper = _wrapper;
         balance = _balance;
     }
     @Override
