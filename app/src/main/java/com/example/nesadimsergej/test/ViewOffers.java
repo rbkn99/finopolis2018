@@ -22,6 +22,7 @@ public class ViewOffers extends SceneController {
     ConstraintLayout exampleQueri;
     LinearLayout offerList;
     public Button back;
+    Button update;
 
     public ViewOffers(View _page){
         super();
@@ -35,6 +36,13 @@ public class ViewOffers extends SceneController {
         super.SetUpScene();
 
         back = page.findViewById(R.id.back);
+        update = page.findViewById(R.id.update);
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateOffers();
+            }
+        });
 
         //Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> _data = new Tuple6<>(
         //        BigInteger.ZERO,"0x0","0x0","0x0",BigInteger.ZERO,BigInteger.ZERO);
@@ -51,6 +59,7 @@ public class ViewOffers extends SceneController {
         UpdateOffers();
     }
     void UpdateOffers(){
+        offerList.removeAllViews();
         Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
@@ -82,122 +91,42 @@ public class ViewOffers extends SceneController {
 
         View view = View.inflate(page.getContext(),R.layout.offer,null);
         offerList.addView(view);
-        Offer offer = new Offer(view,_data);
+        Offer offer = new Offer(view, _data, new OfferCallback() {
+            @Override
+            public void func(Offer offer) {
+                OnOffer(offer);
+            }
+        });
         offer.LoadTokenData(web3,credentials,contract);
 
     }
-/*
 
-    void UpdateQueries(){
+    void OnOffer(Offer offer){
+        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
+        Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+        System.out.println(offer.offerId);
 
-        Loyalty contract = Loyalty.load(Config.contractAdress,web3,
-                credentials,
-                Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
-
-        BigInteger requestCount = BigInteger.ZERO;
         try {
-            Company s =new Company( contract.companies(credentials.getAddress()).send());
-            requestCount = s.requestCount;//contract.getRequestCount().send();//(new Company(s)).requestCount;
-            System.out.println(s);
+            bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
         }catch (Exception e){
-
-        }
-
-        ArrayList<Tuple2<String,String>> resultQueries = new ArrayList<>();
-        System.out.println("Request count: "+requestCount);
-        for(BigInteger i = BigInteger.ZERO ; i.compareTo(requestCount) == -1 ; i = i.add( BigInteger.ONE)) {
-            try {
-
-                String s = contract.getRequestOnIndex(i).sendAsync().get();
-                resultQueries.add(new Tuple2<>(s,s));
-                System.out.println(s);
-                //System.out.println("UpdateQueries3");
-                //System.out.println("hui");
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        queriList.removeAllViews();
-        for (Tuple2<String,String> t: resultQueries
-                ) {
-            String queriText = t.getValue1();
-            String secreteCode = t.getValue2();
-            AddQueri(queriText,secreteCode);
-        }
-
-
-    }
-
-
-    private void AnswerRequest(Queri q, boolean answer){
-
-        String requestAddress = q.secreteCode;
-        Credentials credentials = ((Office)page.getContext()).credentials;
-        Web3j web3 = ((Office)page.getContext()).web3;
-
-        Loyalty contract = Loyalty.load(Config.contractAdress,web3,
-                credentials,
-                Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
-        try {
-            contract.respond(requestAddress, answer).send();
-            Toast.makeText(page.getContext(), "движж???0)",
-                    Toast.LENGTH_SHORT).show();
-            q.Destroy();
-        }catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
-    void OnQueriAccepted(Queri q){
-        AnswerRequest(q,true);
+    interface OfferCallback {
+
+        void func(Offer offer);
     }
-    void OnQueriDeclined(Queri q){
-
-
-        AnswerRequest(q,false);
-    }
-
-
-    class QueryUpdater extends TimerTask {
-        @Override
-        public void run() {
-            ((Activity)page.getContext()).runOnUiThread(new Runnable() {
-                public void run() {
-                    UpdateQueries();
-                }
-            });
-        }
-    }
-
-
-    String[] wordList = new String[]{"Школа взоравалась","Привет всем, кто первый день на крокодиле"};
-    String QueriGenerator(){
-        return wordList[new Random().nextInt(wordList.length)];
-    }
-    */
-
-
 }
 
 
-/*
-struct Offer {
-        uint256 id;
-        address seller;
-        address sellToken;
-        address wantedToken;
-        uint256 sellAmount;
-        uint256 buyAmount;
-    }
- */
+
 
 class Offer{
+
+    Offer _this;
 
     BigInteger offerId;
     String sellerAddress;
@@ -213,13 +142,17 @@ class Offer{
 
     TextView offerId_TV,offer_seller,sellToken_TV, buyToken_TV;
 
+    ViewOffers.OfferCallback onOffer;
+
+    Button acceptOffer;
     public void Destroy(){
         ((ViewGroup)offerView.getParent()).removeView(offerView);
     }
 
 
     private Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> data;
-    public Offer(View _offer, Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> _data){
+    public Offer(View _offer, Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> _data,ViewOffers.OfferCallback _onOffer){
+        _this = this;
         offerView = _offer;
         offerId = _data.getValue1();
         sellerAddress = _data.getValue2();
@@ -227,7 +160,7 @@ class Offer{
         wantedTokenCompany = _data.getValue4();
         sellAmount = _data.getValue5().divide(Config.tene18);
         buyAmount = _data.getValue6().divide(Config.tene18);
-
+        onOffer = _onOffer;
         data = _data;
 
 
@@ -235,6 +168,13 @@ class Offer{
         offer_seller = _offer.findViewById(R.id.offer_seller);
         sellToken_TV = _offer.findViewById(R.id.sellToken);
         buyToken_TV = _offer.findViewById(R.id.buyToken);
+        acceptOffer = _offer.findViewById(R.id.acceptOffer);
+        acceptOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _onOffer.func(_this);
+            }
+        });
     }
 
     public void LoadTokenData(Web3j web3, Credentials credentials, Loyalty contract){
@@ -249,8 +189,7 @@ class Offer{
         }
         DisplayData();
     }
-    //1
-    //2
+
     @SuppressLint("SetTextI18n")
     public void DisplayData(){
         offerId_TV.setText(offerId.toString());
@@ -258,8 +197,6 @@ class Offer{
         sellToken_TV.setText(sellToken.name + "   ("+sellAmount.toString()+")");
         buyToken_TV.setText(buyToken.name+ "   ("+buyAmount.toString()+")");
     }
-
-
 
 
 }

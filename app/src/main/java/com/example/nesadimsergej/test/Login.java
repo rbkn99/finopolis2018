@@ -2,23 +2,18 @@ package com.example.nesadimsergej.test;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Credentials;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jFactory;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tuples.generated.Tuple10;
 import org.web3j.tuples.generated.Tuple2;
-import org.web3j.tuples.generated.Tuple4;
-import org.web3j.tuples.generated.Tuple5;
-import org.web3j.tuples.generated.Tuple6;
-import org.web3j.tuples.generated.Tuple7;
 import org.web3j.tuples.generated.Tuple8;
 
 import java.math.BigInteger;
@@ -30,6 +25,7 @@ public class Login extends AppCompatActivity {
     Web3j web3;
     Login context;
     SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         context = this;
@@ -44,25 +40,15 @@ public class Login extends AppCompatActivity {
         numberLogin = findViewById(R.id.numberLogin);
         backBtn = findViewById(R.id.backBtn);
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TryToLogin();
-            }
-        });
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Back();
-            }
-        });
+        loginBtn.setOnClickListener(v -> TryToLogin());
+        backBtn.setOnClickListener(v -> Back());
 
     }
 
 
     void TryToLogin(){
             String phoneNumber = numberLogin.getText().toString();
-            //String fileName = sharedPref.getString("NAME","PZD");
+
             String pathToFile = sharedPref.getString("PATH","EC");
 
             try {
@@ -76,6 +62,7 @@ public class Login extends AppCompatActivity {
                     credentials = WalletUtils.loadCredentials(" ",
                             pathToFile + "/" + fileName);
                 }catch (Exception e){
+                    Toast.makeText(context,"Неверный номер телефона",Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                     return;
                 }
@@ -98,35 +85,25 @@ public class Login extends AppCompatActivity {
 
                 if(phoneHash.equals(targetHash)){
                     editor.apply();
-                    //E BOI
                     // Это обычный пользователь
                     Intent intent = new Intent(context, Office_User.class);
                     startActivity(intent);
                 }else{
 
-                    // 1 -
-                    // 2 -
-                    // 3 -
-                    // 4 - phoneHash
-
-                    Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> b =
-                            contract.companies(credentials.getAddress()).sendAsync().get();
-                    Company cmp = new Company(b);
+                    Company cmp = new Company(contract.companies(credentials.getAddress()).sendAsync().get());
                     targetHash = cmp.phoneNumber;
 
                     if(phoneHash.equals(targetHash)) {
                         editor.apply();
-                        //E BOI
                         // Это компания
                         Intent intent = new Intent(context, Office_TCP.class);
                         startActivity(intent);
                     }else{
-                        System.out.println("pizda1488");
+                        Toast.makeText(context,"Такой номер не зарегистрирован в системе",Toast.LENGTH_SHORT).show();
                     }
                 }
 
             }catch (Exception e){
-                //System.out.println("pizda322");
                 SharedPreferences.Editor a = sharedPref.edit();
                 a.clear();
                 a.apply();
@@ -138,7 +115,7 @@ public class Login extends AppCompatActivity {
     }
 
     void Back(){
-        Intent intent = new Intent(context, start.class);
+        Intent intent = new Intent(context, Start.class);
         startActivity(intent);
     }
 }

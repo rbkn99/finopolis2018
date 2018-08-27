@@ -66,28 +66,19 @@ public class Exchange_bonuses extends SceneController {
         changeInCoalition = page.findViewById(R.id.changeInCoalition);
         makeOffer_button.setOnClickListener(v -> MakeOffer());
         TradeInCoalition();
-        tradeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // в зависимости от значения isChecked выводим нужное сообщение
-                if (isChecked) {
-                    tradingInCoalitions = false;
-                    TradeInStockExchange();
-                } else {
-                    tradingInCoalitions = true;
-                    TradeInCoalition();
-                }
-                OnSelected();
+        tradeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // в зависимости от значения isChecked выводим нужное сообщение
+            if (isChecked) {
+                tradingInCoalitions = false;
+                TradeInStockExchange();
+            } else {
+                tradingInCoalitions = true;
+                TradeInCoalition();
             }
+            OnSelected();
         });
 
-        changeInCoalition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Change();
-            }
-        });
+        changeInCoalition.setOnClickListener(v -> Change());
 
         bonus1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -96,7 +87,11 @@ public class Exchange_bonuses extends SceneController {
             {
                 TokenWrapperWithBalance bonus =(TokenWrapperWithBalance) bonus1.getItemAtPosition(pos);
                 balance1.setText(bonus.balance.toString());
-                UpdateBonuses2();
+
+                Runnable bonusUpdater = () -> UpdateBonuses2();
+                Thread thread = new Thread(bonusUpdater);
+                thread.setPriority(Thread.MIN_PRIORITY);
+                thread.start();
             }
 
             public void onNothingSelected(AdapterView<?> parent)
@@ -122,20 +117,10 @@ public class Exchange_bonuses extends SceneController {
 
         });
 
-        viewOffers_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DisplayOfferWindow();
-            }
-        });
+        viewOffers_button.setOnClickListener(v -> DisplayOfferWindow());
 
         viewOffers = new ViewOffers(offers);
-        viewOffers.back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DisplayExchangeWindow();
-            }
-        });
+        viewOffers.back.setOnClickListener(v -> DisplayExchangeWindow());
 
     }
 
@@ -163,17 +148,10 @@ public class Exchange_bonuses extends SceneController {
         }else{
             exchange_window.setVisibility(View.VISIBLE);
             offers.setVisibility(View.INVISIBLE);
-
-            Runnable bonusUpdater = new Runnable() {
-                @Override
-                public void run() {
-                    UpdateBonuses1();
-                }
-            };
+            Runnable bonusUpdater = () -> UpdateBonuses1();
             Thread thread = new Thread(bonusUpdater);
-            thread.setPriority(Thread.NORM_PRIORITY);
+            thread.setPriority(Thread.MIN_PRIORITY);
             thread.start();
-
         }
     }
 
@@ -213,7 +191,7 @@ public class Exchange_bonuses extends SceneController {
                     e.printStackTrace();
                 }
 
-                TokenWrapperWithBalance tokenWithBalance = new TokenWrapperWithBalance(token.tokenAddress, token.name,balance,normalCompany._address,nominalOwner);
+                TokenWrapperWithBalance tokenWithBalance = new TokenWrapperWithBalance(token,balance);
                 tokens.add(tokenWithBalance);
             }catch (Exception e){
                 e.printStackTrace();
@@ -234,33 +212,14 @@ public class Exchange_bonuses extends SceneController {
 
         ArrayAdapter<TokenWrapperWithBalance> adapter = new ArrayAdapter<>(office, android.R.layout.simple_spinner_dropdown_item,tokens );
 
-        ((Office)page.getContext()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                bonus1.setAdapter(adapter);
-                // Stuff that updates the UI
-
-            }
-        });
-
-
-
+        ((Office)page.getContext()).runOnUiThread(() -> bonus1.setAdapter(adapter));
 
         int newSelectedItem = 0;
         if(selectedCompanyName1!=null)
             newSelectedItem = tokens.indexOf(selectedCompanyName1);
 
         final int newSI = newSelectedItem;
-        ((Office)page.getContext()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                bonus1.setSelection(newSI);
-                // Stuff that updates the UI
-
-            }
-        });
-
+        ((Office)page.getContext()).runOnUiThread(() -> bonus1.setSelection(newSI));
 
     }
 
@@ -274,7 +233,8 @@ public class Exchange_bonuses extends SceneController {
             TokenWrapperWithBalance bonus = (TokenWrapperWithBalance) bonus1.getItemAtPosition(bonus1.getSelectedItemPosition());
             System.out.println(bonus.wrapper.name);
             System.out.println(bonus.balance);
-            String startCompany = bonus.wrapper.ownerAddress;
+            String startCompany = bonus.wrapper.nominalOwner;
+            System.out.println(bonus.wrapper.ownerAddress);
             Company company = null;
             try {
                 company = new Company(loyaltyContract.companies(startCompany).send());
@@ -293,18 +253,24 @@ public class Exchange_bonuses extends SceneController {
                     BigInteger balance = currentToken.balanceOf(credentials.getAddress()).send().divide(
                             Config.tene18
                     );
-                    tokens.add(new TokenWrapperWithBalance(token.tokenAddress, token.name, balance, token.ownerAddress, token.nominalOwner));
+                    tokens.add(new TokenWrapperWithBalance(token,balance));
                 } catch (Exception e) {
 
                 }
             }
 
             ArrayAdapter<TokenWrapperWithBalance> adapter = new ArrayAdapter<>(page.getContext(), android.R.layout.simple_spinner_dropdown_item, tokens);
-            bonus2.setAdapter(adapter);
-            bonus2.setSelection(0);
+            ((Office)page.getContext()).runOnUiThread(() -> {
+                bonus2.setAdapter(adapter);
+                bonus2.setSelection(0);
+            });
+
         }else {
-            bonus2.setAdapter(bonus1.getAdapter());
-            bonus2.setSelection(0);
+            ((Office)page.getContext()).runOnUiThread(() -> {
+                bonus2.setAdapter(bonus1.getAdapter());
+                bonus2.setSelection(0);
+            });
+
         }
 
     }
@@ -348,23 +314,20 @@ public class Exchange_bonuses extends SceneController {
 
 
 
-        Runnable bonusUpdater = new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    String tokenOwner1 = token1.wrapper.nominalOwner;
-                    String tokenOwner2 = token2.wrapper.nominalOwner;
-                    bankLoyalty.exchangeToken(credentials.getAddress(),tokenOwner1,tokenOwner2,count1_18).send();
+        Runnable bonusUpdater = () -> {
+            try{
+                String tokenOwner1 = token1.wrapper.nominalOwner;
+                String tokenOwner2 = token2.wrapper.nominalOwner;
+                bankLoyalty.exchangeToken(credentials.getAddress(),tokenOwner1,tokenOwner2,count1_18).send();
 
-                    Toast(() -> Toast.makeText(page.getContext(),"Обмен прошел успешно!",Toast.LENGTH_SHORT).show());
+                Toast(() -> Toast.makeText(page.getContext(),"Обмен прошел успешно!",Toast.LENGTH_SHORT).show());
 
-                }catch (Exception e){
-                    Toast(() -> {
-                        Toast.makeText(page.getContext(),"Ошибка!",Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    });
+            }catch (Exception e){
+                Toast(() -> {
+                    Toast.makeText(page.getContext(),"Ошибка!",Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                });
 
-                }
             }
         };
         Thread thread = new Thread(bonusUpdater);
@@ -405,7 +368,6 @@ public class Exchange_bonuses extends SceneController {
         count1 = new BigInteger(count1_string);
         count2 = new BigInteger(count2_string);
 
-
         // Проверяем есть ли у пользователя введенная сумма
         // Для второго откена такого нет, т.к. он их не отдает
         if(token1.balance.compareTo(count1) == -1){
@@ -425,14 +387,19 @@ public class Exchange_bonuses extends SceneController {
 
         Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
-        try {
-            // И тут должен отпарвляться запрос
-            bankContract.placeCustomerOffer(credentials.getAddress(), token1.wrapper.nominalOwner, token2.wrapper.nominalOwner,
-                    count1_18, count2_18).send();
-            System.out.println(bankContract.getStockSize().send());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        Runnable bonusUpdater = () -> {
+            try {
+                bankContract.placeCustomerOffer(credentials.getAddress(), token1.wrapper.nominalOwner, token2.wrapper.nominalOwner,
+                        count1_18, count2_18).send();
+                Toast(() -> Toast.makeText(page.getContext(),"Предложение успешно опубликовано",Toast.LENGTH_SHORT).show());
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
 
     }
 

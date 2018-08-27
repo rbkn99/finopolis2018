@@ -222,153 +222,132 @@ public class Office extends AppCompatActivity {
 
     protected void AddEth(){
 
-        new Thread(new Runnable() {
-            public void run() {
-                try {
+        Runnable bonusUpdater = () -> {
+            try {
 
-                    float v = Float.parseFloat(balanceCheater.getText().toString());
+                float v = Float.parseFloat(balanceCheater.getText().toString());
 
-                    TransactionReceipt transactionReceipt =
-                            Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
-                                    BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
-                    UpdateBalance();
+                TransactionReceipt transactionReceipt =
+                        Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
+                                BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
+                UpdateBalance();
 
-                } catch (Exception e){
-                    System.out.println(e);
-                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
-        }).run();
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
     }
     protected void AddEth1(){
+        Runnable bonusUpdater = () -> {
+            try {
 
-        new Thread(new Runnable() {
-            public void run() {
-                try {
+                float v = Config.AddBalance;
 
-                    float v = Config.AddBalance;
-
-                    TransactionReceipt transactionReceipt =
-                            Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
-                                    BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
-                    UpdateBalance();
-
-                } catch (Exception e){
-                    System.out.println(e);
-                }
+                TransactionReceipt transactionReceipt =
+                        Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
+                                BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
+                UpdateBalance();
+            } catch (Exception e){
+                e.printStackTrace();
             }
-        }).run();
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
     }
 
     protected void UpdateBalance(){
-        new Thread(new Runnable() {
-            public void run() {
-                updateBalanceBtn.setEnabled(false);
-                try {
-                    EthGetBalance ethGetBalance = web3
-                            .ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST)
-                            .sendAsync().get(20, TimeUnit.SECONDS);
-                    // Еще что-то делаем
-                    BigInteger wei = ethGetBalance.getBalance();
-                    //System.out.println(wei);
-                    String result = wei.toString();
+        Runnable bonusUpdater = () -> {
+            context.runOnUiThread(() -> updateBalanceBtn.setEnabled(false));
 
-                    int l = result.length();
-                    for(int i = l; i<18;i++)
-                        result = "0"+result;
+            try {
+                EthGetBalance ethGetBalance = web3
+                        .ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST)
+                        .sendAsync().get(40, TimeUnit.SECONDS);
 
-                    String a = result.substring(max( result.length() - 18,0));
-                    String b = result.substring(0,max( result.length() - 18,0));
-                    if( b.equals( "") || b.equals(" "))
-                        b = "0";
-                    result = b+"."+a;
+                BigInteger wei = ethGetBalance.getBalance();
+                String result = wei.toString();
+                result = divideString(result);
 
-                    money.setText(result);
-                    updateBalanceBtn.setEnabled(true);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Error!",
-                            Toast.LENGTH_SHORT).show();
-                    updateBalanceBtn.setEnabled(true);
-                }
+                money.setText(result);
+
+                context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Error!",
+                        Toast.LENGTH_SHORT).show();
+                context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }
-        }).run();
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+
     }
 
-    protected void Contract(){
 
-        try {
+    String divideString(String s){
+        int l = s.length();
+        for(int i = l; i<18;i++)
+            s = "0"+s;
 
-            Loyalty contract = Loyalty
-                    .load(Config.contractAdress,web3,Credentials.create(Config.bankPrivateKey
-                            ,Config.bankPublicKey),Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+        String a = s.substring(max( s.length() - 18,0));
+        String b = s.substring(0,max( s.length() - 18,0));
+        if( b.equals( "") || b.equals(" "))
+            b = "0";
+        s = b+"."+a;
+        return s;
+    }
 
-            //contract.
+    protected void UploadContract(){
 
-            System.out.println("Contract address:"+contract.getContractAddress());
+        Runnable uploadContract = () -> {
+
+            context.runOnUiThread(() -> deployContractBtn.setEnabled(false));
+
             try {
-                BigInteger i = new BigInteger("12345");
-                System.out.println(i.bitCount());
-
-                TransactionReceipt a = contract.addCompany(credentials.getAddress(),"PidorasCo",i).sendAsync().get();
-
-                Toast.makeText(getApplicationContext(),  a.getBlockNumber().toString(),
+                Loyalty contract = Loyalty
+                        .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT.add(new BigInteger("8000000"))).send();
+                String contractAddress = contract.getContractAddress();
+                context.runOnUiThread(() -> deployContractBtn.setEnabled(true));
+                System.out.println("Contract address1: "+contractAddress);
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Error!",
                         Toast.LENGTH_SHORT).show();
+                context.runOnUiThread(() -> deployContractBtn.setEnabled(true));
+            }
+        };
+
+        Thread thread = new Thread(uploadContract);
+        thread.setPriority(Thread.NORM_PRIORITY);
+        thread.start();
+    }
+
+    protected void SendEth(){
+
+        Runnable bonusUpdater = () -> {
+            String address = targetAddress.getText().toString();
+            float v = Float.parseFloat(targetSum.getText().toString());
+            try {
+                TransactionReceipt transactionReceipt =
+                        Transfer.sendFunds(web3, credentials, address,
+                                BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
 
             }catch (Exception e){
-                Toast.makeText(getApplicationContext(), "Pizdec!",
-                        Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Error!",
+                        Toast.LENGTH_SHORT).show();
             }
+            UpdateBalance();
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
 
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println("error1");
-        }
-
-    }
-    String contractAddress = "";
-    protected void UploadContract(){
-        new Thread(new Runnable() {
-            public void run() {
-                deployContractBtn.setEnabled(false);
-                try {
-
-                    Loyalty contract = Loyalty
-                            .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT.add(new BigInteger("8000000"))).send();
-
-                    contractAddress = contract.getContractAddress();
-                    deployContractBtn.setEnabled(true);
-                    System.out.println("Contract address1: "+contractAddress);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Error!",
-                            Toast.LENGTH_SHORT).show();
-                    deployContractBtn.setEnabled(true);
-                }
-            }
-        }).run();
-    }
-
-    //
-    protected void SendEth(){
-        new Thread(new Runnable() {
-            public void run() {
-                String address = targetAddress.getText().toString();
-                float v = Float.parseFloat(targetSum.getText().toString());
-
-                try {
-                    TransactionReceipt transactionReceipt =
-                            Transfer.sendFunds(web3, credentials, address,
-                                    BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Error!",
-                            Toast.LENGTH_SHORT).show();
-                }
-                UpdateBalance();
-            }
-        }).run();
     }
 
     protected void LoadAll(){
@@ -414,45 +393,50 @@ public class Office extends AppCompatActivity {
 
     protected void LoadAllCompanies(){
 
-        ArrayList<Company> _companies = new ArrayList<>();
-        boolean hadError = false;
-        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-        BigInteger companiesCount = BigInteger.ZERO;
-        try {
-
-            companiesCount = contract.companiesCount().send();
-
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            hadError = true;
-        }
-
-        for(BigInteger i = BigInteger.ZERO ; i.compareTo(companiesCount) == -1 ; i = i.add( BigInteger.ONE)) {
-
+        Runnable bonusUpdater = () -> {
+            ArrayList<Company> _companies = new ArrayList<>();
+            boolean hadError = false;
+            Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+            BigInteger companiesCount = BigInteger.ZERO;
             try {
-                Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s = contract.companySet(i).send();
-                Company currentCompany = new Company(s);
-                //System.out.println(currentCompany.toString());
-                _companies.add(currentCompany);
 
-            }catch (Exception e){
+                companiesCount = contract.companiesCount().send();
 
+            }
+            catch (Exception e){
                 e.printStackTrace();
                 hadError = true;
-                break;
+            }
+
+            for(BigInteger i = BigInteger.ZERO ; i.compareTo(companiesCount) == -1 ; i = i.add( BigInteger.ONE)) {
+
+                try {
+                    Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s = contract.companySet(i).send();
+                    Company currentCompany = new Company(s);
+                    //System.out.println(currentCompany.toString());
+                    _companies.add(currentCompany);
+
+                }catch (Exception e){
+
+                    e.printStackTrace();
+                    hadError = true;
+                    break;
+
+                }
 
             }
 
-        }
+            if (! hadError){
+                companies = _companies;
+                listUpdatedEvent.sayHello();
 
-        if (! hadError){
-            companies = _companies;
-            listUpdatedEvent.sayHello();
-
-        }else{
-            Toast.makeText(this,"Andrey daolbaeb",Toast.LENGTH_LONG).show();
-        }
+            }else{
+                //Toast.makeText(context,"Andrey daolbaeb",Toast.LENGTH_LONG).show();
+            }
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
     }
 
     void Exit(){
@@ -461,11 +445,8 @@ public class Office extends AppCompatActivity {
             t.cancel();
         }
         SharedPreferences.Editor e = sharedPref.edit();
-        //e.clear();
-        //e.remove("PATH");
-        //e.remove("NAME");
         e.apply();
-        Intent intent = new Intent(this, start.class);
+        Intent intent = new Intent(this, Start.class);
         startActivity(intent);
     }
 }
@@ -531,9 +512,9 @@ class TokenWrapper{
     String name;
     String ownerAddress;
     String nominalOwner;
-    public TokenWrapper(String _address,String _name,String _ownerAddress,String _nominalOwner){
-        tokenAddress = _address;
-        name = _name;
+    public TokenWrapper(String _tokenAddress,String _tokenName,String _ownerAddress,String _nominalOwner){
+        tokenAddress = _tokenAddress;
+        name = _tokenName;
         ownerAddress = _ownerAddress;
         nominalOwner = _nominalOwner;
     }
@@ -561,8 +542,9 @@ class TokenWrapper{
 class TokenWrapperWithBalance{
     TokenWrapper wrapper;
     BigInteger balance;
-    public TokenWrapperWithBalance(String _address,String _name, BigInteger _balance, String ownerAddress,String _nominalAddress){
-        wrapper = new TokenWrapper(_address,_name,ownerAddress,_nominalAddress);
+
+    public TokenWrapperWithBalance(TokenWrapper _wrapper, BigInteger _balance){
+        wrapper = _wrapper;
         balance = _balance;
     }
     @Override
@@ -611,7 +593,6 @@ class CompanyListUpdatedEvent {
     }
 }
 
-// Someone interested in "Hello" events
 class Responder implements CompanyListUpdatedListener {
 
 

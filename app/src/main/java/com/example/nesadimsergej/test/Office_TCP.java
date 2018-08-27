@@ -68,58 +68,20 @@ public class Office_TCP extends Office {
 
         //Loyalty c;
 
-        updateBalanceBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                UpdateBalance();
-            }
-        });
-        addEth.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                AddEth();
-            }
-        });
-        sendEth.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                SendEth();
-            }
-        });
-
-
-        infoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InfoPopUP();
-            }
-        });
+        updateBalanceBtn.setOnClickListener(v -> UpdateBalance());
+        addEth.setOnClickListener(v -> AddEth());
+        sendEth.setOnClickListener(v -> SendEth());
+        infoBtn.setOnClickListener(v -> InfoPopUP());
         // тут все круто
 
         // Обработчик для кнопки выхода
         // Стирает всю информацию о пользователе и переходит на стартовую сцену
-        exitOfficeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Exit();
-            }
-        });
-
-        contractTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //System.out.println("called1488");
-                Contract();
-            }
-        });
-        deployContractBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UploadContract();
-            }
-        });
+        exitOfficeBtn.setOnClickListener(v -> Exit());
+        deployContractBtn.setOnClickListener(v -> UploadContract());
 
 
         UpdateBalance();
     }
-
 
     @Override
     protected void LoadAll(){
@@ -150,7 +112,6 @@ public class Office_TCP extends Office {
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -164,6 +125,4 @@ public class Office_TCP extends Office {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }
