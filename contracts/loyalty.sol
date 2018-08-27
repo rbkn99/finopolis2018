@@ -67,6 +67,8 @@ contract Loyalty {
     Offer[] private stock;
     
     int256[] phoneNumberHashes;
+    bytes32[] tokenNames;
+    bytes32[] companyNames;
     
     // cost of asm operations of transferBonuses() func
     uint constant public transferBonuses_transaction_cost = 119290;
@@ -101,6 +103,10 @@ contract Loyalty {
                 companyNotExists(company)
                 customerNotExists(company) 
                 uniquePhone(_phoneNumber){
+        bytes32 nhash = outerHash(_name);
+        for(uint256 i = 0; i < companyNames.length; i++){
+            require(nhash != companyNames[i], "Company name already registered or hash collided");
+        }
         companiesCount++;
         companies[company]._address = company;
         companies[company].exists = true;
@@ -109,6 +115,7 @@ contract Loyalty {
         phoneNumberHashes.push(_phoneNumber);
         companies[company].request_count = 0;
         companySet.push(companies[company]);
+        companyNames.push(nhash);
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
     
@@ -171,6 +178,10 @@ contract Loyalty {
         return address(0);
     }
     
+    function outerHash(string s) pure internal returns (bytes32 hash) {
+        return keccak256(abi.encodePacked(s));
+    }
+    
     // company calls
     // name of the token, tokens per spent rouble, price when you spend tokens, exchange price
     function setToken(string _name, uint _inPrice, uint _outPrice,
@@ -178,6 +189,10 @@ contract Loyalty {
         companyExists(msg.sender) {
         // doesn't exist => create
         if (!companies[msg.sender].has_token) {
+            bytes32 nhash = outerHash(_name);
+            for(uint256 i = 0; i < tokenNames.length; i++){
+                require(nhash != tokenNames[i], "Token name already registered or hash collided");
+            }
             Token token = new Token(msg.sender, _name, _inPrice, _outPrice, _exchangePrice);
             companies[msg.sender].token = token;
             companies[msg.sender].has_token = true;
@@ -219,7 +234,7 @@ contract Loyalty {
     
     function exchangeToken(address customer, address tokenOwner1, address tokenOwner2, uint amount)
                                                 public onlyOwner customerExists(customer) 
-                                                companyExists(tokenOwner1) companyExists(tokenOwner2)
+                                                  companyExists(tokenOwner1) companyExists(tokenOwner2)
                                                 returns (uint amount2) {
         Token token1 = companies[tokenOwner1].token;
         Token token2 = companies[tokenOwner2].token;
