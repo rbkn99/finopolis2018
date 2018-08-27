@@ -56,8 +56,8 @@ public class User_bonuses extends SceneController {
             String companyAddress = c._address;
 
             try {
-                Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s = loyalty.companies(companyAddress).send();
-                c = new Company(s);
+                //Tuple8<Boolean, BigInteger, String, String, Boolean, String, BigInteger, BigInteger> s = loyalty.companies(companyAddress).send();
+                c =Utils.getCompany(web3,credentials,companyAddress); //new Company(s);
             }catch (Exception e){
                 // В случае если что-то пошло не так мы просто переходим к рассмотрению следующей компании
                 e.printStackTrace();

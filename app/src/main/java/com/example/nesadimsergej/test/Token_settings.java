@@ -50,7 +50,7 @@ public class Token_settings extends SceneController {
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
         try {
-            currentCompany = new Company(contract.companies(credentials.getAddress()).send());
+            currentCompany = Utils.getCompany(web3,credentials,credentials.getAddress()); //new Company(contract.companies(credentials.getAddress()).send());
 
             if(currentCompany.hasToken){
                 TokenWrapper companyToken = Utils.getToken(web3,credentials,currentCompany.token);

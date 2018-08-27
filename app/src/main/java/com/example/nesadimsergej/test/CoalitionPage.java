@@ -87,7 +87,7 @@ public class CoalitionPage extends SceneController {
         try {
 
 
-            System.out.println( contract.companies(credentials.getAddress()).send());
+            System.out.println( Utils.getCompany(web3,credentials,credentials.getAddress()));
             System.out.println( contract.coalitions(credentials.getAddress()).send());
 
         }catch (Exception e){

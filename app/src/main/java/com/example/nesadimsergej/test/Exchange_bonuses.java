@@ -169,7 +169,7 @@ public class Exchange_bonuses extends SceneController {
                 )
         {
             try {
-                Company normalCompany = new Company(loyalty.companies(c._address).send());
+                Company normalCompany = Utils.getCompany(web3,credentials,c._address);
                 if(!normalCompany.hasToken){
                     continue;
                 }
@@ -237,7 +237,7 @@ public class Exchange_bonuses extends SceneController {
             System.out.println(bonus.wrapper.ownerAddress);
             Company company = null;
             try {
-                company = new Company(loyaltyContract.companies(startCompany).send());
+                company = Utils.getCompany(web3,credentials,startCompany);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;

@@ -159,8 +159,7 @@ public class Pay_bonuses extends SceneController {
         Loyalty loyaltyContractBank = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
         try {
-            selectedCompany = new Company(loyaltyContractBank.companies(selectedCompany._address).send());
-
+            selectedCompany = Utils.getCompany(web3,credentials,selectedCompany._address);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -208,7 +207,7 @@ public class Pay_bonuses extends SceneController {
             System.out.println("Адрес владельца токена: "+tokenOwner);
 
             try {
-                System.out.println(loyaltyContractBank.companies(selectedCompany._address).send());
+                System.out.println(Utils.getCompany(web3,credentials,selectedCompany._address));// loyaltyContractBank.companies(selectedCompany._address).send());
 
             }catch (Exception e){
                 e.printStackTrace();

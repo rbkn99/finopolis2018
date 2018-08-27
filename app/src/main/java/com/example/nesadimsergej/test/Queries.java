@@ -78,7 +78,7 @@ public class Queries extends SceneController {
 
         BigInteger requestCount = BigInteger.ZERO;
         try {
-            Company s =new Company( contract.companies(credentials.getAddress()).send());
+            Company s =Utils.getCompany(web3,credentials,credentials.getAddress());//  contract.companies(credentials.getAddress()).send());
             requestCount = s.requestCount;//contract.getRequestCount().send();//(new Company(s)).requestCount;
             System.out.println(s);
         }catch (Exception e){

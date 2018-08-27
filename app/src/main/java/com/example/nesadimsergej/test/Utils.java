@@ -176,4 +176,26 @@ public class Utils {
         }
         return token;
     }
+
+    public static Map<String, Company> companyMap = new HashMap<>();
+
+    public static Company getCompany(Web3j web3,Credentials credential,String companyAddress){
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credential,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        Company company = null;
+        try {
+            company =new Company( contract.companies(companyAddress).send());
+            companyMap.put(companyAddress,company);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return company;
+    }
+
+    public static Company getLastRequestedCompany(Web3j web3,Credentials credential,String companyAddress){
+        if( companyMap.containsKey(companyAddress)){
+            return companyMap.get(companyAddress);
+        }
+        return getCompany(web3,credential,companyAddress);
+    }
 }
