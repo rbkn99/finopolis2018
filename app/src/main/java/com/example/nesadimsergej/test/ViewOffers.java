@@ -98,13 +98,30 @@ public class ViewOffers extends SceneController {
 
         View view = View.inflate(page.getContext(),R.layout.offer,null);
         ((Office)page.getContext()).runOnUiThread(() -> offerList.addView(view));
+
         Offer offer = new Offer(view, _data, new OfferCallback() {
             @Override
             public void func(Offer offer) {
                 OnOffer(offer);
             }
+        }, new OfferCallback() {
+            @Override
+            public void func(Offer offer) {
+                OnDecline(offer);
+
+            }
         });
         offer.LoadTokenData(web3,credentials,contract);
+
+        ((Office)page.getContext()).runOnUiThread(() -> {
+
+            if(credentials.getAddress().equals(offer.sellerAddress)){
+                offer.Decline();
+            }else{
+                offer.Accept();
+            }
+
+        });
 
     }
 
@@ -117,6 +134,22 @@ public class ViewOffers extends SceneController {
 
         try {
             bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    void OnDecline(Offer offer){
+        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
+        Credentials credentials = ((Office)page.getContext()).credentials;
+        Web3j web3 = ((Office)page.getContext()).web3;
+        Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+        System.out.println(offer.offerId);
+
+        try {
+            bankContract.recallOffer(offer.offerId,credentials.getAddress()).send();
+            //bankContract.rec
+            //bankContract.rec;//bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -151,14 +184,15 @@ class Offer{
 
     ViewOffers.OfferCallback onOffer;
 
-    Button acceptOffer;
+    Button acceptOffer,declineOffer;
     public void Destroy(){
         ((ViewGroup)offerView.getParent()).removeView(offerView);
     }
 
 
     private Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> data;
-    public Offer(View _offer, Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> _data,ViewOffers.OfferCallback _onOffer){
+    public Offer(View _offer, Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> _data,ViewOffers.OfferCallback _onOffer,
+                 ViewOffers.OfferCallback _onDecline){
         _this = this;
         offerView = _offer;
         offerId = _data.getValue1();
@@ -176,8 +210,21 @@ class Offer{
         sellToken_TV = _offer.findViewById(R.id.sellToken);
         buyToken_TV = _offer.findViewById(R.id.buyToken);
         acceptOffer = _offer.findViewById(R.id.acceptOffer);
+        declineOffer = _offer.findViewById(R.id.declineOffer);
         acceptOffer.setOnClickListener(v -> _onOffer.func(_this));
+        declineOffer.setOnClickListener(v -> _onDecline.func(_this));
     }
+    void Decline(){
+        acceptOffer.setVisibility(View.GONE);
+        declineOffer.setVisibility(View.VISIBLE);
+    }
+
+    void Accept(){
+        acceptOffer.setVisibility(View.VISIBLE);
+        declineOffer.setVisibility(View.GONE);
+    }
+
+
 
     public void LoadTokenData(Web3j web3, Credentials credentials, Loyalty contract){
         try {
