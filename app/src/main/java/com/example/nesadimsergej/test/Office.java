@@ -465,7 +465,7 @@ public class Office extends AppCompatActivity {
         //e.remove("PATH");
         //e.remove("NAME");
         e.apply();
-        Intent intent = new Intent(this, start.class);
+        Intent intent = new Intent(this, Start.class);
         startActivity(intent);
     }
 }

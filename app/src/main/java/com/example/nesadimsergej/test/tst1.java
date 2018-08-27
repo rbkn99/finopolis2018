@@ -127,7 +127,7 @@ public class tst1 extends AppCompatActivity {
                 //e.remove("PATH");
                 //e.remove("NAME");
                 e.apply();
-                Intent intent = new Intent(v.getContext(), start.class);
+                Intent intent = new Intent(v.getContext(), Start.class);
                 startActivity(intent);
             }
         });

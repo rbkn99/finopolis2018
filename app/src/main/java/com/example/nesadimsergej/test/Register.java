@@ -26,6 +26,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Register extends AppCompatActivity {
 
@@ -63,30 +64,25 @@ public class Register extends AppCompatActivity {
                     default:break;
                 }
             }
-
             public void onNothingSelected(AdapterView<?> parent)
             {
 
             }
-
         });
 
-        userRegisterButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                RegisterUser();
-            }
-        });
-        tcpRegisterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RegisterTCP();
-            }
-        });
+        userRegisterButton.setOnClickListener(v -> RegisterUser());
+        tcpRegisterButton.setOnClickListener(v -> RegisterTCP());
 
     }
+
+
+
     void RegisterUser(){
-        if(!checkUserFields())
+        String s = checkUserFields();
+        if(!s.equals("")) {
+            Toast.makeText(this,s,Toast.LENGTH_SHORT);
             return;
+        }
 
         userRegisterButton.setEnabled(false);
         new Handler().post(new Runnable() {
@@ -126,16 +122,6 @@ public class Register extends AppCompatActivity {
                         System.out.println(phoneNumber);
                         System.out.println(phoneHash);
                         System.out.println(phoneHash.bitLength());
-                        //crFile1.
-                        /*if(crFile1.delete())
-                        {
-                            System.out.println("File deleted successfully");
-                        }
-                        else
-                        {
-                            System.out.println("Failed to delete the file");
-                        }
-                        */
 
                         // Регистрируем пользователя
                         RemoteCall<TransactionReceipt> c = contract.addCustomer(
@@ -143,13 +129,12 @@ public class Register extends AppCompatActivity {
                                 phoneHash
                         );
 
-
                         Future<TransactionReceipt> a = c.sendAsync();
                         System.out.println(a.toString());
                         a.get();
 
                     }else{
-                        System.out.println("COOL HACK");
+                        //System.out.println("COOL HACK");
                     }
                     SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
@@ -170,9 +155,11 @@ public class Register extends AppCompatActivity {
         });
     }
     void RegisterTCP(){
-        if(!checkTCPFields())
+        String s = checkTCPFields();
+        if(!s.equals("")) {
+            Toast.makeText(this,s,Toast.LENGTH_SHORT);
             return;
-
+        }
         userRegisterButton.setEnabled(false);
         new Handler().post(new Runnable() {
             public void run() {
@@ -258,12 +245,26 @@ public class Register extends AppCompatActivity {
         });
 
     }
-    boolean checkUserFields(){
+    String checkUserFields(){
         String phoneNumber = phoneUSER.getText().toString();
-        return phoneNumber.length() > 0;
+        if(phoneNumber.length() == 0){
+            return "Не введен номер телефона";
+        }
+        return "";
     }
-    boolean checkTCPFields(){
-        return true;
+    String checkTCPFields(){
+        String phoneNumber = phoneTCP.getText().toString();
+        if(phoneNumber.length() == 0){
+            return "Не введен номер телефона";
+        }
+
+        String companyName = nameTCP.getText().toString();
+
+        if(companyName.length() == 0){
+            return "Не введен номер телефона";
+        }
+
+        return "";
     }
 
 
