@@ -198,4 +198,16 @@ public class Utils {
         }
         return getCompany(web3,credential,companyAddress);
     }
+
+    public static CoalitionWrapper getCoalition(Web3j web3,Credentials credential,String coalitionAddress){
+        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credential,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+
+        try {
+
+            return new CoalitionWrapper(contract.coalitions(coalitionAddress).send(),coalitionAddress);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -54,7 +54,7 @@ public class CoalitionPage extends SceneController {
 
         LoadCoalitionInfo();
         DisplayCoalitionInfo();
-        //UpdateCoalitionMembers();
+
         if(coalitionAddress.equals(((Office)page.getContext()).credentials.getAddress())) {
             System.out.println("here");
 
@@ -66,12 +66,18 @@ public class CoalitionPage extends SceneController {
             inviteButton.setVisibility(View.INVISIBLE);
             inviteAddress.setVisibility(View.INVISIBLE);
         }
+        OnSelected();
     }
 
     @Override
     void OnSelected() {
         super.OnSelected();
-        UpdateCoalitionMembers();
+
+        Runnable bonusUpdater = () -> UpdateCoalitionMembers();
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+
     }
 
     void Invite(){
@@ -83,9 +89,7 @@ public class CoalitionPage extends SceneController {
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,
                 credentials,
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
         try {
-
 
             System.out.println( Utils.getCompany(web3,credentials,credentials.getAddress()));
             System.out.println( contract.coalitions(credentials.getAddress()).send());
@@ -145,7 +149,8 @@ public class CoalitionPage extends SceneController {
 
         }
 
-        coalitionMembers.removeAllViews();
+        ((Office)page.getContext()).runOnUiThread(() -> coalitionMembers.removeAllViews());
+
         ArrayList<String> userAddresses = new ArrayList<>();
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(coalitionSize) == -1 ; i = i.add( BigInteger.ONE)) {
             try {
@@ -157,16 +162,21 @@ public class CoalitionPage extends SceneController {
         }
         for (String address:userAddresses
              ) {
-            AddRow(address);
+
+            AddRow(web3,credentials,address);
         }
     }
 
-    UserRow AddRow(String text){
-        View view = View.inflate(page.getContext(),R.layout.company_coalition,null);
-        coalitionMembers.addView(view);
-        UserRow r = new UserRow(view);
-        r.SetName(text);
-        return r;
+    void AddRow(Web3j web3, Credentials credentials,String companyAddress){
+        ((Office)page.getContext()).runOnUiThread(() -> {
+            View view = View.inflate(page.getContext(),R.layout.company_coalition,null);
+            coalitionMembers.addView(view);
+            UserRow r = new UserRow(view);
+
+            r.SetName(Utils.getLastRequestedCompany(web3,credentials,companyAddress).companyName);
+        });
+
+        //return r;
     }
 
     class CoaltionInfo{
