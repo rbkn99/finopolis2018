@@ -143,9 +143,6 @@ public class Pay_bonuses extends SceneController {
         }
     }
 
-
-
-
     void Pay(){
         Company selectedCompany = companies.get(companySelector.getSelectedItemPosition());
 
@@ -223,7 +220,8 @@ public class Pay_bonuses extends SceneController {
 
             Runnable bonusUpdater = () -> {
                 try {
-
+                    ((Office)page.getContext()).runOnUiThread(() ->
+                            Toast.makeText(page.getContext(),"Платеж отправлен на обработку",Toast.LENGTH_SHORT).show());
                     loyaltyContractBank.transferBonuses(sC._address, credentials.getAddress(),
                             sumR, bonusSumR,
                             tO).send();
