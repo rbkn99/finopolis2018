@@ -60,28 +60,35 @@ public class ViewOffers extends SceneController {
     }
     void UpdateOffers(){
         offerList.removeAllViews();
-        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
-        Credentials credentials = ((Office)page.getContext()).credentials;
-        Web3j web3 = ((Office)page.getContext()).web3;
-        Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-        BigInteger stockSize = BigInteger.ZERO;
+        Runnable bonusUpdater = () -> {
+            Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
+            Credentials credentials = ((Office)page.getContext()).credentials;
+            Web3j web3 = ((Office)page.getContext()).web3;
+            Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+            Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+            BigInteger stockSize = BigInteger.ZERO;
 
-        try{
-            stockSize = contract.getStockSize().send();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        for(BigInteger i = BigInteger.ZERO ; i.compareTo(stockSize) == -1 ; i = i.add( BigInteger.ONE)) {
-            try {
-
-                Tuple6<BigInteger, String, String, String, BigInteger, BigInteger> offer = contract.getOfferFromStock(i).send();
-                AddOffer(offer,web3,credentials,contract);
+            try{
+                stockSize = contract.getStockSize().send();
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }
+
+            for(BigInteger i = BigInteger.ZERO ; i.compareTo(stockSize) == -1 ; i = i.add( BigInteger.ONE)) {
+                try {
+
+                    Tuple6<BigInteger, String, String, String, BigInteger, BigInteger> offer = contract.getOfferFromStock(i).send();
+                    AddOffer(offer,web3,credentials,contract);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+
+
 
     }
 
@@ -90,7 +97,7 @@ public class ViewOffers extends SceneController {
                   Credentials credentials,Loyalty contract){
 
         View view = View.inflate(page.getContext(),R.layout.offer,null);
-        offerList.addView(view);
+        ((Office)page.getContext()).runOnUiThread(() -> offerList.addView(view));
         Offer offer = new Offer(view, _data, new OfferCallback() {
             @Override
             public void func(Offer offer) {
@@ -169,12 +176,7 @@ class Offer{
         sellToken_TV = _offer.findViewById(R.id.sellToken);
         buyToken_TV = _offer.findViewById(R.id.buyToken);
         acceptOffer = _offer.findViewById(R.id.acceptOffer);
-        acceptOffer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _onOffer.func(_this);
-            }
-        });
+        acceptOffer.setOnClickListener(v -> _onOffer.func(_this));
     }
 
     public void LoadTokenData(Web3j web3, Credentials credentials, Loyalty contract){
@@ -192,10 +194,13 @@ class Offer{
 
     @SuppressLint("SetTextI18n")
     public void DisplayData(){
-        offerId_TV.setText(offerId.toString());
-        offer_seller.setText(sellerAddress);
-        sellToken_TV.setText(sellToken.name + "   ("+sellAmount.toString()+")");
-        buyToken_TV.setText(buyToken.name+ "   ("+buyAmount.toString()+")");
+        ((Office)offerView.getContext()).runOnUiThread(() ->{
+            offerId_TV.setText(offerId.toString());
+            offer_seller.setText(sellerAddress);
+            sellToken_TV.setText(sellToken.name + "   ("+sellAmount.toString()+")");
+            buyToken_TV.setText(buyToken.name+ "   ("+buyAmount.toString()+")");
+
+        });
     }
 
 

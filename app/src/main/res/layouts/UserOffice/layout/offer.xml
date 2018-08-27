@@ -125,7 +125,7 @@
             android:id="@+id/acceptOffer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ОПА, ТВОЯ МАТЬ ПРЕДЛОЖЕНИЕ" />
+            android:text="Принять" />
 
     </LinearLayout>
 
