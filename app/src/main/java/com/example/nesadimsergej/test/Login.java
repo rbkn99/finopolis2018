@@ -1,5 +1,6 @@
 package com.example.nesadimsergej.test;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -20,11 +21,13 @@ import java.math.BigInteger;
 
 public class Login extends AppCompatActivity {
 
-    Button loginBtn,backBtn;
+    Button loginBtn, backBtn;
     EditText numberLogin;
     Web3j web3;
     Login context;
     SharedPreferences sharedPref;
+
+    Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,81 +43,87 @@ public class Login extends AppCompatActivity {
         numberLogin = findViewById(R.id.numberLogin);
         backBtn = findViewById(R.id.backBtn);
 
+        ctx = this;
+
         loginBtn.setOnClickListener(v -> TryToLogin());
         backBtn.setOnClickListener(v -> Back());
 
     }
 
 
-    void TryToLogin(){
-            String phoneNumber = numberLogin.getText().toString();
+    void TryToLogin() {
+        String phoneNumber = numberLogin.getText().toString();
 
-            String pathToFile = sharedPref.getString("PATH","EC");
+        String pathToFile = sharedPref.getString("PATH", "EC");
 
-            try {
-                BigInteger phoneHash = new BigInteger(
-                        String.valueOf(phoneNumber.hashCode())
-                );
-
-                String fileName = phoneHash.toString() +".json";
-                org.web3j.crypto.Credentials credentials;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
                 try {
-                    credentials = WalletUtils.loadCredentials(" ",
-                            pathToFile + "/" + fileName);
-                }catch (Exception e){
-                    Toast.makeText(context,"Неверный номер телефона",Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                    return;
-                }
+                    BigInteger phoneHash = new BigInteger(
+                            String.valueOf(phoneNumber.hashCode())
+                    );
 
-                Loyalty contract = Loyalty.load(
-                        Config.contractAdress,
-                        web3,
-                        credentials,
-                        Loyalty.GAS_PRICE,
-                        Loyalty.GAS_LIMIT);
-
-                Tuple2<Boolean, BigInteger> a = contract.customers(credentials.getAddress()).sendAsync().get();
-
-                BigInteger targetHash = a.getValue2();
-
-                SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("NAME",fileName);
-
-
-                if(phoneHash.equals(targetHash)){
-                    editor.apply();
-                    // Это обычный пользователь
-                    Intent intent = new Intent(context, Office_User.class);
-                    startActivity(intent);
-                }else{
-
-                    Company cmp = new Company(contract.companies(credentials.getAddress()).sendAsync().get());
-                    targetHash = cmp.phoneNumber;
-
-                    if(phoneHash.equals(targetHash)) {
-                        editor.apply();
-                        // Это компания
-                        Intent intent = new Intent(context, Office_TCP.class);
-                        startActivity(intent);
-                    }else{
-                        Toast.makeText(context,"Такой номер не зарегистрирован в системе",Toast.LENGTH_SHORT).show();
+                    String fileName = phoneHash.toString() + ".json";
+                    org.web3j.crypto.Credentials credentials;
+                    Utils.sendNotification(ctx, "Подождите, выполняется вход...", 3);
+                    try {
+                        credentials = WalletUtils.loadCredentials(" ",
+                                pathToFile + "/" + fileName);
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Неверный номер телефона", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                        return;
                     }
+
+                    Loyalty contract = Loyalty.load(
+                            Config.contractAdress,
+                            web3,
+                            credentials,
+                            Loyalty.GAS_PRICE,
+                            Loyalty.GAS_LIMIT);
+
+                    Tuple2<Boolean, BigInteger> a = contract.customers(credentials.getAddress()).sendAsync().get();
+
+                    BigInteger targetHash = a.getValue2();
+
+                    SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("NAME", fileName);
+
+
+                    if (phoneHash.equals(targetHash)) {
+                        editor.apply();
+                        // Это обычный пользователь
+                        Intent intent = new Intent(context, Office_User.class);
+                        startActivity(intent);
+                    } else {
+
+                        Company cmp = new Company(contract.companies(credentials.getAddress()).sendAsync().get());
+                        targetHash = cmp.phoneNumber;
+
+                        if (phoneHash.equals(targetHash)) {
+                            editor.apply();
+                            // Это компания
+                            Intent intent = new Intent(context, Office_TCP.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(context, "Такой номер не зарегистрирован в системе", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    SharedPreferences.Editor a = sharedPref.edit();
+                    a.clear();
+                    a.apply();
+
+                    e.printStackTrace();
+                    Back();
                 }
-
-            }catch (Exception e){
-                SharedPreferences.Editor a = sharedPref.edit();
-                a.clear();
-                a.apply();
-
-                e.printStackTrace();
-                Back();
             }
-
+        }).start();
     }
 
-    void Back(){
+    void Back() {
         Intent intent = new Intent(context, Start.class);
         startActivity(intent);
     }
