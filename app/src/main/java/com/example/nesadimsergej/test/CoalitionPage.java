@@ -56,6 +56,8 @@ public class CoalitionPage extends SceneController {
         DisplayCoalitionInfo();
         //UpdateCoalitionMembers();
         if(coalitionAddress.equals(((Office)page.getContext()).credentials.getAddress())) {
+            System.out.println("here");
+
             inviteButton.setVisibility(View.VISIBLE);
             inviteAddress.setVisibility(View.VISIBLE);
             inviteButton.setOnClickListener(v -> Invite());
