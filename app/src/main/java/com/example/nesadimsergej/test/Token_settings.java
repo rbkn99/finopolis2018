@@ -53,7 +53,7 @@ public class Token_settings extends SceneController {
             currentCompany = new Company(contract.companies(credentials.getAddress()).send());
 
             if(currentCompany.hasToken){
-                TokenWrapper companyToken = Pay_bonuses.getToken(web3,credentials,currentCompany.token);
+                TokenWrapper companyToken = Utils.getToken(web3,credentials,currentCompany.token);
 
 
 

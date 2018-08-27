@@ -175,7 +175,7 @@ public class Exchange_bonuses extends SceneController {
                 }
                 Token tokenContract = Token.load(normalCompany.token,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
 
-                TokenWrapper token = Pay_bonuses.getToken(web3,credentials,normalCompany.token);
+                TokenWrapper token = Utils.getToken(web3,credentials,normalCompany.token);
 
                 String nominalOwner = "ERROR";
                 try{
@@ -243,7 +243,7 @@ public class Exchange_bonuses extends SceneController {
                 return;
             }
             System.out.println(company.toString());
-            ArrayList<TokenWrapper> s = Pay_bonuses.CalculatePossibleTokens(web3, credentials, company);
+            ArrayList<TokenWrapper> s = Utils.CalculatePossibleTokens(web3, credentials, company);
 
             ArrayList<TokenWrapperWithBalance> tokens = new ArrayList<>();
 

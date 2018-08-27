@@ -183,8 +183,8 @@ class Offer{
         try {
             Company sell_company = new Company( contract.companies(sellTokenCompany).send());
             Company buy_company = new Company( contract.companies(wantedTokenCompany).send());
-            buyToken = Pay_bonuses.getToken(web3,credentials,buy_company.token);
-            sellToken = Pay_bonuses.getToken(web3,credentials,sell_company.token);
+            buyToken = Utils.getToken(web3,credentials,buy_company.token);
+            sellToken = Utils.getToken(web3,credentials,sell_company.token);
 
         }catch (Exception e){
             e.printStackTrace();

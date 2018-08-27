@@ -41,7 +41,14 @@ public class Coalitions extends SceneController {
     @Override
     void OnSelected(){
         super.OnSelected();
-        LoadCompanyCoalitions();
+
+        Runnable bonusUpdater = () -> LoadCompanyCoalitions();
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+
+
+
         if(!showCoalition){
             DisplayListOfCoalitions();
         }else{
@@ -83,16 +90,18 @@ public class Coalitions extends SceneController {
                 e.printStackTrace();
             }
         }
-        coalitionList.removeAllViews();
+        ((Office)page.getContext()).runOnUiThread(() ->  coalitionList.removeAllViews());
+
         for (CoalitionWrapper coalition:coalitions
              ) {
 
-            View view = View.inflate(page.getContext(),R.layout.coalition_row,null);
+            ((Office)page.getContext()).runOnUiThread(() ->  {
+                View view = View.inflate(page.getContext(),R.layout.coalition_row,null);
+                coalitionList.addView(view);
+                //((TextView)view.findViewById(R.id.QueriText)).setText(text);
+                AddCoalition(coalition,view);
+            });
 
-            coalitionList.addView(view);
-            //((TextView)view.findViewById(R.id.QueriText)).setText(text);
-
-            AddCoalition(coalition,view);
         }
     }
 
