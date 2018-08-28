@@ -75,9 +75,6 @@ public class User_bonuses extends SceneController {
                 continue;
             }
 
-            // Добавляем строчку в список бонусов
-            addCount ++;
-            BonusRow r = AddRow(c.companyName);
             String tokeAddress = c.token;
 
             // Сейчас мы попробуем узнать баланс пользователя
@@ -90,6 +87,13 @@ public class User_bonuses extends SceneController {
                 // нужно домножить его на 10^18
                 userBalance = userBalance.divide(Config.tene18);
                 System.out.println(userBalance);
+
+                if (userBalance.compareTo(BigInteger.ZERO) < 1)
+                    continue;
+
+                // Добавляем строчку в список бонусов
+                addCount ++;
+                BonusRow r = AddRow(c.companyName + " (" + contract.name().send() + ")");
                 // Записываем это число в нашу строчку
                 final BigInteger uB = userBalance;
 

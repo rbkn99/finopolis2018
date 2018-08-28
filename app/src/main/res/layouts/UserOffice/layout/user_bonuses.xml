@@ -36,68 +36,6 @@
                 tools:layout_editor_absoluteX="20dp"
                 tools:layout_editor_absoluteY="20dp">
 
-                <TableRow>
-
-                    <TextView
-                        android:layout_column="1"
-                        android:paddingLeft="30dp"
-                        android:text="KFC"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:gravity="right"
-                        android:paddingRight="30dp"
-                        android:text="14"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:gravity="right"
-                        android:paddingRight="30dp"
-                        android:text="88"
-                        android:textSize="25sp" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_column="1"
-                        android:paddingLeft="30dp"
-                        android:text="BURGER KONG"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:gravity="right"
-                        android:paddingRight="30dp"
-                        android:text="13"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:gravity="right"
-                        android:paddingRight="30dp"
-                        android:text="37"
-                        android:textSize="25sp" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_column="1"
-                        android:paddingLeft="30dp"
-                        android:text="BURGER KONG"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:gravity="right"
-                        android:paddingRight="30dp"
-                        android:text="13"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:gravity="right"
-                        android:paddingRight="30dp"
-                        android:text="37"
-                        android:textSize="25sp" />
-                </TableRow>
             </TableLayout>
         </LinearLayout>
     </ScrollView>

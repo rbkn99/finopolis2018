@@ -40,16 +40,16 @@
 
     <Button
         android:id="@+id/back_btn"
-        android:layout_width="256dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="444dp"
+        android:layout_marginBottom="56dp"
         android:background="@color/buttonBckgrnd"
         android:text="Назад"
         android:textColor="@color/backgrnd"
+        app:layout_constraintBottom_toBottomOf="@+id/User"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/TCP"
@@ -92,7 +92,7 @@
 
         <Button
             android:id="@+id/tcpRegisterButton"
-            android:layout_width="256dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
 
             android:layout_marginTop="130dp"
@@ -134,7 +134,7 @@
 
         <Button
             android:id="@+id/userRegisterButton"
-            android:layout_width="256dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
 
             android:layout_marginTop="130dp"
