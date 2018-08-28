@@ -106,9 +106,12 @@ public class Token_settings extends SceneController {
 
         Runnable bonusUpdater = () -> {
             try {
+                ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
+                        "Отправляем запрос",
+                        Toast.LENGTH_SHORT).show());
                 s.send();
                 ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
-                        "Что-то произошло",
+                        "Бонусная валюта добавлена",
                         Toast.LENGTH_SHORT).show());
             }catch (Exception e){
                 ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),

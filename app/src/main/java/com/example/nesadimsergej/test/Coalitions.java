@@ -21,6 +21,8 @@ public class Coalitions extends SceneController {
     boolean showCoalition = false;
     CoalitionPage coalitionPage = null;
 
+    TextView ifEmpty;
+
     public Coalitions(View _page){
         super();
         page = _page;
@@ -35,6 +37,7 @@ public class Coalitions extends SceneController {
 
         coalitionSelected = page.findViewById(R.id.coalitionSelected);
         displayCoalitions = page.findViewById(R.id.displayCoalitions);
+        ifEmpty = page.findViewById(R.id.ifEmpty);
         DisplayListOfCoalitions();
     }
 
@@ -77,7 +80,7 @@ public class Coalitions extends SceneController {
         //System.out.println(coalitionCount);
 
         ArrayList<CoalitionWrapper> coalitions = new ArrayList<>();
-
+        boolean added = false;
 
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(coalitionCount) == -1 ; i = i.add( BigInteger.ONE)) {
             try {
@@ -86,6 +89,7 @@ public class Coalitions extends SceneController {
                 Tuple2<Boolean, String> coalition = contract.coalitions(coalitionAddress).send();
                 CoalitionWrapper coalitionWrapper = new CoalitionWrapper(coalition,coalitionAddress);
                 coalitions.add(coalitionWrapper);
+                added = true;
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -101,8 +105,15 @@ public class Coalitions extends SceneController {
                 //((TextView)view.findViewById(R.id.QueriText)).setText(text);
                 AddCoalition(coalition,view);
             });
-
         }
+        boolean _added = added;
+        ((Office)page.getContext()).runOnUiThread(() -> {
+            if(!_added){
+                ifEmpty.setVisibility(View.VISIBLE);
+            }else {
+                ifEmpty.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     CoalitionRow AddCoalition( CoalitionWrapper coalition,View view){
