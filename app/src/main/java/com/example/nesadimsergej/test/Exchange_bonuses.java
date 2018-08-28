@@ -295,6 +295,7 @@ public class Exchange_bonuses extends SceneController {
         BigInteger count1_18 = count.multiply(Config.tene18);
 
 
+
         String debug = "";
         debug+="Название первого токена: "+token1.wrapper.name+"\n";
         debug+="Название второго токена: "+token2.wrapper.name+"\n";
@@ -313,13 +314,28 @@ public class Exchange_bonuses extends SceneController {
         Loyalty bankLoyalty = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
 
+        Token tokenContract = Token.load(token1.wrapper.tokenAddress,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
+        BigInteger balance = BigInteger.ZERO;
+        try{
+            balance = tokenContract.balanceOf(credentials.getAddress()).send();
+            //System.out.println(count1_18);
+            //System.out.println(balance);
+        }catch (Exception e){
+            return;
+        }
+
+        if(balance.compareTo(count1_18) == -1){
+            Toast.makeText(page.getContext(),
+                    "Количество бонусов не может превышать баланс", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Runnable bonusUpdater = () -> {
             try{
                 String tokenOwner1 = token1.wrapper.nominalOwner;
                 String tokenOwner2 = token2.wrapper.nominalOwner;
+                Toast(() -> Toast.makeText(page.getContext(),"Запрос отправлен успешно!",Toast.LENGTH_SHORT).show());
                 bankLoyalty.exchangeToken(credentials.getAddress(),tokenOwner1,tokenOwner2,count1_18).send();
-
                 Toast(() -> Toast.makeText(page.getContext(),"Обмен прошел успешно!",Toast.LENGTH_SHORT).show());
 
             }catch (Exception e){
@@ -389,6 +405,7 @@ public class Exchange_bonuses extends SceneController {
 
         Runnable bonusUpdater = () -> {
             try {
+                Toast(() -> Toast.makeText(page.getContext(),"Запрос успешно отправлен",Toast.LENGTH_SHORT).show());
                 bankContract.placeCustomerOffer(credentials.getAddress(), token1.wrapper.nominalOwner, token2.wrapper.nominalOwner,
                         count1_18, count2_18).send();
                 Toast(() -> Toast.makeText(page.getContext(),"Предложение успешно опубликовано",Toast.LENGTH_SHORT).show());
