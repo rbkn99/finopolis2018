@@ -1,5 +1,6 @@
 package com.example.nesadimsergej.test;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class Config {
@@ -18,7 +19,7 @@ public class Config {
     public static String bankPublicKey = "753a8f55eec86e250d2f9671b8f08f85cbdf897aeee5944abfa8a32b794c3b5988a38eb91025cb4560c38095bcbf51263509d47b70db4ef75d51efe9cfd82ce9";
 
     public static BigInteger tene18 =new BigInteger( "1000000000000000000");
-
+    public static BigDecimal tene18_decimal =new BigDecimal( "1000000000000000000");
     public static float AddBalance = 0.3f;
     public static BigInteger AddToToken = new BigInteger("100000000000000000");// =0.1 eth
 }

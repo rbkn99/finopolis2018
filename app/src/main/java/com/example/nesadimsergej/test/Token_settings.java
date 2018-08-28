@@ -10,6 +10,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.KeyStore;
 
@@ -94,9 +95,21 @@ public class Token_settings extends SceneController {
             Toast.makeText(page.getContext(),"Введите цену при обмене",Toast.LENGTH_SHORT).show();
             return;
         }
-        BigInteger in_price = new BigInteger(in_price_string);
-        BigInteger out_price = new BigInteger(out_price_string);
-        BigInteger swap_price = new BigInteger(swap_price_string);
+
+        double in_price_float = Double.valueOf(in_price_string);
+        double out_price_float =Double.valueOf(out_price_string);
+        double swap_price_float =Double.valueOf(swap_price_string);
+
+
+
+        BigInteger in_price = (new BigDecimal(in_price_float).multiply(Config.tene18_decimal)).toBigInteger();//new BigInteger(in_price_string);
+        BigInteger out_price = (new BigDecimal(out_price_float).multiply(Config.tene18_decimal)).toBigInteger();
+        BigInteger swap_price = (new BigDecimal(swap_price_float).multiply(Config.tene18_decimal)).toBigInteger();
+
+        System.out.println(in_price);
+        System.out.println(out_price);
+        System.out.println(swap_price);
+
 
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
@@ -109,7 +122,9 @@ public class Token_settings extends SceneController {
                 ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
                         "Отправляем запрос",
                         Toast.LENGTH_SHORT).show());
+
                 s.send();
+
                 ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
                         "Бонусная валюта добавлена",
                         Toast.LENGTH_SHORT).show());

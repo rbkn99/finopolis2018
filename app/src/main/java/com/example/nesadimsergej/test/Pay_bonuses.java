@@ -144,9 +144,20 @@ public class Pay_bonuses extends SceneController {
     }
 
     void Pay(){
-        Company selectedCompany = companies.get(companySelector.getSelectedItemPosition());
-
-        TokenWrapper selectedToken =(TokenWrapper) tokenSelector.getSelectedItem();
+        Company selectedCompany = null;
+        try {
+            selectedCompany = companies.get(companySelector.getSelectedItemPosition());
+        }catch (Exception e){
+            Toast.makeText(page.getContext(),"Пока ни одна компания не участвует в нашей программе :(",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        TokenWrapper selectedToken;
+        try {
+            selectedToken =(TokenWrapper) tokenSelector.getSelectedItem();
+        }catch (Exception e){
+            Toast.makeText(page.getContext(),"Эта компания пока что не выпустила собственный токен :(",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
