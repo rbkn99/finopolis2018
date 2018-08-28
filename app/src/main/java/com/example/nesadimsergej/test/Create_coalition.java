@@ -36,11 +36,14 @@ public class Create_coalition extends SceneController {
 
 
         CoalitionNotExists();
-        createCoalitionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CreateCoalition();
-            }
+        createCoalitionBtn.setOnClickListener(v -> {
+
+
+            Runnable bonusUpdater = () -> CreateCoalition();
+            Thread thread = new Thread(bonusUpdater);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
+
         });
 
     }
@@ -102,10 +105,13 @@ public class Create_coalition extends SceneController {
         System.out.println(cName);
        try {
            contract.addCoalition(credentials.getAddress(), cName).send();
-           Toast.makeText(page.getContext(), "Коалиция создана",
-                   Toast.LENGTH_SHORT).show();
+           ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(), "Коалиция создана",
+                   Toast.LENGTH_SHORT).show());
+
            OnSelected();
         }catch (Exception e){
+           ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(), "Во время создание коалиции произошла ошибка",
+                   Toast.LENGTH_SHORT).show());
             e.printStackTrace();
         }
 

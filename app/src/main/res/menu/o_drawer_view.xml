@@ -7,9 +7,7 @@
         <item
             android:id="@+id/Transaction"
             android:title="@string/Transaction" />
-        <item
-            android:id="@+id/YE"
-            android:title="@string/Shieet" />
+
 
         <item
             android:id="@+id/user_bonuses"
@@ -20,5 +18,8 @@
         <item
             android:id="@+id/pay_bonuses"
             android:title="Оплатить" />
+        <item
+            android:id="@+id/YE"
+            android:title="@string/Settings" />
     </group>
 </menu>
