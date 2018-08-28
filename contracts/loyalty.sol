@@ -8,13 +8,13 @@ contract Loyalty {
     
     struct Customer {
         bool exists;
-        uint phoneNumber;
+        int phoneNumber;
         mapping (address => bool) tokens;
     }
     
     struct Company {
         bool exists;
-        uint phoneNumber;
+        int phoneNumber;
         string name;
         address _address;
         
@@ -66,13 +66,17 @@ contract Loyalty {
     
     Offer[] private stock;
     
+    int256[] phoneNumberHashes;
+    bytes32[] tokenNames;
+    bytes32[] companyNames;
+    
     // cost of asm operations of transferBonuses() func
     uint constant public transferBonuses_transaction_cost = 119290;
     
     // events for debug and output
-    event AddCompany(address companyAddress, string name, uint phoneNumber);
-    event AddCustomer(address customerAddress, uint number);
-    event LoggedIn(address _address, uint number);
+    event AddCompany(address companyAddress, string name, int phoneNumber);
+    event AddCustomer(address customerAddress, int number);
+    event LoggedIn(address _address, int number);
     event Log(address _address);
     
     constructor() public {
@@ -81,35 +85,72 @@ contract Loyalty {
         offerHistory = 0;
     }
     
+    function phoneIsUnique (int256 _phoneNumber) public view 
+                returns (bool bass){
+        bass = true;
+        for(uint256 i = 0; i < phoneNumberHashes.length; i++){
+            if(_phoneNumber == phoneNumberHashes[i]) {
+                bass = false;
+            }
+        }
+        return bass;
+    }
+    
+    function nameIsUnique (string _name) public view returns (bool bass){
+        bass = true;
+        bytes32 nhash = outerHash(_name);
+        for(uint256 i = 0; i < companyNames.length; i++){
+            if(nhash == companyNames[i]) {
+                bass = false;
+            }
+        }
+        return bass;
+    }
+    
+    function tokenIsUnique (string _name) public view returns (bool bass) {
+        bass = true;
+        bytes32 nhash = outerHash(_name);
+        for(uint256 i = 0; i < tokenNames.length; i++){
+            if(nhash == tokenNames[i]) {
+                bass = false;
+            }
+        }
+        return bass;
+    }
+    
     // bank calls
-    function addCustomer(address customer, uint _phoneNumber) public
+    function addCustomer(address customer, int _phoneNumber) public
                 onlyOwner
                 customerNotExists(customer)
-                companyNotExists(customer) {
+                companyNotExists(customer){
         customers[customer].exists = true;
         customers[customer].phoneNumber = _phoneNumber;
+        phoneNumberHashes.push(_phoneNumber);
         emit AddCustomer(customer, customers[customer].phoneNumber);
     }
     
     // bank calls
-    function addCompany(address company, string _name, uint _phoneNumber) public
+    function addCompany(address company, string _name, int _phoneNumber) public
                 onlyOwner
                 companyNotExists(company)
-                customerNotExists(company) {
+                customerNotExists(company){
         companiesCount++;
         companies[company]._address = company;
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
+        phoneNumberHashes.push(_phoneNumber);
         companies[company].request_count = 0;
         companySet.push(companies[company]);
+        bytes32 nhash = outerHash(_name);
+        companyNames.push(nhash);
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
     
     // bank calls, company pays
     function transferBonuses(address company,
                              address customer,
-                             uint roublesAmount,
+                             uint roublesAmount, // *10^36
                              uint bonusesAmount,
                              address tokenOwner) // 0-address if bonusesAmount == 0
                                 public
@@ -122,7 +163,7 @@ contract Loyalty {
         Token token = companies[company].token;
         // charge bonuses to customer
         if (bonusesAmount == 0) {
-            bonusesAmount = roublesAmount.mul(token.inPrice());
+            bonusesAmount = roublesAmount.div(token.inPrice());
             token.transfer(company, customer, bonusesAmount);
             customers[customer].tokens[token] = true;
             val = bonusesAmount;
@@ -131,9 +172,12 @@ contract Loyalty {
         else {
             require(companies[tokenOwner].token.balances(customer) >= bonusesAmount, "Not enough bonuses");
             uint deltaMoney;
+            //uint newBonuses;
             if (token.nominal_owner() == tokenOwner) {
+                //newBonuses = roublesAmount.div(token.inPrice());
+                //token.transfer(company, customer, newBonuses);
                 deltaMoney = bonusesAmount.mul(token.outPrice());
-                roublesAmount = roublesAmount.mul(10^18);
+                
                 roublesAmount = roublesAmount.add(deltaMoney);
                 token.transfer(customer, company, bonusesAmount);
             }
@@ -141,10 +185,11 @@ contract Loyalty {
                 address current_coalition = isMatch(companies[company], 
                                                     companies[tokenOwner]);
                 require(current_coalition != address(0), "Not in one ccoalition");
+                //newBonuses = roublesAmount.mul(token.inPrice());
+                //token.transfer(company, customer, newBonuses);
                 deltaMoney = bonusesAmount.mul(companies[tokenOwner].token.exchangePrice());
                 deltaMoney = deltaMoney.div(token.exchangePrice());
                 deltaMoney = deltaMoney.mul(token.outPrice());
-                roublesAmount = roublesAmount.mul(10^18);
                 roublesAmount = roublesAmount.add(deltaMoney);
                 companies[tokenOwner].token.transfer(customer, tokenOwner, bonusesAmount);
             }
@@ -152,6 +197,7 @@ contract Loyalty {
         }
         if (!payForTransaction(company, initialGas - gasleft()))
             revert();
+        return val;
     }
     
     // check if 2 companies belongs to the one coalition and returns its name
@@ -165,6 +211,10 @@ contract Loyalty {
         return address(0);
     }
     
+    function outerHash(string s) pure internal returns (bytes32 hash) {
+        return keccak256(abi.encodePacked(s));
+    }
+    
     // company calls
     // name of the token, tokens per spent rouble, price when you spend tokens, exchange price
     function setToken(string _name, uint _inPrice, uint _outPrice,
@@ -172,6 +222,8 @@ contract Loyalty {
         companyExists(msg.sender) {
         // doesn't exist => create
         if (!companies[msg.sender].has_token) {
+            bytes32 nhash = outerHash(_name);
+            tokenNames.push(nhash);
             Token token = new Token(msg.sender, _name, _inPrice, _outPrice, _exchangePrice);
             companies[msg.sender].token = token;
             companies[msg.sender].has_token = true;
@@ -213,7 +265,7 @@ contract Loyalty {
     
     function exchangeToken(address customer, address tokenOwner1, address tokenOwner2, uint amount)
                                                 public onlyOwner customerExists(customer) 
-                                                companyExists(tokenOwner1) companyExists(tokenOwner2)
+                                                  companyExists(tokenOwner1) companyExists(tokenOwner2)
                                                 returns (uint amount2) {
         Token token1 = companies[tokenOwner1].token;
         Token token2 = companies[tokenOwner2].token;
@@ -310,6 +362,7 @@ contract Loyalty {
                                    buyAmount);
         stock.push(newOffer);
         offerHistory++;
+        companies[sellTokenCompany].token.charge(customer, sellAmount);
     }
     
     function getStockSize() public view returns (uint256 stockSize) {
@@ -338,19 +391,42 @@ contract Loyalty {
         for(uint256 i = 0; i < stock.length; i++ ) {
             if(stock[i].id == id) {
                 offer = stock[i];
+                break;
             }
         }
+        require(i < stock.length, "Offer not found");
+        require(stock[i].id == id, "Offer not found");
+        
         Token sellT = companies[offer.sellTokenCompany].token;
         Token buyT = companies[offer.wantedTokenCompany].token;
         
         require(buyT.balanceOf(acceptor) >= offer.buyAmount, "Not enough tokens to buy");
         
-        sellT.charge(offer.seller, offer.sellAmount);
+        //sellT.charge(offer.seller, offer.sellAmount);
         buyT.charge(acceptor, offer.buyAmount);
         
         sellT.emitToken(acceptor, offer.sellAmount);
         buyT.emitToken(offer.seller, offer.buyAmount);
         
+        delete stock[i];
+        for (uint j = i + 1; j < stock.length; j++) {
+            stock[j-1] = stock[j];
+        }
+        stock.length--;
+    }
+    
+    function recallOffer (uint256 id, address acceptor) public 
+                            onlyOwner{
+        
+        for(uint256 i = 0; i < stock.length; i++ ) {
+            if(stock[i].id == id) {
+                break;
+            }
+        }
+        require(i < stock.length, "Offer not found");
+        require(stock[i].id == id, "Offer not found");
+        require(stock[i].seller == acceptor, "Deleting unowned offer");
+        companies[stock[i].sellTokenCompany].token.emitToken(acceptor, stock[i].sellAmount);
         delete stock[i];
         for (uint j = i + 1; j < stock.length; j++) {
             stock[j-1] = stock[j];
@@ -392,6 +468,13 @@ contract Loyalty {
     
     modifier onlyOwner() {
         require(msg.sender == owner);
+        _;
+    }
+    
+    modifier uniquePhone(int256 number) {
+        for(uint256 i = 0; i < phoneNumberHashes.length; i++){
+            require(number != phoneNumberHashes[i], "Phone number already registered");
+        }
         _;
     }
     
