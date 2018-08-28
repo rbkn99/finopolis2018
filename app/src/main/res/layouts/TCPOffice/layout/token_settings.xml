@@ -8,8 +8,8 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="251dp"
-        android:layout_height="601dp"
+        android:layout_width="297dp"
+        android:layout_height="602dp"
         android:layout_marginBottom="1dp"
         android:layout_marginEnd="80dp"
         android:layout_marginLeft="80dp"
@@ -86,7 +86,9 @@
             android:id="@+id/createTokenBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Создать" />
+            android:background="@color/buttonBckgrnd"
+            android:text="Создать"
+            android:textColor="@color/backgrnd" />
 
         <Space
             android:layout_width="match_parent"
@@ -96,7 +98,9 @@
             android:id="@+id/payForToken"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Залить бабки" />
+            android:background="@color/buttonBckgrnd"
+            android:text="Залить бабки"
+            android:textColor="@color/backgrnd" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
