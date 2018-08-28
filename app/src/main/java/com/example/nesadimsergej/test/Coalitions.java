@@ -141,7 +141,6 @@ public class Coalitions extends SceneController {
     }
 
     void OnClick(CoalitionRow row){
-        //if(coalitionPage == null){
         coalitionPage = new CoalitionPage(page,row.wrapper.address);
         coalitionPage.back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,10 +148,8 @@ public class Coalitions extends SceneController {
                 DisplayListOfCoalitions();
             }
         });
-        //}
         DisplaySelectedCoalition();
-        //System.out.println(row.wrapper.name);
-
+        coalitionPage.OnSelected();
     }
 
     interface CoalitionCallback {

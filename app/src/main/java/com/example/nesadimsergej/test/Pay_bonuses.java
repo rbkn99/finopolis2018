@@ -12,6 +12,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.tuples.generated.Tuple2;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,24 +146,22 @@ public class Pay_bonuses extends SceneController {
 
     void Pay(){
         Company selectedCompany = null;
-        try {
-            selectedCompany = companies.get(companySelector.getSelectedItemPosition());
-        }catch (Exception e){
-            Toast.makeText(page.getContext(),"Пока ни одна компания не участвует в нашей программе :(",Toast.LENGTH_SHORT).show();
+        selectedCompany = companies.get(companySelector.getSelectedItemPosition());
+        if(selectedCompany == null) {
+            Toast.makeText(page.getContext(), "Пока ни одна компания не участвует в нашей программе :(", Toast.LENGTH_SHORT).show();
             return;
         }
-        TokenWrapper selectedToken;
-        try {
-            selectedToken =(TokenWrapper) tokenSelector.getSelectedItem();
-        }catch (Exception e){
-            Toast.makeText(page.getContext(),"Эта компания пока что не выпустила собственный токен :(",Toast.LENGTH_SHORT).show();
+        TokenWrapper selectedToken = null;
+        selectedToken =(TokenWrapper) tokenSelector.getSelectedItem();
+
+        if(selectedToken == null) {
+            Toast.makeText(page.getContext(), "Эта компания пока что не выпустила собственный токен :(", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
         Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
-        System.out.println("Start address: "+bankCredentials.getAddress());
 
         Loyalty loyaltyContractBank = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
@@ -175,9 +174,14 @@ public class Pay_bonuses extends SceneController {
         String paySumStr = paySum.getText().toString();
         String bonusSumStr = bonusesSum.getText().toString();
 
+        if(bonusSumStr.equals(""))
+            bonusSumStr = "0";
+
+        double bonusesSum_float = Double.valueOf(bonusSumStr);
+
         BigInteger bonusSum = BigInteger.ZERO;
         if(!bonusSumStr.equals("")){
-            bonusSum = new BigInteger(bonusSumStr);
+            bonusSum = (new BigDecimal(bonusesSum_float).multiply(Config.tene18_decimal)).toBigInteger();
         }
 
         if(paySumStr.isEmpty()){
@@ -191,27 +195,29 @@ public class Pay_bonuses extends SceneController {
         BigInteger bonusCount = BigInteger.ZERO;
         String tokenOwner = "0x0000000000000000000000000000000000000000";
         try {
-            bonusCount = tokenContract.balanceOf(credentials.getAddress()).send().divide(Config.tene18);
+            bonusCount = tokenContract.balanceOf(credentials.getAddress()).send();
             tokenOwner = tokenContract.nominal_owner().send();
         }catch (Exception e){
             Toast.makeText(page.getContext(),"Error!",Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
-        if(bonusCount.compareTo(bonusSum) == -1){
+        BigInteger bonusSum_18 = bonusSum;
+        if(bonusCount.compareTo(bonusSum_18) == -1){
             Toast.makeText(page.getContext(),"Недостаточно бонусов на счету",Toast.LENGTH_SHORT).show();
             return;
         }
         try {
-            BigInteger sumR = (new BigInteger(paySumStr)).multiply(Config.tene18);
-            BigInteger bonusSumR = bonusSum.multiply(Config.tene18);
-            System.out.println("Сумма в рублях: "+sumR);
-            System.out.println("Сумма в бонусах: "+bonusSumR);
+            BigInteger sum_36 = (new BigDecimal(Double.valueOf(paySumStr)).multiply(Config.tene18_decimal.multiply(Config.tene18_decimal))).toBigInteger();
+
+            System.out.println("Сумма в рублях: "+sum_36);
+            System.out.println("Сумма в бонусах: "+bonusSum_18);
             System.out.println("Адрес компании: "+selectedCompany._address);
             System.out.println("Имя компании: "+selectedCompany.companyName);
 
-            if(bonusSumR.equals(BigInteger.ZERO))
+            if(bonusSum_18.equals(BigInteger.ZERO))
                 tokenOwner = "0x0000000000000000000000000000000000000000";
+
             System.out.println("Адрес владельца токена: "+tokenOwner);
 
             try {
@@ -232,10 +238,12 @@ public class Pay_bonuses extends SceneController {
             Runnable bonusUpdater = () -> {
                 try {
                     ((Office)page.getContext()).runOnUiThread(() ->
-                            Toast.makeText(page.getContext(),"",Toast.LENGTH_SHORT).show());
+                            Toast.makeText(page.getContext(),"Платеж отправлен на обработку",Toast.LENGTH_SHORT).show());
+
                     loyaltyContractBank.transferBonuses(sC._address, credentials.getAddress(),
-                            sumR, bonusSumR,
+                            sum_36, bonusSum_18,
                             tO).send();
+
                     ((Office)page.getContext()).runOnUiThread(() ->
                             Toast.makeText(page.getContext(),"Оплата прошла успешно",Toast.LENGTH_SHORT).show());
 
