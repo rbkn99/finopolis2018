@@ -106,9 +106,9 @@ public class Login extends AppCompatActivity {
                         Intent intent = new Intent(context, Office_User.class);
                         startActivity(intent);
                     } else {
-                    Company cmp = Utils.getCompany(web3,credentials,credentials.getAddress());// new Company(contract.companies(credentials.getAddress()).sendAsync().get());
+                        Company cmp = Utils.getCompany(web3,credentials,credentials.getAddress());// new Company(contract.companies(credentials.getAddress()).sendAsync().get());
                         System.out.println(cmp);
-                    targetHash = cmp.phoneNumber;
+                        targetHash = cmp.phoneNumber;
 
                         if (phoneHash.equals(targetHash)) {
                             editor.apply();

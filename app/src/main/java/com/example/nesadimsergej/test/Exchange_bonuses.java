@@ -389,6 +389,7 @@ public class Exchange_bonuses extends SceneController {
 
         Runnable bonusUpdater = () -> {
             try {
+                Toast(() -> Toast.makeText(page.getContext(),"Запрос успешно отправлен",Toast.LENGTH_SHORT).show());
                 bankContract.placeCustomerOffer(credentials.getAddress(), token1.wrapper.nominalOwner, token2.wrapper.nominalOwner,
                         count1_18, count2_18).send();
                 Toast(() -> Toast.makeText(page.getContext(),"Предложение успешно опубликовано",Toast.LENGTH_SHORT).show());
