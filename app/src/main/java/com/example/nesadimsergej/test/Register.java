@@ -113,11 +113,13 @@ public class Register extends AppCompatActivity {
                     // Если номер это просто то 1, то текущий пользователь не регистрируется( кул хак)
                     String newFileName = str;
                     File crFile = new File(folder.getAbsolutePath() + "/" +str);
+
                     if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
+                        Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
                         Loyalty contract = Loyalty.load(
                                 Config.contractAdress,
                                 web3,
-                                Credentials.create(Config.bankPrivateKey, Config.bankPublicKey),
+                                bankCredentials,
                                 Loyalty.GAS_PRICE,
                                 Loyalty.GAS_LIMIT);
 
@@ -125,6 +127,13 @@ public class Register extends AppCompatActivity {
                         BigInteger phoneHash = new BigInteger(
                                 String.valueOf(phoneNumber.hashCode())
                         );
+
+                        if(!isPhoneUnique(web3,bankCredentials,phoneHash)){
+                            _this.runOnUiThread(() -> userRegisterButton.setEnabled(true));
+                            _this.runOnUiThread(() -> Toast.makeText(context,"Такой номер уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
+                            return;
+                        }
+
                         newFileName = phoneHash.toString()+".json";
                         Boolean s = crFile.renameTo(new File(folder.getAbsolutePath() + "/"+newFileName));
 
@@ -142,6 +151,7 @@ public class Register extends AppCompatActivity {
                         Future<TransactionReceipt> a = c.sendAsync();
                         System.out.println(a.toString());
                         a.get();
+
 
                     }else{
                         //System.out.println("COOL HACK");
@@ -189,7 +199,7 @@ public class Register extends AppCompatActivity {
                     File folder = new File(getApplicationContext().getFilesDir(),"");
                     String str = WalletUtils.generateLightNewWalletFile(" ", folder);
                     Credentials credentials = WalletUtils.loadCredentials(" ",folder.getAbsolutePath() + "/" +str);
-
+                    Credentials bankCredentials = Credentials.create(Config.bankPrivateKey, Config.bankPublicKey);
                     // Сохраняем всю интересующую нас информацию
 
 
@@ -219,6 +229,16 @@ public class Register extends AppCompatActivity {
                                 String.valueOf(phoneNumber.hashCode())
                         );
 
+                        if(!isPhoneUnique(web3,bankCredentials,phoneHash)){
+                            _this.runOnUiThread(() -> tcpRegisterButton.setEnabled(true));
+                            _this.runOnUiThread(() -> Toast.makeText(context,"Такой номер уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
+                            return;
+                        }
+                        if(!isNameUnique(web3,bankCredentials,companyName)){
+                            _this.runOnUiThread(() -> tcpRegisterButton.setEnabled(true));
+                            _this.runOnUiThread(() -> Toast.makeText(context,"Компания с таким именем уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
+                            return;
+                        }
                         newFileName = phoneHash.toString()+".json";
                         Boolean s = crFile.renameTo(new File(folder.getAbsolutePath() + "/"+newFileName));
 
@@ -263,7 +283,7 @@ public class Register extends AppCompatActivity {
                     //startActivity(intent);
 
                 }catch(Exception e){
-                    userRegisterButton.setEnabled(true);
+                    tcpRegisterButton.setEnabled(true);
                     ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
                     e.printStackTrace();
                 }
@@ -293,7 +313,29 @@ public class Register extends AppCompatActivity {
         return "";
     }
 
+    boolean isNameUnique(Web3j web3, Credentials bankCredentials,String name){
+        Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty
+        .GAS_LIMIT);
 
+        try {
+            return bankContract.nameIsUnique(name).send();
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    boolean isPhoneUnique(Web3j web3, Credentials bankCredentials,BigInteger phoneHash){
+        Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty
+                .GAS_LIMIT);
+        //System.out.println(bankCredentials.getEcKeyPair().getPublicKey().toString(16));
+        try {
+            return bankContract.phoneIsUnique(phoneHash).send();
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     // Функция для загрузки всех нужных эелементов сцены
     void LoadAll(){

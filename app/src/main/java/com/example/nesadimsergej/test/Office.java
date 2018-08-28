@@ -307,14 +307,15 @@ public class Office extends AppCompatActivity {
 
             try {
                 Loyalty contract = Loyalty
-                        .deploy(web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT.add(new BigInteger("1800000"))).send();
+                        .deploy(web3,credentials,Loyalty.GAS_PRICE,(new BigInteger("7000763"))).send();
                 String contractAddress = contract.getContractAddress();
                 context.runOnUiThread(() -> deployContractBtn.setEnabled(true));
                 System.out.println("Contract address1: "+contractAddress);
             }catch (Exception e){
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Error!",
-                        Toast.LENGTH_SHORT).show();
+                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error!",
+                        Toast.LENGTH_SHORT).show());
+
                 context.runOnUiThread(() -> deployContractBtn.setEnabled(true));
             }
         };

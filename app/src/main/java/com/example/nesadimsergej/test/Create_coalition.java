@@ -97,7 +97,7 @@ public class Create_coalition extends SceneController {
         Web3j web3 = ((Office)page.getContext()).web3;
 
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,
-                Credentials.create(Config.bankPrivateKey,Config.bankPublicKey),
+                Credentials.create(Config.bankPrivateKey),
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         System.out.println(cName);
        try {
