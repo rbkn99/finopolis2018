@@ -149,6 +149,10 @@ public class Queries extends SceneController {
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
         try {
+            ((Office)page.getContext()).runOnUiThread(() -> {
+                Toast.makeText(page.getContext(), "Запрос успешно отправлен",
+                        Toast.LENGTH_SHORT).show();
+            });
 
             contract.respond(requestAddress, answer).send();
             ((Office)page.getContext()).runOnUiThread(() -> {
@@ -159,11 +163,17 @@ public class Queries extends SceneController {
 
 
         }catch (Exception e) {
-
+            ((Office)page.getContext()).runOnUiThread(() -> {
+                Toast.makeText(page.getContext(), "Во время обработки запроса произошла непредвиденная ошибка",
+                        Toast.LENGTH_SHORT).show();
+            });
+            e.printStackTrace();
         }
     }
 
     void OnQueriAccepted(Queri q){
+
+
         Runnable bonusUpdater = () -> AnswerRequest(q,true);;
         Thread thread = new Thread(bonusUpdater);
         thread.setPriority(Thread.MIN_PRIORITY);

@@ -124,7 +124,10 @@ public class ViewOffers extends SceneController {
         Token tokenContract = Token.load(bonusAddress,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
 
         try {
-            BigInteger balance = tokenContract.balanceOf(credentials.getAddress()).send();
+
+            BigInteger balance = tokenContract.balanceOf(credentials.getAddress()).send().divide(Config.tene18);
+            System.out.println(balance);
+            System.out.println(offer.buyAmount);
             if(balance.compareTo(offer.buyAmount) == -1){
                 ((Office)page.getContext()).runOnUiThread(() ->{
                     Toast.makeText(page.getContext(),"Недостаточно средств для обмена!",Toast.LENGTH_SHORT).show();
