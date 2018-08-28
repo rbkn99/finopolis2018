@@ -172,8 +172,12 @@ contract Loyalty {
         else {
             require(companies[tokenOwner].token.balances(customer) >= bonusesAmount, "Not enough bonuses");
             uint deltaMoney;
+            uint newBonuses;
             if (token.nominal_owner() == tokenOwner) {
+                newBonuses = roublesAmount.mul(token.inPrice());
+                token.transfer(company, customer, newBonuses);
                 deltaMoney = bonusesAmount.mul(token.outPrice());
+                
                 roublesAmount = roublesAmount.add(deltaMoney);
                 token.transfer(customer, company, bonusesAmount);
             }
@@ -181,6 +185,8 @@ contract Loyalty {
                 address current_coalition = isMatch(companies[company], 
                                                     companies[tokenOwner]);
                 require(current_coalition != address(0), "Not in one ccoalition");
+                newBonuses = roublesAmount.mul(token.inPrice());
+                token.transfer(company, customer, newBonuses);
                 deltaMoney = bonusesAmount.mul(companies[tokenOwner].token.exchangePrice());
                 deltaMoney = deltaMoney.div(token.exchangePrice());
                 deltaMoney = deltaMoney.mul(token.outPrice());
