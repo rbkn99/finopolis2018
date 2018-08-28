@@ -74,7 +74,7 @@ public class Register extends AppCompatActivity {
 
             }
         });
-
+        back_btn = findViewById(R.id.back_btn);
         userRegisterButton.setOnClickListener(v -> RegisterUser());
         tcpRegisterButton.setOnClickListener(v -> RegisterTCP());
         back_btn.setOnClickListener(v -> {

@@ -67,6 +67,10 @@ public class User_bonuses extends SceneController {
                 continue;
             }
             // В случае если компания пока что не завела свой токен мы просто переходим к следующей компании
+            if(c==null){
+                System.out.println("NULL");
+                continue;
+            }
             if(!c.hasToken){
                 continue;
             }
