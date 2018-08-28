@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -18,8 +19,6 @@ import java.math.BigInteger;
 
 public class ViewOffers extends SceneController {
 
-
-    ConstraintLayout exampleQueri;
     LinearLayout offerList;
     public Button back;
     Button update;
@@ -37,25 +36,9 @@ public class ViewOffers extends SceneController {
 
         back = page.findViewById(R.id.back);
         update = page.findViewById(R.id.update);
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpdateOffers();
-            }
-        });
+        update.setOnClickListener(v -> UpdateOffers());
 
-        //Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> _data = new Tuple6<>(
-        //        BigInteger.ZERO,"0x0","0x0","0x0",BigInteger.ZERO,BigInteger.ZERO);
-
-        //exampleQueri = page.findViewById(R.id.queri);
         offerList = page.findViewById(R.id.offerList);
-        //for(Integer i = 0;i<20;i++)
-        //    AddOffer(_data);
-
-        //Timer timer = new Timer();
-        //timer.schedule(new QueryUpdater(), 0, 30000);// Обновлять запросы каждые 30 секунд
-        //((Office)page.getContext()).timers.add(timer);*/
-        //page.getContext().
         UpdateOffers();
     }
     void UpdateOffers(){
@@ -130,11 +113,32 @@ public class ViewOffers extends SceneController {
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
         Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-        System.out.println(offer.offerId);
+
+        String bonusAddress = offer.buyToken.tokenAddress;
+        Token tokenContract = Token.load(bonusAddress,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
 
         try {
-            bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
+            BigInteger balance = tokenContract.balanceOf(credentials.getAddress()).send();
+            if(balance.compareTo(offer.buyAmount) == -1){
+                ((Office)page.getContext()).runOnUiThread(() ->{
+                    Toast.makeText(page.getContext(),"Недостаточно средств для обмена!",Toast.LENGTH_SHORT).show();
+                });
+                return;
+            }
+
         }catch (Exception e){
+
+        }
+        try {
+            bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
+            ((Office)page.getContext()).runOnUiThread(() ->{
+                Toast.makeText(page.getContext(),"Обмен прошел успешно!",Toast.LENGTH_SHORT).show();
+                offer.Destroy();
+            });
+        }catch (Exception e){
+            ((Office)page.getContext()).runOnUiThread(() ->{
+                Toast.makeText(page.getContext(),"Неизвестная ошибка, попробуйте обновить страницу!",Toast.LENGTH_SHORT).show();
+            });
             e.printStackTrace();
         }
     }
@@ -144,14 +148,20 @@ public class ViewOffers extends SceneController {
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
         Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-        System.out.println(offer.offerId);
+
+
 
         try {
             bankContract.recallOffer(offer.offerId,credentials.getAddress()).send();
-            //bankContract.rec
-            //bankContract.rec;//bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
+            ((Office)page.getContext()).runOnUiThread(() ->{
+                Toast.makeText(page.getContext(),"Предложение успешно отозвано!",Toast.LENGTH_SHORT).show();
+                offer.Destroy();
+            });
         }catch (Exception e){
             e.printStackTrace();
+            ((Office)page.getContext()).runOnUiThread(() ->{
+                Toast.makeText(page.getContext(),"Неизвестная ошибка, попробуйте обновить страницу!",Toast.LENGTH_SHORT).show();
+            });
         }
     }
 
