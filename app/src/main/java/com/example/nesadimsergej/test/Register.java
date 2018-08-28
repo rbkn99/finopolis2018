@@ -84,7 +84,6 @@ public class Register extends AppCompatActivity {
         });
         context = this;
         //_this = ;
-
     }
 
 
@@ -98,7 +97,8 @@ public class Register extends AppCompatActivity {
 
         userRegisterButton.setEnabled(false);
         tcpRegisterButton.setEnabled(false);
-        Utils.sendNotification(this, String.format(Utils.longLoadingMsg, "создание кошелька"), 1);
+        back_btn.setEnabled(false);
+        Toast.makeText(this, String.format(Utils.longLoadingMsg, "создание кошелька"), Toast.LENGTH_LONG).show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -135,6 +135,7 @@ public class Register extends AppCompatActivity {
 
                         if(!isPhoneUnique(web3,bankCredentials,phoneHash)){
                             _this.runOnUiThread(() -> userRegisterButton.setEnabled(true));
+                            _this.runOnUiThread(() -> back_btn.setEnabled(true));
                             _this.runOnUiThread(() -> Toast.makeText(context,"Такой номер уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
                             return;
                         }
@@ -197,7 +198,8 @@ public class Register extends AppCompatActivity {
         }
         userRegisterButton.setEnabled(false);
         tcpRegisterButton.setEnabled(false);
-        Utils.sendNotification(this, String.format(Utils.longLoadingMsg, "создание кошелька"), 1);
+        back_btn.setEnabled(false);
+        Toast.makeText(this, String.format(Utils.longLoadingMsg, "создание кошелька"), Toast.LENGTH_LONG).show();
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -237,11 +239,13 @@ public class Register extends AppCompatActivity {
 
                         if(!isPhoneUnique(web3,bankCredentials,phoneHash)){
                             _this.runOnUiThread(() -> tcpRegisterButton.setEnabled(true));
+                            _this.runOnUiThread(() -> back_btn.setEnabled(true));
                             _this.runOnUiThread(() -> Toast.makeText(context,"Такой номер уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
                             return;
                         }
                         if(!isNameUnique(web3,bankCredentials,companyName)){
                             _this.runOnUiThread(() -> tcpRegisterButton.setEnabled(true));
+                            _this.runOnUiThread(() -> back_btn.setEnabled(true));
                             _this.runOnUiThread(() -> Toast.makeText(context,"Компания с таким именем уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
                             return;
                         }

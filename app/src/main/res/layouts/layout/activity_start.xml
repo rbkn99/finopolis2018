@@ -11,13 +11,11 @@
         android:id="@+id/textView"
         android:layout_width="293dp"
         android:layout_height="157dp"
-        android:layout_alignBottom="@+id/imageView2"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/imageView2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="88dp"
-        android:gravity="top|bottom|left|right"
-        android:text="Blockchain\n                Loyalty\n                              Program"
+        android:gravity="center"
+        android:text="Blockchain\nLoyalty\nProgram"
         android:textSize="24sp"
         android:textStyle="bold"
         app:fontFamily="@font/cairo_bold"
@@ -27,7 +25,7 @@
 
     <Button
         android:id="@+id/registerBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -45,7 +43,7 @@
 
     <Button
         android:id="@+id/loginBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
 
         android:layout_alignParentBottom="true"

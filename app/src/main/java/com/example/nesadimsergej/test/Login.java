@@ -68,7 +68,7 @@ public class Login extends AppCompatActivity {
 
                     String fileName = phoneHash.toString() + ".json";
                     Credentials credentials;
-                    Utils.sendNotification(ctx, "Подождите, выполняется вход...", 3);
+                    context.runOnUiThread(() -> Toast.makeText(context, "Подождите, выполняется вход...", Toast.LENGTH_LONG).show());
                     try {
                         credentials = WalletUtils.loadCredentials(" ",
                                 pathToFile + "/" + fileName);
