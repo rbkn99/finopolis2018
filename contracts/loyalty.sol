@@ -278,9 +278,7 @@ contract Loyalty {
         token1.charge(customer, amount);
         token2.emitToken(customer, amount2);
     }
-    
-    
-// --------------------------------------------------- NAHUI S MOEGO BOLOTA --------------------------------------------------------------------------    
+   
     // coalition - coalition leader, _name - coalition name
     function addCoalition(address coalition, string _name) public
                                 onlyOwner
