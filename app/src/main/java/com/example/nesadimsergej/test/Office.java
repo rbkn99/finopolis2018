@@ -274,7 +274,7 @@ public class Office extends AppCompatActivity {
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }catch (Exception e){
                 e.printStackTrace();
-                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error!",
+                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), e.getStackTrace().toString(),
                         Toast.LENGTH_SHORT).show());
 
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));

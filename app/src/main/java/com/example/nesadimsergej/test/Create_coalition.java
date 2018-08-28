@@ -104,13 +104,16 @@ public class Create_coalition extends SceneController {
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         System.out.println(cName);
        try {
+           ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(), "Запрос отправлен на обработку",
+                   Toast.LENGTH_SHORT).show());
+
            contract.addCoalition(credentials.getAddress(), cName).send();
            ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(), "Коалиция создана",
                    Toast.LENGTH_SHORT).show());
 
-           OnSelected();
+           ((Office)page.getContext()).runOnUiThread(() ->  OnSelected());
         }catch (Exception e){
-           ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(), "Во время создание коалиции произошла ошибка",
+           ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(), "Во время создании коалиции произошла ошибка",
                    Toast.LENGTH_SHORT).show());
             e.printStackTrace();
         }

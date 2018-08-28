@@ -38,7 +38,7 @@ public class Register extends AppCompatActivity {
     EditText phoneUSER,phoneTCP,nameTCP;
     Web3j web3;
     String[] items = new String[]{"Клиент-покупатель","ТСП"};
-
+    Button back_btn;
     Context context;
     Register _this;
     @Override
@@ -76,7 +76,11 @@ public class Register extends AppCompatActivity {
 
         userRegisterButton.setOnClickListener(v -> RegisterUser());
         tcpRegisterButton.setOnClickListener(v -> RegisterTCP());
+        back_btn.setOnClickListener(v -> {
 
+            Intent intent = new Intent(getBaseContext(), Start.class);
+            startActivity(intent);
+        });
         context = this;
         //_this = ;
 
