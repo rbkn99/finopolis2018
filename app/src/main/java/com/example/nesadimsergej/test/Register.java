@@ -200,104 +200,102 @@ public class Register extends AppCompatActivity {
         tcpRegisterButton.setEnabled(false);
         back_btn.setEnabled(false);
         Toast.makeText(this, String.format(Utils.longLoadingMsg, "создание кошелька"), Toast.LENGTH_LONG).show();
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    //Заводин новый адресс, публичный ключ и приватный ключ
-                    File folder = new File(getApplicationContext().getFilesDir(),"");
-                    String str = WalletUtils.generateLightNewWalletFile(" ", folder);
-                    Credentials credentials = WalletUtils.loadCredentials(" ",folder.getAbsolutePath() + "/" +str);
-                    Credentials bankCredentials = Credentials.create(Config.bankPrivateKey, Config.bankPublicKey);
-                    // Сохраняем всю интересующую нас информацию
+        new Thread(() -> {
+            try {
+                //Заводин новый адресс, публичный ключ и приватный ключ
+                File folder = new File(getApplicationContext().getFilesDir(),"");
+                String str = WalletUtils.generateLightNewWalletFile(" ", folder);
+                Credentials credentials = WalletUtils.loadCredentials(" ",folder.getAbsolutePath() + "/" +str);
+                Credentials bankCredentials = Credentials.create(Config.bankPrivateKey, Config.bankPublicKey);
+                // Сохраняем всю интересующую нас информацию
 
 
-                    /**
-                     * Загружаем смарт контракт ( все действия будут выполнены не от имени регистрируемого пользователя,
-                     * а от имени владельца контракта( того, кто его залил)
-                     **/
-                    Loyalty contract = Loyalty.load(
-                            Config.contractAdress,/*Адресс контракта (указан в конфиге) */
-                            web3,/* */
-                            Credentials.create(Config.bankPrivateKey, Config.bankPublicKey),/**/
-                            Loyalty.GAS_PRICE,
-                            Loyalty.GAS_LIMIT);
+                /**
+                 * Загружаем смарт контракт ( все действия будут выполнены не от имени регистрируемого пользователя,
+                 * а от имени владельца контракта( того, кто его залил)
+                 **/
+                Loyalty contract = Loyalty.load(
+                        Config.contractAdress,/*Адресс контракта (указан в конфиге) */
+                        web3,/* */
+                        Credentials.create(Config.bankPrivateKey, Config.bankPublicKey),/**/
+                        Loyalty.GAS_PRICE,
+                        Loyalty.GAS_LIMIT);
 
-                    String phoneNumber = phoneTCP.getText().toString();
-                    String companyName = nameTCP.getText().toString();
+                String phoneNumber = phoneTCP.getText().toString();
+                String companyName = nameTCP.getText().toString();
 
 
-                    String newFileName = str;
-                    File crFile = new File(folder.getAbsolutePath() + "/" +str);
+                String newFileName = str;
+                File crFile = new File(folder.getAbsolutePath() + "/" +str);
 
-                    // Если номер это просто то 1, то текущий пользователь не регистрируется( кул хак)
-                    if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
+                // Если номер это просто то 1, то текущий пользователь не регистрируется( кул хак)
+                if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
 
-                        // Хэш номера телефона, который мы будем отправлять в блокчейн
-                        BigInteger phoneHash = new BigInteger(
-                                String.valueOf(phoneNumber.hashCode())
-                        );
+                    // Хэш номера телефона, который мы будем отправлять в блокчейн
+                    BigInteger phoneHash = new BigInteger(
+                            String.valueOf(phoneNumber.hashCode())
+                    );
 
-                        if(!isPhoneUnique(web3,bankCredentials,phoneHash)){
-                            _this.runOnUiThread(() -> tcpRegisterButton.setEnabled(true));
-                            _this.runOnUiThread(() -> back_btn.setEnabled(true));
-                            _this.runOnUiThread(() -> Toast.makeText(context,"Такой номер уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
-                            return;
-                        }
-                        if(!isNameUnique(web3,bankCredentials,companyName)){
-                            _this.runOnUiThread(() -> tcpRegisterButton.setEnabled(true));
-                            _this.runOnUiThread(() -> back_btn.setEnabled(true));
-                            _this.runOnUiThread(() -> Toast.makeText(context,"Компания с таким именем уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
-                            return;
-                        }
-                        newFileName = phoneHash.toString()+".json";
-                        Boolean s = crFile.renameTo(new File(folder.getAbsolutePath() + "/"+newFileName));
+                    if(!isPhoneUnique(web3,bankCredentials,phoneHash)){
+                        _this.runOnUiThread(() -> tcpRegisterButton.setEnabled(true));
+                        _this.runOnUiThread(() -> back_btn.setEnabled(true));
+                        _this.runOnUiThread(() -> Toast.makeText(context,"Такой номер уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
+                        return;
+                    }
+                    if(!isNameUnique(web3,bankCredentials,companyName)){
+                        _this.runOnUiThread(() -> tcpRegisterButton.setEnabled(true));
+                        _this.runOnUiThread(() -> back_btn.setEnabled(true));
+                        _this.runOnUiThread(() -> Toast.makeText(context,"Компания с таким именем уже зарегистрирован в сети",Toast.LENGTH_SHORT).show());
+                        return;
+                    }
+                    newFileName = phoneHash.toString()+".json";
+                    Boolean s1 = crFile.renameTo(new File(folder.getAbsolutePath() + "/"+newFileName));
 
-                        if(crFile.delete())
-                        {
-                            System.out.println("File deleted successfully");
-                        }
-                        else
-                        {
-                            System.out.println("Failed to delete the file");
-                        }
-
-                        System.out.println(phoneNumber);
-                        System.out.println(phoneHash);
-                        System.out.println(phoneHash.bitLength());
-
-                        // Регистрируем пользователя
-                        contract.addCompany(
-                                credentials.getAddress(),
-                                companyName,
-                                phoneHash
-                        ).send();
-
-                    }else{
-                        System.out.println("COOL HACK");
+                    if(crFile.delete())
+                    {
+                        System.out.println("File deleted successfully");
+                    }
+                    else
+                    {
+                        System.out.println("Failed to delete the file");
                     }
 
-                    SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("NAME", newFileName);
-                    editor.putString("PATH",folder.getAbsolutePath());
-                    editor.putBoolean(Config.IS_TCP,false);
-                    editor.apply();
+                    System.out.println(phoneNumber);
+                    System.out.println(phoneHash);
+                    System.out.println(phoneHash.bitLength());
 
-                    Utils.sendNotification(context, String.format("Создание кошелька завершено, теперь вы можете войти!\n" +
-                            "Номер телефона: %s\nНазвание: %s\nАдрес: %s", phoneNumber, companyName, credentials.getAddress()), 2);
-                    Intent i = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    // Переходим на сцену с личным кабинетом компании
-                    //Intent intent = new Intent(getBaseContext(), Office_TCP.class);
-                    //startActivity(intent);
+                    // Регистрируем пользователя
+                    contract.addCompany(
+                            credentials.getAddress(),
+                            companyName,
+                            phoneHash
+                    ).send();
 
-                }catch(Exception e){
-                    tcpRegisterButton.setEnabled(true);
-                    ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
-                    e.printStackTrace();
+                }else{
+                    System.out.println("COOL HACK");
                 }
+
+                SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("NAME", newFileName);
+                editor.putString("PATH",folder.getAbsolutePath());
+                editor.putBoolean(Config.IS_TCP,false);
+                editor.apply();
+
+                Utils.sendNotification(context, String.format("Создание кошелька завершено, теперь вы можете войти!\n" +
+                        "Номер телефона: %s\nНазвание: %s\nАдрес: %s", phoneNumber, companyName, credentials.getAddress()), 2);
+                Intent i = getBaseContext().getPackageManager()
+                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                // Переходим на сцену с личным кабинетом компании
+                //Intent intent = new Intent(getBaseContext(), Office_TCP.class);
+                //startActivity(intent);
+
+            }catch(Exception e){
+                tcpRegisterButton.setEnabled(true);
+                ((TextView)(findViewById(R.id.textView2))).setText(e.toString());
+                e.printStackTrace();
             }
         }).start();
 
