@@ -40,7 +40,12 @@ public class Token_settings extends SceneController {
         createTokenBtn = page.findViewById(R.id.createTokenBtn);
         createTokenBtn.setOnClickListener(v -> CreateToken());
         payForToken = page.findViewById(R.id.payForToken);
-        payForToken.setOnClickListener(v -> PayForToken());
+        payForToken.setOnClickListener(v -> {
+            Runnable bonusUpdater = () -> PayForToken();
+            Thread thread = new Thread(bonusUpdater);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
+        });
     }
     Company currentCompany = null;
     @Override

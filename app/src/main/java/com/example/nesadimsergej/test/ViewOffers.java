@@ -143,7 +143,7 @@ public class ViewOffers extends SceneController {
             bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
             ((Office)page.getContext()).runOnUiThread(() ->{
                 Toast.makeText(page.getContext(),"Обмен прошел успешно!",Toast.LENGTH_SHORT).show();
-                offer.Destroy();
+                //offer.Destroy();
             });
         }catch (Exception e){
             ((Office)page.getContext()).runOnUiThread(() ->{
