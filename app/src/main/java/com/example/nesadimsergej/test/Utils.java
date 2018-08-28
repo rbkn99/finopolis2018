@@ -23,9 +23,10 @@ import static android.support.v4.app.NotificationCompat.DEFAULT_VIBRATE;
 
 public class Utils {
     public static final String CHANNEL_ID = "1";
+    public static NotificationManager notificationManager;
 
     public static final String longLoadingMsg = "Идёт %s, это может занять несколько минут. Вы можете " +
-            "свернуть приложение, но, пожалуйста, не выключайте его.";
+            "свернуть приложение, но пожалуйста, не выключайте его.";
 
     public static void createNotificationChannel(Context ctx) {
         // Create the NotificationChannel, but only on API 26+ because
@@ -38,7 +39,7 @@ public class Utils {
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
+            notificationManager = ctx.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
     }

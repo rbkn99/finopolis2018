@@ -3,6 +3,7 @@ package com.example.nesadimsergej.test;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -163,7 +164,8 @@ public class Register extends AppCompatActivity {
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
 
-                    Utils.sendNotification(context, "Создание кошелька завершено, теперь вы можете войти!", 2);
+                    Utils.sendNotification(context, String.format("Создание кошелька завершено, теперь вы можете войти!\n" +
+                            "Номер телефона: %s\nАдрес: %s", phoneNumber, credentials.getAddress()), 2);
                     // Перезагружаемся, иначе вылетает
 
                     if(!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
@@ -273,7 +275,8 @@ public class Register extends AppCompatActivity {
                     editor.putBoolean(Config.IS_TCP,false);
                     editor.apply();
 
-                    Utils.sendNotification(context, "Создание кошелька завершено, теперь вы можете войти!", 2);
+                    Utils.sendNotification(context, String.format("Создание кошелька завершено, теперь вы можете войти!\n" +
+                            "Номер телефона: %s\nНазвание: %s\nАдрес: %s", phoneNumber, companyName, credentials.getAddress()), 2);
                     Intent i = getBaseContext().getPackageManager()
                             .getLaunchIntentForPackage( getBaseContext().getPackageName() );
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
