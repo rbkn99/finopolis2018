@@ -81,7 +81,7 @@ public class Office_User extends Office {
         UpdateBalance();
 
         Timer timer = new Timer();
-        timer.schedule(new CompanyUpdater(), 0, 30000);
+        timer.schedule(new CompanyUpdater(), 0, 10000);
         timers.add(timer);
 
     }

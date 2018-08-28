@@ -188,7 +188,7 @@ public class Utils {
 
     public static Company getCompany(Web3j web3,Credentials credential,String companyAddress){
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,credential,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
+        System.out.println(companyAddress);
         Company company = null;
         try {
             company =new Company( contract.companies(companyAddress).send());
