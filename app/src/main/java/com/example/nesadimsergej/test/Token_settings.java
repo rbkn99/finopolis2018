@@ -1,11 +1,19 @@
 package com.example.nesadimsergej.test;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.ECKeyPair;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -14,6 +22,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.KeyStore;
 
+import static android.support.v4.content.ContextCompat.getSystemService;
+
 public class Token_settings extends SceneController {
 
 
@@ -21,7 +31,7 @@ public class Token_settings extends SceneController {
     EditText purchasePrise;
     EditText price_when_using;
     EditText swapPrice;
-    Button createTokenBtn,payForToken;
+    Button createTokenBtn,payForToken,helpButton;
 
     public Token_settings(View _page){
         super();
@@ -39,6 +49,7 @@ public class Token_settings extends SceneController {
         swapPrice = page.findViewById(R.id.swapPrice);
         createTokenBtn = page.findViewById(R.id.createTokenBtn);
         createTokenBtn.setOnClickListener(v -> CreateToken());
+        helpButton = page.findViewById(R.id.helpButton);
         payForToken = page.findViewById(R.id.payForToken);
         payForToken.setOnClickListener(v -> {
             Runnable bonusUpdater = () -> PayForToken();
@@ -46,29 +57,53 @@ public class Token_settings extends SceneController {
             thread.setPriority(Thread.MIN_PRIORITY);
             thread.start();
         });
+        helpButton.setOnClickListener(v -> InfoPopUP());
     }
     Company currentCompany = null;
+    boolean hasToken = false;
     @Override
     void OnSelected() {
         super.OnSelected();
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
-        Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+        //Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
         try {
             currentCompany = Utils.getCompany(web3,credentials,credentials.getAddress()); //new Company(contract.companies(credentials.getAddress()).send());
 
             if(currentCompany.hasToken){
                 TokenWrapper companyToken = Utils.getToken(web3,credentials,currentCompany.token);
-
-
-
+                hasToken = true;
             }
 
         }catch (Exception e){
             e.printStackTrace();
         }
 
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    protected  void InfoPopUP(){
+        Dialog dialog = new Dialog(page.getContext());
+        dialog.setContentView(R.layout.help_token_settings);
+
+
+        dialog.show();
+
+    }
+    @SuppressLint("SetTextI18n")
+    protected  void QuestionPopUp(Runnable onYes,Runnable onNo){
+        AlertDialog.Builder builder = new AlertDialog.Builder(page.getContext());
+        builder.setMessage("Предупреждение о том что токен сотрется")
+                .setPositiveButton("Создать", (dialog
+                        , id) -> {
+                    onYes.run();
+                })
+                .setNegativeButton("Подумать", (dialog, id) -> {
+                    onNo.run();
+                });
+        builder.create().show();
     }
 
     String f(String s){
@@ -140,9 +175,18 @@ public class Token_settings extends SceneController {
                 e.printStackTrace();
             }
         };
-        Thread thread = new Thread(bonusUpdater);
-        thread.setPriority(Thread.MIN_PRIORITY);
-        thread.start();
+        Runnable createToken = ()-> {
+            Thread thread = new Thread(bonusUpdater);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
+        };
+        if(hasToken){
+            QuestionPopUp(() -> createToken.run(), () -> { });
+        }else{
+            createToken.run();
+        }
+
+
 
     }
 

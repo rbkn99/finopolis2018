@@ -10,4 +10,11 @@
     <string name="Invite">Invite</string>
     <string name="title_activity_orders_view">OrdersViewActivity</string>
     <string name="Settings">Настройки</string>
+    <string name="inPrice_help">Цена при покупке = сколько рублей стоит один бонус</string>
+    <string name="outPrice_help">Цена при использовании = хуй её знает</string>
+    <string name="swapPrice_help">Цена при обмене = какому количеству рублей эквивалентен 1 бонус</string>
+    <string name="token_name">Название токена</string>
+    <string name="in_price">Цена при покупке</string>
+    <string name="out_price">Цена при использовании</string>
+    <string name="swap_price">Цена при обмене</string>
 </resources>

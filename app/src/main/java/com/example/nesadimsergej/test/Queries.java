@@ -1,9 +1,7 @@
 package com.example.nesadimsergej.test;
 
 import android.app.Activity;
-import android.os.Debug;
 import android.support.constraint.ConstraintLayout;
-import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.web3j.abi.datatypes.Array;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.tuples.generated.Tuple10;
 import org.web3j.tuples.generated.Tuple2;
-import org.web3j.tuples.generated.Tuple7;
-import org.web3j.tuples.generated.Tuple8;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -69,7 +62,7 @@ public class Queries extends SceneController {
             queryText = queryText +" приглашает вас вступить в коалицию ";
             queryText = queryText + coalitionName;
 
-            ((TextView)view.findViewById(R.id.QueriText)).setText(queryText);
+            ((TextView)view.findViewById(R.id.answer_text)).setText(queryText);
             queriList.addView(view);
             Queri q = new Queri(view,secreteCode,
                     qu -> OnQueriAccepted(qu),
@@ -250,7 +243,7 @@ class Queri{
         accept = _accept;
         decline = _decline;
 
-        queriText = queri.findViewById(R.id.QueriText);
+        queriText = queri.findViewById(R.id.answer_text);
         yesBtn = queri.findViewById(R.id.yesBtn);
         noBtn = queri.findViewById(R.id.noBtn);
         yesBtn.setOnClickListener(v -> OnClickYes());

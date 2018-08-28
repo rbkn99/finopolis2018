@@ -7,6 +7,16 @@
     android:background="@color/backgrnd"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/helpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/buttonBckgrnd"
+        android:text="Помощь"
+        android:textColor="@color/backgrnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:layout_width="312dp"
         android:layout_height="439dp"
@@ -29,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Название токена"
+            android:hint="@string/token_name"
             android:inputType="textPersonName"
             tools:layout_editor_absoluteX="98dp"
             tools:layout_editor_absoluteY="74dp" />
@@ -43,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Цена при покупке"
+            android:hint="@string/in_price"
             android:inputType="numberDecimal"
             tools:layout_editor_absoluteX="98dp"
             tools:layout_editor_absoluteY="74dp" />
@@ -57,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Цена при использовании"
+            android:hint="@string/out_price"
             android:inputType="numberDecimal"
             tools:layout_editor_absoluteX="98dp"
             tools:layout_editor_absoluteY="74dp" />
@@ -71,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Цена при обмене"
+            android:hint="@string/swap_price"
             android:inputType="numberDecimal"
             tools:layout_editor_absoluteX="98dp"
             tools:layout_editor_absoluteY="74dp" />
