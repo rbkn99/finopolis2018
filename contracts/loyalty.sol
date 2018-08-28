@@ -85,12 +85,44 @@ contract Loyalty {
         offerHistory = 0;
     }
     
+    function phoneIsUnique (int256 _phoneNumber) public view 
+                returns (bool bass){
+        bass = true;
+        for(uint256 i = 0; i < phoneNumberHashes.length; i++){
+            if(_phoneNumber == phoneNumberHashes[i]) {
+                bass = false;
+            }
+        }
+        return bass;
+    }
+    
+    function nameIsUnique (string _name) public view returns (bool bass){
+        bass = true;
+        bytes32 nhash = outerHash(_name);
+        for(uint256 i = 0; i < companyNames.length; i++){
+            if(nhash == companyNames[i]) {
+                bass = false;
+            }
+        }
+        return bass;
+    }
+    
+    function tokenIsUnique (string _name) public view returns (bool bass) {
+        bass = true;
+        bytes32 nhash = outerHash(_name);
+        for(uint256 i = 0; i < tokenNames.length; i++){
+            if(nhash == tokenNames[i]) {
+                bass = false;
+            }
+        }
+        return bass;
+    }
+    
     // bank calls
     function addCustomer(address customer, int _phoneNumber) public
                 onlyOwner
                 customerNotExists(customer)
-                companyNotExists(customer)
-                uniquePhone(_phoneNumber){
+                companyNotExists(customer){
         customers[customer].exists = true;
         customers[customer].phoneNumber = _phoneNumber;
         phoneNumberHashes.push(_phoneNumber);
@@ -101,12 +133,7 @@ contract Loyalty {
     function addCompany(address company, string _name, int _phoneNumber) public
                 onlyOwner
                 companyNotExists(company)
-                customerNotExists(company) 
-                uniquePhone(_phoneNumber){
-        bytes32 nhash = outerHash(_name);
-        for(uint256 i = 0; i < companyNames.length; i++){
-            require(nhash != companyNames[i], "Company name already registered or hash collided");
-        }
+                customerNotExists(company){
         companiesCount++;
         companies[company]._address = company;
         companies[company].exists = true;
@@ -115,6 +142,7 @@ contract Loyalty {
         phoneNumberHashes.push(_phoneNumber);
         companies[company].request_count = 0;
         companySet.push(companies[company]);
+        bytes32 nhash = outerHash(_name);
         companyNames.push(nhash);
         emit AddCompany(company, companies[company].name, customers[company].phoneNumber);
     }
@@ -146,7 +174,6 @@ contract Loyalty {
             uint deltaMoney;
             if (token.nominal_owner() == tokenOwner) {
                 deltaMoney = bonusesAmount.mul(token.outPrice());
-                roublesAmount = roublesAmount.mul(10^18);
                 roublesAmount = roublesAmount.add(deltaMoney);
                 token.transfer(customer, company, bonusesAmount);
             }
@@ -157,7 +184,6 @@ contract Loyalty {
                 deltaMoney = bonusesAmount.mul(companies[tokenOwner].token.exchangePrice());
                 deltaMoney = deltaMoney.div(token.exchangePrice());
                 deltaMoney = deltaMoney.mul(token.outPrice());
-                roublesAmount = roublesAmount.mul(10^18);
                 roublesAmount = roublesAmount.add(deltaMoney);
                 companies[tokenOwner].token.transfer(customer, tokenOwner, bonusesAmount);
             }
@@ -165,6 +191,7 @@ contract Loyalty {
         }
         if (!payForTransaction(company, initialGas - gasleft()))
             revert();
+        return val;
     }
     
     // check if 2 companies belongs to the one coalition and returns its name
@@ -190,9 +217,7 @@ contract Loyalty {
         // doesn't exist => create
         if (!companies[msg.sender].has_token) {
             bytes32 nhash = outerHash(_name);
-            for(uint256 i = 0; i < tokenNames.length; i++){
-                require(nhash != tokenNames[i], "Token name already registered or hash collided");
-            }
+            tokenNames.push(nhash);
             Token token = new Token(msg.sender, _name, _inPrice, _outPrice, _exchangePrice);
             companies[msg.sender].token = token;
             companies[msg.sender].has_token = true;
