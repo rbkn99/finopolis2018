@@ -3,6 +3,7 @@ package com.example.nesadimsergej.test;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -104,9 +105,8 @@ public class Login extends AppCompatActivity {
                         Intent intent = new Intent(context, Office_User.class);
                         startActivity(intent);
                     } else {
-
                     Company cmp = Utils.getCompany(web3,credentials,credentials.getAddress());// new Company(contract.companies(credentials.getAddress()).sendAsync().get());
-
+                        System.out.println(cmp);
                     targetHash = cmp.phoneNumber;
 
                         if (phoneHash.equals(targetHash)) {
@@ -133,5 +133,26 @@ public class Login extends AppCompatActivity {
     void Back() {
         Intent intent = new Intent(context, Start.class);
         startActivity(intent);
+    }
+
+    boolean doubleBackToExitPressedOnce = false;
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 }

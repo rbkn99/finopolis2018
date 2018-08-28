@@ -128,13 +128,10 @@ public class User_bonuses extends SceneController {
 
             }
         });
-
-
     }
-
 }
 
-class BonusRow{
+class BonusRow {
 
     TextView bonusCompanyName;
     TextView bonusNumber1;
