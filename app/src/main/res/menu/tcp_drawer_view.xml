@@ -8,10 +8,6 @@
             android:id="@+id/Transaction"
             android:title="@string/Transaction" />
         <item
-            android:id="@+id/YE"
-            android:title="@string/Shieet" />
-
-        <item
             android:id="@+id/token_settings"
             android:title="@string/token_settings" />
         <item
@@ -23,7 +19,9 @@
         <item
             android:id="@+id/coalitions"
             android:title="@string/coalitions" />
-
+        <item
+            android:id="@+id/YE"
+            android:title="@string/Settings" />
 
     </group>
 </menu>

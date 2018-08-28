@@ -9,4 +9,5 @@
     <string name="inviteAddress">address</string>
     <string name="Invite">Invite</string>
     <string name="title_activity_orders_view">OrdersViewActivity</string>
+    <string name="Settings">Настройки</string>
 </resources>
