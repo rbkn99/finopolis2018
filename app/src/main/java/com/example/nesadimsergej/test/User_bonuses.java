@@ -14,6 +14,8 @@ public class User_bonuses extends SceneController {
 
     TableLayout bonusesTable;
 
+    TextView ifEmpty;
+
     public User_bonuses(View _page){
         super();
         page = _page;
@@ -26,6 +28,7 @@ public class User_bonuses extends SceneController {
         super.SetUpScene();
 
         bonusesTable = page.findViewById(R.id.bonusesTable);
+        ifEmpty = page.findViewById(R.id.ifEmpty);
         ((Office)page.getContext()).AddCompanyUpdatedListener(office -> {
 
             Runnable bonusUpdater = () -> UpdateBonuses();
@@ -45,7 +48,7 @@ public class User_bonuses extends SceneController {
         Web3j web3 = ((Office)page.getContext()).web3;
         Credentials credentials = ((Office)page.getContext()).credentials;
         Loyalty loyalty = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
+        int addCount = 0;
         // Перебираем все коспании
         for (Company c:
                 office.companies
@@ -67,7 +70,9 @@ public class User_bonuses extends SceneController {
             if(!c.hasToken){
                 continue;
             }
+
             // Добавляем строчку в список бонусов
+            addCount ++;
             BonusRow r = AddRow(c.companyName);
             String tokeAddress = c.token;
 
@@ -89,6 +94,17 @@ public class User_bonuses extends SceneController {
                 e.printStackTrace();
             }
         }
+        int _addCount = addCount;
+        ((Office)page.getContext()).runOnUiThread(() -> {
+
+            if(_addCount == 0){
+                ifEmpty.setVisibility(View.VISIBLE);
+            }else{
+                ifEmpty.setVisibility(View.INVISIBLE);
+            }
+
+        });
+
     }
 
     // Функция которая добавляют на сцену bonus_row.xml

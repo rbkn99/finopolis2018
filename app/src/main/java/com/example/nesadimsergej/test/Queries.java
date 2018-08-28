@@ -32,6 +32,7 @@ public class Queries extends SceneController {
 
     ConstraintLayout exampleQueri;
     LinearLayout queriList;
+    TextView ifEmpty;
 
     public Queries(View _page){
         super();
@@ -51,6 +52,7 @@ public class Queries extends SceneController {
         Timer timer = new Timer();
         timer.schedule(new QueryUpdater(), 0, 30000);// Обновлять запросы каждые 30 секунд
         ((Office)page.getContext()).timers.add(timer);
+        ifEmpty = page.findViewById(R.id.ifEmpty);
         //page.getContext().
     }
 
@@ -90,20 +92,19 @@ public class Queries extends SceneController {
         try {
             Company s =Utils.getCompany(web3,credentials,credentials.getAddress());//  contract.companies(credentials.getAddress()).send());
             requestCount = s.requestCount;//contract.getRequestCount().send();//(new Company(s)).requestCount;
-            //System.out.println(s);
         }catch (Exception e){
 
         }
 
         ArrayList<Tuple2<String,String>> resultQueries = new ArrayList<>();
-
+        int added = 0;
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(requestCount) == -1 ; i = i.add( BigInteger.ONE)) {
             try {
 
                 String s = contract.getRequestOnIndex(i).sendAsync().get();
                 resultQueries.add(new Tuple2<>(s,s));
                 //System.out.println(s);
-
+                added ++;
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -118,7 +119,14 @@ public class Queries extends SceneController {
             String secreteCode = t.getValue2();
             AddQueri(web3,credentials,queriText,secreteCode);
         }
-
+        int _added = added;
+        ((Office)page.getContext()).runOnUiThread(() ->{
+            if(_added == 0){
+                ifEmpty.setVisibility(View.VISIBLE);
+            }else{
+                ifEmpty.setVisibility(View.INVISIBLE);
+            }
+        });
 
     }
 
