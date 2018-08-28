@@ -109,11 +109,17 @@ public class ViewOffers extends SceneController {
     }
 
     void OnOffer(Offer offer){
+        Runnable bonusUpdater = () -> _OnOffer(offer);
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+
+    }
+    void _OnOffer(Offer offer){
         Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
         Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
         String bonusAddress = offer.buyToken.tokenAddress;
         Token tokenContract = Token.load(bonusAddress,web3,credentials,Token.GAS_PRICE,Token.GAS_LIMIT);
 
@@ -130,6 +136,10 @@ public class ViewOffers extends SceneController {
 
         }
         try {
+            ((Office)page.getContext()).runOnUiThread(() ->{
+                Toast.makeText(page.getContext(),"Запрос отправлен!",Toast.LENGTH_SHORT).show();
+                offer.Destroy();
+            });
             bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
             ((Office)page.getContext()).runOnUiThread(() ->{
                 Toast.makeText(page.getContext(),"Обмен прошел успешно!",Toast.LENGTH_SHORT).show();
@@ -142,16 +152,23 @@ public class ViewOffers extends SceneController {
             e.printStackTrace();
         }
     }
+    void OnDecline(Offer offer) {
+        Runnable bonusUpdater = () -> _OnDecline(offer);
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
 
-    void OnDecline(Offer offer){
+    }
+    void _OnDecline(Offer offer){
         Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
         Loyalty bankContract = Loyalty.load(Config.contractAdress,web3,bankCredentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-
-
-
         try {
+            ((Office)page.getContext()).runOnUiThread(() ->{
+                Toast.makeText(page.getContext(),"Запрос отправлен!",Toast.LENGTH_SHORT).show();
+                offer.Destroy();
+            });
             bankContract.recallOffer(offer.offerId,credentials.getAddress()).send();
             ((Office)page.getContext()).runOnUiThread(() ->{
                 Toast.makeText(page.getContext(),"Предложение успешно отозвано!",Toast.LENGTH_SHORT).show();

@@ -58,7 +58,14 @@ public class CoalitionPage extends SceneController {
         if(coalitionAddress.equals(((Office)page.getContext()).credentials.getAddress())) {
             inviteButton.setVisibility(View.VISIBLE);
             inviteAddress.setVisibility(View.VISIBLE);
-            inviteButton.setOnClickListener(v -> Invite());
+            inviteButton.setOnClickListener(v -> {
+
+                Runnable bonusUpdater = () -> Invite();
+                Thread thread = new Thread(bonusUpdater);
+                thread.setPriority(Thread.MIN_PRIORITY);
+                thread.start();
+
+            });
 
         }else{
             inviteButton.setVisibility(View.INVISIBLE);
@@ -87,20 +94,17 @@ public class CoalitionPage extends SceneController {
                 Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
         try {
 
-            //System.out.println( Utils.getCompany(web3,credentials,credentials.getAddress()));
-            //System.out.println( contract.coalitions(credentials.getAddress()).send());
-
         }catch (Exception e){
             e.printStackTrace();
         }
 
         try {
-            //System.out.println(credentials.getAddress());
-            //System.out.println(cAddress);
+            ((Office)page.getContext()).runOnUiThread(() ->  Toast.makeText(page.getContext(),"Запрос отправлен на обработку", Toast.LENGTH_SHORT).show());
+
             contract.inviteToCoalition(cAddress).sendAsync().get();
 
+            ((Office)page.getContext()).runOnUiThread(() ->  Toast.makeText(page.getContext(),"Приглашение отправлено", Toast.LENGTH_SHORT).show());
 
-            Toast.makeText(page.getContext(),"Приглашение отправлено", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
 
             e.printStackTrace();
