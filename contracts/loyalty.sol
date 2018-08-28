@@ -69,7 +69,7 @@ contract Loyalty {
     int256[] phoneNumberHashes;
     bytes32[] tokenNames;
     bytes32[] companyNames;
-    
+
     // cost of asm operations of transferBonuses() func
     uint constant public transferBonuses_transaction_cost = 119290;
     
@@ -85,7 +85,7 @@ contract Loyalty {
         offerHistory = 0;
     }
     
-    function phoneIsUnique (int256 _phoneNumber) public view 
+    function phoneIsUnique (int256 _phoneNumber) public view
                 returns (bool bass){
         bass = true;
         for(uint256 i = 0; i < phoneNumberHashes.length; i++){
@@ -95,7 +95,7 @@ contract Loyalty {
         }
         return bass;
     }
-    
+
     function nameIsUnique (string _name) public view returns (bool bass){
         bass = true;
         bytes32 nhash = outerHash(_name);
@@ -106,7 +106,7 @@ contract Loyalty {
         }
         return bass;
     }
-    
+
     function tokenIsUnique (string _name) public view returns (bool bass) {
         bass = true;
         bytes32 nhash = outerHash(_name);
@@ -117,7 +117,7 @@ contract Loyalty {
         }
         return bass;
     }
-    
+
     // bank calls
     function addCustomer(address customer, int _phoneNumber) public
                 onlyOwner
@@ -177,7 +177,7 @@ contract Loyalty {
                 //newBonuses = roublesAmount.div(token.inPrice());
                 //token.transfer(company, customer, newBonuses);
                 deltaMoney = bonusesAmount.mul(token.outPrice());
-                
+
                 roublesAmount = roublesAmount.add(deltaMoney);
                 token.transfer(customer, company, bonusesAmount);
             }
@@ -214,7 +214,7 @@ contract Loyalty {
     function outerHash(string s) pure internal returns (bytes32 hash) {
         return keccak256(abi.encodePacked(s));
     }
-    
+
     // company calls
     // name of the token, tokens per spent rouble, price when you spend tokens, exchange price
     function setToken(string _name, uint _inPrice, uint _outPrice,
@@ -396,7 +396,7 @@ contract Loyalty {
         }
         require(i < stock.length, "Offer not found");
         require(stock[i].id == id, "Offer not found");
-        
+
         Token sellT = companies[offer.sellTokenCompany].token;
         Token buyT = companies[offer.wantedTokenCompany].token;
         
@@ -414,10 +414,10 @@ contract Loyalty {
         }
         stock.length--;
     }
-    
-    function recallOffer (uint256 id, address acceptor) public 
+
+    function recallOffer (uint256 id, address acceptor) public
                             onlyOwner{
-        
+
         for(uint256 i = 0; i < stock.length; i++ ) {
             if(stock[i].id == id) {
                 break;
@@ -477,7 +477,7 @@ contract Loyalty {
         }
         _;
     }
-    
+
     modifier customerExists(address customer) {
         require(customers[customer].exists, "Customer doesn't exist.");
         _;
