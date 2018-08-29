@@ -34,7 +34,7 @@
                     android:layout_marginTop="16dp"
                     android:ems="10"
                     android:gravity="center"
-                    android:hint="5000"
+                    android:hint="0"
                     android:inputType="number"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/bonus2" />
@@ -55,7 +55,7 @@
                     android:layout_marginStart="27dp"
                     android:layout_marginTop="1dp"
                     android:gravity="center"
-                    android:text="1000"
+                    android:text="0"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -99,7 +99,7 @@
                     android:layout_marginStart="27dp"
                     android:layout_marginTop="1dp"
                     android:gravity="center"
-                    android:text="1000"
+                    android:text="0"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -113,7 +113,7 @@
                     android:layout_marginTop="16dp"
                     android:ems="10"
                     android:gravity="center"
-                    android:hint="5000"
+                    android:hint="0"
                     android:inputType="number"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/bonus1" />

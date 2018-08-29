@@ -54,7 +54,6 @@ public class Exchange_bonuses extends SceneController {
 
         exchange_window = page.findViewById(R.id.exchange_window);
         offers = page.findViewById(R.id.offers);
-
         tradeSwitch = page.findViewById(R.id.tradeSwitch);
         bonus1 = page.findViewById(R.id.bonus1);
         bonus2 = page.findViewById(R.id.bonus2);
@@ -189,8 +188,13 @@ public class Exchange_bonuses extends SceneController {
         exchangeCount2.setVisibility(View.VISIBLE);
     }
 
+    boolean has_selected = false;
     @Override
     void OnSelected(){
+        if (!has_selected) {
+            Toast.makeText(page.getContext(), "Загружаем список токенов, пожалуйста, подождите...", Toast.LENGTH_LONG).show();
+            has_selected = true;
+        }
         if(viewingOffers){
             exchange_window.setVisibility(View.INVISIBLE);
             offers.setVisibility(View.VISIBLE);
