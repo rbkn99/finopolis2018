@@ -46,17 +46,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <include
-                android:id="@+id/transactionP"
-                layout="@layout/uo_transactions"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <include
                 android:id="@+id/user_bonusesP"
                 layout="@layout/user_bonuses"
                 android:layout_width="fill_parent"
