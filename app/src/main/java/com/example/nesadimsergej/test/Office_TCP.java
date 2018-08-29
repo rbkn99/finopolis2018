@@ -61,8 +61,14 @@ public class Office_TCP extends Office {
         HideAllPgs();
         SetUpDrawerLayout();
 
-        addEth.setOnClickListener(v -> AddEth());
-        sendEth.setOnClickListener(v -> SendEth());
+
+        sendEth.setOnClickListener(v -> {
+            Runnable bonusUpdater = () -> SendEth();;
+            Thread thread = new Thread(bonusUpdater);
+            thread.setPriority(Thread.MIN_PRIORITY);
+
+            thread.start();
+        });
         infoBtn.setOnClickListener(v -> InfoPopUP());
 
         // Обработчик для кнопки выхода

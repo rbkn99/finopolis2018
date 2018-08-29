@@ -68,7 +68,6 @@ public class Office_User extends Office {
         HideAllPgs();
         SetUpDrawerLayout();
 
-        addEth.setOnClickListener(v -> AddEth());
         sendEth.setOnClickListener(v -> SendEth());
         infoBtn.setOnClickListener(v -> InfoPopUP());
         exitOfficeBtn.setOnClickListener(v -> Exit());

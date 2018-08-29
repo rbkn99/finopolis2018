@@ -70,7 +70,7 @@ public class Office extends AppCompatActivity {
     public Web3j web3;
 
     protected TextView money;
-    protected Button addEth,infoBtn;
+    protected Button infoBtn;
     protected SharedPreferences sharedPref;
     protected EditText balanceCheater;
     protected Button exitOfficeBtn;
@@ -210,26 +210,7 @@ public class Office extends AppCompatActivity {
         dialog.show();
     }
 
-    protected void AddEth(){
 
-        Runnable bonusUpdater = () -> {
-            try {
-
-                float v = Float.parseFloat(balanceCheater.getText().toString());
-
-                TransactionReceipt transactionReceipt =
-                        Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
-                                BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
-                UpdateBalance();
-
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        };
-        Thread thread = new Thread(bonusUpdater);
-        thread.setPriority(Thread.MIN_PRIORITY);
-        thread.start();
-    }
 
     protected void UpdateBalance(){
         @SuppressLint("SetTextI18n") Runnable bonusUpdater = () -> {
@@ -269,19 +250,6 @@ public class Office extends AppCompatActivity {
     }
 
 
-    String divideString(String s){
-        int l = s.length();
-        for(int i = l; i<18;i++)
-            s = "0"+s;
-
-        String a = s.substring(max( s.length() - 18,0));
-        String b = s.substring(0,max( s.length() - 18,0));
-        if( b.equals( "") || b.equals(" "))
-            b = "0";
-        s = b+"."+a;
-        return s;
-    }
-
     protected void UploadContract(){
 
         Runnable uploadContract = () -> {
@@ -314,18 +282,22 @@ public class Office extends AppCompatActivity {
             String address = targetAddress.getText().toString();
             float v = Float.parseFloat(targetSum.getText().toString());
             try {
+                context.runOnUiThread(() ->
+                        Toast.makeText(context,"Запрос отправлен",Toast.LENGTH_SHORT).show());
                 TransactionReceipt transactionReceipt =
                         Transfer.sendFunds(web3, credentials, address,
                                 BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
-
+                context.runOnUiThread(() ->
+                        Toast.makeText(context,"Перевод отправлен на обработку",Toast.LENGTH_SHORT).show());
             }catch (Exception e){
                 e.printStackTrace();
                 context.runOnUiThread(() ->
-                        Toast.makeText(context,"Error2!",Toast.LENGTH_SHORT).show());
+                        Toast.makeText(context,"Произошла непонятная ошибка",Toast.LENGTH_SHORT).show());
 
             }
             UpdateBalance();
         };
+
         Thread thread = new Thread(bonusUpdater);
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
@@ -343,7 +315,6 @@ public class Office extends AppCompatActivity {
         exitOfficeBtn = findViewById(R.id.exitOfficeBtn);
         money = findViewById(R.id.ethInfo);
         balanceCheater = findViewById(R.id.balanceCheater);
-        addEth = findViewById(R.id.addEth);
         web3 = Web3jFactory.build(new HttpService(Config.web3Address));
         NavigationView navView = findViewById(R.id.nav_view);
         headerLayout = navView.getHeaderView(0);
