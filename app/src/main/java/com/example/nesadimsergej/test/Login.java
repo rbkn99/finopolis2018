@@ -79,7 +79,6 @@ public class Login extends AppCompatActivity {
                 } catch (Exception e) {
                     runOnUiThread(() -> {
                         Toast.makeText(context, "Неверный номер телефона", Toast.LENGTH_SHORT).show();
-                        Utils.notificationManager.cancel(3);
                     });
                     e.printStackTrace();
                     return;
