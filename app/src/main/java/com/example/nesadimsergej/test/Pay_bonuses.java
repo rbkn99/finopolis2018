@@ -47,7 +47,7 @@ public class Pay_bonuses extends SceneController {
         {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
             {
-                Runnable bonusUpdater = () -> CompanySelected(parent,view,pos,id);;
+                Runnable bonusUpdater = () -> CompanySelected(parent,view,pos,id);
                 Thread thread = new Thread(bonusUpdater);
                 thread.setPriority(Thread.MIN_PRIORITY);
                 thread.start();
