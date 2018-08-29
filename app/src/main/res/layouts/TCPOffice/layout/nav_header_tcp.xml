@@ -9,6 +9,13 @@
     android:gravity="bottom">
 
     <TextView
+        android:id="@+id/office_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Office TCP Menu"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
         android:id="@+id/deposit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,10 +23,10 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/office_header"
+        android:id="@+id/balanceHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Office TCP Menu"
+        android:text="@string/balanceinfo"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 </LinearLayout>

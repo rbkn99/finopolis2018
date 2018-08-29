@@ -82,18 +82,7 @@ public class ViewOffers extends SceneController {
         View view = View.inflate(page.getContext(),R.layout.offer,null);
         ((Office)page.getContext()).runOnUiThread(() -> offerList.addView(view));
 
-        Offer offer = new Offer(view, _data, new OfferCallback() {
-            @Override
-            public void func(Offer offer) {
-                OnOffer(offer);
-            }
-        }, new OfferCallback() {
-            @Override
-            public void func(Offer offer) {
-                OnDecline(offer);
-
-            }
-        });
+        Offer offer = new Offer(view, _data, offer1 -> OnOffer(offer1), offer12 -> OnDecline(offer12),offerList);
         offer.LoadTokenData(web3,credentials,contract);
 
         ((Office)page.getContext()).runOnUiThread(() -> {
@@ -141,12 +130,12 @@ public class ViewOffers extends SceneController {
         try {
             ((Office)page.getContext()).runOnUiThread(() ->{
                 Toast.makeText(page.getContext(),"Запрос отправлен!",Toast.LENGTH_SHORT).show();
-                offer.Destroy();
+
             });
             bankContract.acceptOffer(offer.offerId, credentials.getAddress()).send();
             ((Office)page.getContext()).runOnUiThread(() ->{
                 Toast.makeText(page.getContext(),"Обмен прошел успешно!",Toast.LENGTH_SHORT).show();
-                //offer.Destroy();
+                offer.Destroy();
             });
         }catch (Exception e){
             ((Office)page.getContext()).runOnUiThread(() ->{
@@ -206,7 +195,7 @@ class Offer{
     BigInteger buyAmount;
 
     View offerView;
-
+    LinearLayout parent;
     TokenWrapper sellToken = null;
     TokenWrapper buyToken = null;
 
@@ -216,13 +205,14 @@ class Offer{
 
     Button acceptOffer,declineOffer;
     public void Destroy(){
-        ((ViewGroup)offerView.getParent()).removeView(offerView);
+        System.out.println(offerView.getParent());
+        parent.removeView(offerView);
     }
 
 
     private Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> data;
     public Offer(View _offer, Tuple6<BigInteger,String,String,String,BigInteger,BigInteger> _data,ViewOffers.OfferCallback _onOffer,
-                 ViewOffers.OfferCallback _onDecline){
+                 ViewOffers.OfferCallback _onDecline, LinearLayout _parent){
         _this = this;
         offerView = _offer;
         offerId = _data.getValue1();
@@ -233,7 +223,7 @@ class Offer{
         buyAmount = _data.getValue6().divide(Config.tene18);
         onOffer = _onOffer;
         data = _data;
-
+        parent = _parent;
 
         offerId_TV = _offer.findViewById(R.id.offerId);
         offer_seller = _offer.findViewById(R.id.offer_seller);
