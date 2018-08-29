@@ -51,6 +51,7 @@ public class Token_settings extends SceneController {
         createTokenBtn.setOnClickListener(v -> CreateToken());
         helpButton = page.findViewById(R.id.helpButton);
         payForToken = page.findViewById(R.id.payForToken);
+        payForToken.setVisibility(View.INVISIBLE);
         payForToken.setOnClickListener(v -> {
             Runnable bonusUpdater = () -> PayForToken();
             Thread thread = new Thread(bonusUpdater);
@@ -58,6 +59,7 @@ public class Token_settings extends SceneController {
             thread.start();
         });
         helpButton.setOnClickListener(v -> InfoPopUP());
+
     }
     Company currentCompany = null;
     boolean hasToken = false;
@@ -70,11 +72,9 @@ public class Token_settings extends SceneController {
     void CheckTokenExists(){
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
-        //Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
         try {
             currentCompany = Utils.getCompany(web3,credentials,credentials.getAddress()); //new Company(contract.companies(credentials.getAddress()).send());
-            System.out.println(currentCompany);
             if(currentCompany.hasToken){
                 TokenWrapper companyToken = Utils.getToken(web3,credentials,currentCompany.token);
                 hasToken = true;
@@ -83,10 +83,15 @@ public class Token_settings extends SceneController {
                 String outPrice =new BigDecimal(Utils.del18(companyToken.outPrice.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
                 String exchangePrice =new BigDecimal(Utils.del18(companyToken.exchangePrice.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
 
-                tokenName.setHint(page.getResources().getString(R.string.token_name)+" ("+companyToken.name+")");
-                purchasePrise.setHint(page.getResources().getString(R.string.in_price)+" ("+inPrice+")");
-                price_when_using.setHint(page.getResources().getString(R.string.out_price)+" ("+outPrice+")");
-                swapPrice.setHint(page.getResources().getString(R.string.swap_price)+" ("+exchangePrice+")");
+
+                ((Office)page.getContext()).runOnUiThread(() -> {
+                    tokenName.setHint(page.getResources().getString(R.string.token_name)+" ("+companyToken.name+")");
+                    purchasePrise.setHint(page.getResources().getString(R.string.in_price)+" ("+inPrice+")");
+                    price_when_using.setHint(page.getResources().getString(R.string.out_price)+" ("+outPrice+")");
+                    swapPrice.setHint(page.getResources().getString(R.string.swap_price)+" ("+exchangePrice+")");
+                    payForToken.setVisibility(View.VISIBLE);
+                });
+
             }
 
         }catch (Exception e){
