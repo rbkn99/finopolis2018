@@ -19,8 +19,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="19dp"
+            android:layout_marginRight="19dp"
             android:text="Обновить" />
 
         <Button
@@ -28,33 +30,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
             android:text="Назад" />
 
     </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/footer"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:background="#689F38"
-        android:gravity="center"
-        android:layout_gravity="center">
-        <TextView
-            android:id="@+id/footer_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="footer"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            android:textSize="25sp"/>
-    </RelativeLayout>
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/footer"
         android:layout_below="@+id/header"
         android:fillViewport="true">
 
