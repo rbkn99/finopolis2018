@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/buttonBckgrnd"
-            android:text="Закинуть эфир"
+            android:text="Пополнить депозит"
             android:textColor="@color/backgrnd" />
 
         <Space

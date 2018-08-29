@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgrnd">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/exchange_window"
@@ -41,10 +42,10 @@
 
                 <RelativeLayout
                     android:id="@+id/bonus2_wrapper"
-                    android:background="@color/softBckgrnd"
                     android:layout_width="150dp"
                     android:layout_height="62dp"
                     android:layout_marginTop="17dp"
+                    android:background="@color/softBckgrnd"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/balance2">
 
@@ -92,17 +93,18 @@
 
                 <RelativeLayout
                     android:id="@+id/bonus1_wrapper"
-                    android:background="@color/softBckgrnd"
                     android:layout_width="150dp"
                     android:layout_height="62dp"
                     android:layout_marginTop="18dp"
+                    android:background="@color/softBckgrnd"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/balance1">
-                <Spinner
-                    android:id="@+id/bonus1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+
+                    <Spinner
+                        android:id="@+id/bonus1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintStart_toStartOf="parent" />
                 </RelativeLayout>
 
                 <TextView
@@ -201,7 +203,7 @@
         <include
             layout="@layout/view_offers"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="fill_parent" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
