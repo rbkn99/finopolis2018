@@ -23,18 +23,22 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="19dp"
             android:layout_marginRight="19dp"
-            android:text="Обновить" />
+            android:background="@color/buttonBckgrnd"
+            android:text="Обновить"
+            android:textColor="@color/backgrnd" />
 
         <Button
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="25dp"
             android:layout_marginLeft="25dp"
-            android:text="Назад" />
+            android:layout_marginStart="25dp"
+            android:background="@color/buttonBckgrnd"
+            android:text="Назад"
+            android:textColor="@color/backgrnd" />
 
     </RelativeLayout>
 
