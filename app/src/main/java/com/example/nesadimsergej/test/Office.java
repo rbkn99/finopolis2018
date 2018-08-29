@@ -272,6 +272,7 @@ public class Office extends AppCompatActivity {
 
                 String balance =new BigDecimal(Utils.del18(result.toString())).setScale(5,BigDecimal.ROUND_HALF_DOWN).toString();
 
+                if(balanceHeader != null)
                 context.runOnUiThread(() -> {
                     balanceHeader.setText(
                             context.getResources().getString(R.string.balanceinfo)+" "+balance +" eth"
