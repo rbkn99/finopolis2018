@@ -176,6 +176,7 @@ public class Exchange_bonuses extends SceneController {
     void TradeInCoalition(){
         changeInCoalition.setVisibility(View.VISIBLE);
         resultBonus.setVisibility(View.VISIBLE);
+        resultBonus.setEnabled(false);
         viewOffers_button.setVisibility(View.INVISIBLE);
         makeOffer_button.setVisibility(View.INVISIBLE);
         exchangeCount2.setVisibility(View.INVISIBLE);
