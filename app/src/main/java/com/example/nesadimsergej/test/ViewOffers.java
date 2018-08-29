@@ -42,6 +42,7 @@ public class ViewOffers extends SceneController {
         UpdateOffers();
     }
     void UpdateOffers(){
+        update.setActivated(false);
         offerList.removeAllViews();
         Runnable bonusUpdater = () -> {
             Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
@@ -55,6 +56,12 @@ public class ViewOffers extends SceneController {
                 stockSize = contract.getStockSize().send();
             }catch (Exception e){
                 e.printStackTrace();
+
+                ((Office)page.getContext()).runOnUiThread(() -> {
+                    update.setActivated(true);
+                });
+
+
             }
 
             for(BigInteger i = BigInteger.ZERO ; i.compareTo(stockSize) == -1 ; i = i.add( BigInteger.ONE)) {
@@ -66,6 +73,9 @@ public class ViewOffers extends SceneController {
                     e.printStackTrace();
                 }
             }
+            ((Office)page.getContext()).runOnUiThread(() -> {
+                update.setActivated(true);
+            });
         };
         Thread thread = new Thread(bonusUpdater);
         thread.setPriority(Thread.MIN_PRIORITY);

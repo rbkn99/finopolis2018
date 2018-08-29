@@ -125,14 +125,15 @@ public class CoalitionPage extends SceneController {
         }
 
 
-
+        System.out.println(cAddress);
 
         boolean inCoalition = false;
         for(BigInteger i = BigInteger.ZERO ; i.compareTo(size) == -1 ; i = i.add( BigInteger.ONE)) {
 
             try {
                 String s = contract.getCoalitionMember(credentials.getAddress(),i).send();
-                if(s.equals(credentials.getAddress())){
+                System.out.println();
+                if(s.equals(cAddress)){
                     inCoalition = true;
 
                     break;

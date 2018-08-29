@@ -272,15 +272,16 @@ public class Office extends AppCompatActivity {
 
                 String balance =new BigDecimal(Utils.del18(result.toString())).setScale(5,BigDecimal.ROUND_HALF_DOWN).toString();
 
-                balanceHeader.setText(
-                        context.getResources().getString(R.string.balanceinfo)+" "+balance +" eth"
-                );
-                //money.setText(result);
+                context.runOnUiThread(() -> {
+                    balanceHeader.setText(
+                            context.getResources().getString(R.string.balanceinfo)+" "+balance +" eth"
+                    );
+                });
 
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }catch (Exception e){
                 e.printStackTrace();
-                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), e.toString(),
+                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error4",
                         Toast.LENGTH_SHORT).show());
 
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
@@ -320,7 +321,7 @@ public class Office extends AppCompatActivity {
                 System.out.println("Contract address1: "+contractAddress);
             }catch (Exception e){
                 e.printStackTrace();
-                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error!",
+                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error1!",
                         Toast.LENGTH_SHORT).show());
 
                 context.runOnUiThread(() -> deployContractBtn.setEnabled(true));
@@ -344,8 +345,9 @@ public class Office extends AppCompatActivity {
 
             }catch (Exception e){
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Error!",
-                        Toast.LENGTH_SHORT).show();
+                context.runOnUiThread(() ->
+                        Toast.makeText(context,"Error2!",Toast.LENGTH_SHORT).show());
+
             }
             UpdateBalance();
         };

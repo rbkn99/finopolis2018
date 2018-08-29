@@ -151,7 +151,12 @@ public class Queries extends SceneController {
             ((Office)page.getContext()).runOnUiThread(() -> {
                 Toast.makeText(page.getContext(), message,
                         Toast.LENGTH_SHORT).show();
-                q.Destroy();
+                try {
+                    q.Destroy();
+                }catch (Exception e){
+                    Toast.makeText(page.getContext(), "Error3",
+                            Toast.LENGTH_SHORT).show();
+                }
             });
 
 
