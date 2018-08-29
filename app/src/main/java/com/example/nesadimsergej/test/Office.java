@@ -54,7 +54,7 @@ public class Office extends AppCompatActivity {
 
     View headerLayout;
     TextView balanceHeader;
-    protected View balanceP,transactionP,eP;
+    protected View transactionP,eP;
 
     public ArrayList<View> pages = new ArrayList<>();
 
@@ -70,11 +70,10 @@ public class Office extends AppCompatActivity {
     public Web3j web3;
 
     protected TextView money;
-    protected Button updateBalanceBtn,addEth,infoBtn;
+    protected Button addEth,infoBtn;
     protected SharedPreferences sharedPref;
     protected EditText balanceCheater;
     protected Button exitOfficeBtn;
-    protected BottomNavigationView bottomNavigationView;
 
     protected EditText targetAddress;
     protected EditText targetSum;
@@ -121,7 +120,7 @@ public class Office extends AppCompatActivity {
     protected void SetUpDrawerLayout(){
         mDrawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setCheckedItem(R.id.Balance);
+
         navigationView.setNavigationItemSelectedListener(
                 item -> {
                     HideAllPgs();
@@ -130,8 +129,8 @@ public class Office extends AppCompatActivity {
 
                     return true;
                 });
-
-        navigationView.getMenu().performIdentifierAction(R.id.Balance,0);
+        navigationView.setCheckedItem(R.id.YE);
+        navigationView.getMenu().performIdentifierAction(R.id.YE,0);
         Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -170,6 +169,7 @@ public class Office extends AppCompatActivity {
                     }
                 }
         );
+
 
     }
 
@@ -259,7 +259,7 @@ public class Office extends AppCompatActivity {
 
     protected void UpdateBalance(){
         @SuppressLint("SetTextI18n") Runnable bonusUpdater = () -> {
-            context.runOnUiThread(() -> updateBalanceBtn.setEnabled(false));
+            //context.runOnUiThread(() -> updateBalanceBtn.setEnabled(false));
 
             try {
                 EthGetBalance ethGetBalance = web3
@@ -279,13 +279,13 @@ public class Office extends AppCompatActivity {
                     );
                 });
 
-                context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
+                //context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }catch (Exception e){
                 e.printStackTrace();
                 context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Error4",
                         Toast.LENGTH_SHORT).show());
 
-                context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
+                //context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }
         };
         Thread thread = new Thread(bonusUpdater);
@@ -359,7 +359,6 @@ public class Office extends AppCompatActivity {
     }
 
     protected void LoadAll(){
-        balanceP = findViewById(R.id.balanceP);
         transactionP = findViewById(R.id.transactionP);
         eP = findViewById(R.id.eP);
         deployContractBtn = findViewById(R.id.deployContractBtn);
@@ -370,10 +369,8 @@ public class Office extends AppCompatActivity {
         sendEth = findViewById(R.id.sendEth);
         exitOfficeBtn = findViewById(R.id.exitOfficeBtn);
         money = findViewById(R.id.ethInfo);
-        updateBalanceBtn = findViewById(R.id.updateBalanceBtn);
         balanceCheater = findViewById(R.id.balanceCheater);
         addEth = findViewById(R.id.addEth);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
         web3 = Web3jFactory.build(new HttpService(Config.web3Address));
         NavigationView navView = findViewById(R.id.nav_view);
         headerLayout = navView.getHeaderView(0);
