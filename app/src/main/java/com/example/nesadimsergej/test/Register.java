@@ -48,7 +48,7 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
+        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
         LoadAll();
         _this = this;
         // Настраиваем список для выбора роли

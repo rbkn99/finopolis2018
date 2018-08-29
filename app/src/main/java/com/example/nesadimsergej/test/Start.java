@@ -23,7 +23,7 @@ public class Start extends AppCompatActivity {
 
 
 
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
+        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1c2833")));
 
         setContentView(R.layout.activity_start);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
