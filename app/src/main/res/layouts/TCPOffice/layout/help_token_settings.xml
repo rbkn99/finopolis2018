@@ -11,19 +11,19 @@
         android:id="@+id/textView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/inPrice_help" />
+        android:text="Цена при покупке = За какое количество потраченных рублей покупатель получит один бонус" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/outPrice_help" />
+        android:text="Цена при использовании = Какому количеству рублей эквивалентен один бонус при использовании его для оплаты покупки" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/swapPrice_help" />
+        android:text="Цена при обмене = Какому количеству рублей эквивалентен один бонус при обмене его на другой токен в коалиции " />
 
 
 </LinearLayout>

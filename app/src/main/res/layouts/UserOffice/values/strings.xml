@@ -15,7 +15,7 @@
     <string name="swapPrice_help">Цена при обмене = какому количеству рублей эквивалентен один бонус при обмене</string>
     <string name="token_name">Название токена</string>
     <string name="in_price">Цена при покупке</string>
-    <string name="out_price">Цена при использовании</string>
+    <string name="out_price">Цена при оплате</string>
     <string name="swap_price">Цена при обмене</string>
     <string name="depositInfo">депозит:</string>
     <string name="balanceinfo">баланс:</string>
