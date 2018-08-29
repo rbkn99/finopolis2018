@@ -18,7 +18,7 @@
         android:layout_height="100dp"
         android:background="@color/buttonBckgrnd"
         android:gravity="center"
-        android:text="Школа взорвалась"
+        android:text="Предложение"
         android:textColor="@color/backgrnd"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -25,18 +25,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/userSelector"
+    <RelativeLayout
         android:layout_width="300dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="24dp"
-        android:gravity="center_horizontal|center"
-        android:theme="@style/ThemeOverlay.AppCompat.Light"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@color/softBckgrnd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
 
+        <Spinner
+            android:id="@+id/userSelector"
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center_horizontal|center" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/back_btn"
