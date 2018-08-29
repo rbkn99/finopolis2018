@@ -62,9 +62,6 @@ public class Office_TCP extends Office {
         HideAllPgs();
         SetUpDrawerLayout();
 
-        //Loyalty c;
-
-        //updateBalanceBtn.setOnClickListener(v -> UpdateBalance());
         addEth.setOnClickListener(v -> AddEth());
         sendEth.setOnClickListener(v -> SendEth());
         infoBtn.setOnClickListener(v -> InfoPopUP());

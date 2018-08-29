@@ -163,9 +163,6 @@ public class tst1 extends AppCompatActivity {
         TextView privateKeyInfo = dialog.findViewById(R.id.PrKUO);
         TextView publicKeyInfo = dialog.findViewById(R.id.PuKUO);
         TextView addressInfo = dialog.findViewById(R.id.AdUO);
-        TextView pathTV = dialog.findViewById(R.id.pathTV);
-        TextView nameTV = dialog.findViewById(R.id.nameTV);
-
 
         addressInfo.setText(
                 credentials.getAddress());
@@ -177,25 +174,18 @@ public class tst1 extends AppCompatActivity {
         privateKeyInfo.setText(
                 p.getPrivateKey().toString(16));
 
-        pathTV.setText(sharedPref.getString("PATH", "NA"));
-        nameTV.setText(sharedPref.getString("NAME", "NA"));
 
-        View.OnClickListener o = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = ((TextView)v).getText().toString();
-                myClip = ClipData.newPlainText("text", text);
-                myClipboard.setPrimaryClip(myClip);
-                Toast.makeText(getApplicationContext(), "Text Copied",
-                        Toast.LENGTH_SHORT).show();
-            }
+        View.OnClickListener o = v -> {
+            String text = ((TextView)v).getText().toString();
+            myClip = ClipData.newPlainText("text", text);
+            myClipboard.setPrimaryClip(myClip);
+            Toast.makeText(getApplicationContext(), "Text Copied",
+                    Toast.LENGTH_SHORT).show();
         };
 
         addressInfo.setOnClickListener(o);
         publicKeyInfo.setOnClickListener(o);
         privateKeyInfo.setOnClickListener(o);
-        pathTV.setOnClickListener(o);
-        nameTV.setOnClickListener(o);
         dialog.show();
     }
 

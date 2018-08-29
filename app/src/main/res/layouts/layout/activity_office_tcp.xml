@@ -35,8 +35,8 @@
             android:layout_height="match_parent" >
 
             <include
-                android:id="@+id/eP"
-                layout="@layout/tcpo_e"
+                android:id="@+id/settingsP"
+                layout="@layout/tcpo_settings"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:visibility="invisible"
