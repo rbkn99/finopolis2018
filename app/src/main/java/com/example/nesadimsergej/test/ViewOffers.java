@@ -95,7 +95,6 @@ public class ViewOffers extends SceneController {
         offer.LoadTokenData(web3,credentials,contract);
         ((Office)page.getContext()).runOnUiThread(() -> {
             offerList.addView(view);
-
             if(credentials.getAddress().equals(offer.sellerAddress)){
                 offer.Decline();
             }else{

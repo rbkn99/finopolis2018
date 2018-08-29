@@ -56,6 +56,9 @@ public class Token_settings extends SceneController {
             Runnable bonusUpdater = () -> PayForToken();
             Thread thread = new Thread(bonusUpdater);
             thread.setPriority(Thread.MIN_PRIORITY);
+            String amount = new BigDecimal(Utils.del18(Config.AddToToken.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
+            Toast.makeText(page.getContext(), "Подождите, переводим " + amount +
+                    " эфира на ваш депозит...", Toast.LENGTH_LONG).show();
             thread.start();
         });
         helpButton.setOnClickListener(v -> InfoPopUP());
