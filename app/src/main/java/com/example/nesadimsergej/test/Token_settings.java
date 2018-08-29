@@ -116,12 +116,12 @@ public class Token_settings extends SceneController {
     @SuppressLint("SetTextI18n")
     protected  void QuestionPopUp(Runnable onYes,Runnable onNo){
         AlertDialog.Builder builder = new AlertDialog.Builder(page.getContext());
-        builder.setMessage("Предупреждение о том что токен сотрется")
-                .setPositiveButton("Создать", (dialog
+        builder.setMessage("Внимание! После выполнения данной операции данные о предыдущем токене будут безвозвратно утеряны( но балансы пользователей и депозит останутся прежними)")
+                .setPositiveButton("Обновить", (dialog
                         , id) -> {
                     onYes.run();
                 })
-                .setNegativeButton("Подумать", (dialog, id) -> {
+                .setNegativeButton("Отметить", (dialog, id) -> {
                     onNo.run();
                 });
         builder.create().show();

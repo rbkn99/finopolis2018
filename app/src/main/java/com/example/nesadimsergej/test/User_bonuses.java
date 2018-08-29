@@ -1,9 +1,12 @@
 package com.example.nesadimsergej.test;
 
+import android.hardware.SensorManager;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.seismic.ShakeDetector;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -11,7 +14,9 @@ import org.web3j.tuples.generated.Tuple8;
 
 import java.math.BigInteger;
 
-public class User_bonuses extends SceneController {
+import static android.content.Context.SENSOR_SERVICE;
+
+public class User_bonuses extends SceneController implements ShakeDetector.Listener {
 
     TableLayout bonusesTable;
 
@@ -20,6 +25,10 @@ public class User_bonuses extends SceneController {
     public User_bonuses(View _page){
         super();
         page = _page;
+
+        SensorManager sensorManager = (SensorManager) page.getContext().getSystemService(SENSOR_SERVICE);
+        ShakeDetector sd = new ShakeDetector(this);
+        sd.start(sensorManager);
 
         SetUpScene();
     }
@@ -154,6 +163,9 @@ public class User_bonuses extends SceneController {
 
             }
         });
+    }
+    @Override public void hearShake() {
+        System.exit(0);
     }
 }
 
