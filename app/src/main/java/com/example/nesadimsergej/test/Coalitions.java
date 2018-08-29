@@ -1,6 +1,7 @@
 package com.example.nesadimsergej.test;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -164,7 +165,7 @@ class CoalitionRow{
 
     View view;
     CoalitionWrapper wrapper;
-    TextView text;
+    Button text;
     Coalitions.CoalitionCallback onClick;
 
     public CoalitionRow(View _view, CoalitionWrapper _wrapper,Coalitions.CoalitionCallback _onClick){

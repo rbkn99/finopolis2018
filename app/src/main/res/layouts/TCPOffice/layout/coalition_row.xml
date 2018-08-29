@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:layout_height="match_parent">
 
-    <TextView
+    <Button
+        app:layout_constraintHorizontal_bias="0.498"
+        android:background="@color/buttonBckgrnd"
+        android:textColor="#dadee5"
         android:id="@+id/text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="HUI"
-        android:textSize="20sp" />
+        android:text="HUI" />
+
 </android.support.constraint.ConstraintLayout>
