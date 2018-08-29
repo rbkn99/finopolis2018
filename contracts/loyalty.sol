@@ -220,9 +220,10 @@ contract Loyalty {
                          uint _exchangePrice) public
         companyExists(msg.sender) {
         // doesn't exist => create
+        bytes32 nhash = outerHash(_name);
+        tokenNames.push(nhash);
         if (!companies[msg.sender].has_token) {
-            bytes32 nhash = outerHash(_name);
-            tokenNames.push(nhash);
+            
             Token token = new Token(msg.sender, _name, _inPrice, _outPrice, _exchangePrice);
             companies[msg.sender].token = token;
             companies[msg.sender].has_token = true;
