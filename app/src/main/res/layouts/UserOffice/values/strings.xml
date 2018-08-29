@@ -19,4 +19,5 @@
     <string name="swap_price">Цена при обмене</string>
     <string name="depositInfo">депозит:</string>
     <string name="balanceinfo">баланс:</string>
+    <string name="back_btn_msg">Нажмите НАЗАД ещё раз, чтобы выйти</string>
 </resources>
