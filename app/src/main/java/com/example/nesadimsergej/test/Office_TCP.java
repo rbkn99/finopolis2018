@@ -108,8 +108,8 @@ public class Office_TCP extends Office {
         idToScene.put(R.id.create_coalitionP,create_coalition);
         idToScene.put(R.id.queriesP,queries);
         idToScene.put(R.id.token_settingsP,token_settings);
-        AddEth1();
 
+        AddEth1();
     }
 
     @Override

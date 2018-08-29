@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.nesadimsergej.test.Utils.max;
@@ -51,6 +52,7 @@ public class Office extends AppCompatActivity {
 
     protected Office context;
 
+    View headerLayout;
     protected View balanceP,transactionP,eP;
 
     public ArrayList<View> pages = new ArrayList<>();
@@ -364,7 +366,8 @@ public class Office extends AppCompatActivity {
         addEth = findViewById(R.id.addEth);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         web3 = Web3jFactory.build(new HttpService(Config.web3Address));
-
+        NavigationView navView = findViewById(R.id.nav_view);
+        headerLayout = navView.getHeaderView(0);
         try {
             Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().send();
             String clientVersion = web3ClientVersion.getWeb3ClientVersion();
@@ -389,22 +392,41 @@ public class Office extends AppCompatActivity {
 
     void SetUpHeader(){
         boolean isTcp = sharedPref.getBoolean(Config.IS_TCP,false);
-        NavigationView navView = findViewById(R.id.nav_view);
-        View headerLayout = navView.getHeaderView(0);
-        System.out.println(isTcp);
+
         if(isTcp){
-            Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
-            try{
-                Company c =new Company(contract.companies(credentials.getAddress()).send());
-                ((TextView)headerLayout.findViewById(R.id.office_header)).setText(c.companyName);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+
+
+
+            Timer timer = new Timer();
+            timer.schedule(new CompanyInfoUpdater(), 0, 10000);
+            timers.add(timer);
 
         }else {
 
         }
     }
+    class CompanyInfoUpdater extends TimerTask {
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void run() {
+            Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+            try{
+
+                Company c =new Company(contract.companies(credentials.getAddress()).send());
+                ((TextView)headerLayout.findViewById(R.id.office_header)).setText(c.companyName);
+                String deposit =new BigDecimal(Utils.del18(c.deposit.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
+
+                ((TextView)headerLayout.findViewById(R.id.deposit)).setText(
+
+                        context.getResources().getString(R.string.depositInfo)+" "+deposit
+                );
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 
     protected void LoadAllCompanies(){
 
