@@ -16,7 +16,7 @@ contract Loyalty {
         bool exists;
         int phoneNumber;
         string name;
-        //address _address;
+        address _address;
         
         bool has_token;
         Token token;
@@ -24,7 +24,7 @@ contract Loyalty {
         
         Request[] request_pool;
         address[] coalitionNames;
-        //uint64 request_count;
+        uint64 request_count;
     }
     
     struct Request {
@@ -135,12 +135,12 @@ contract Loyalty {
                 companyNotExists(company)
                 customerNotExists(company){
         companiesCount++;
-        //companies[company]._address = company;
+        companies[company]._address = company;
         companies[company].exists = true;
         companies[company].name = _name;
         companies[company].phoneNumber = _phoneNumber;
         phoneNumberHashes.push(_phoneNumber);
-        //companies[company].request_count = 0;
+        companies[company].request_count = 0;
         companySet.push(companies[company]);
         bytes32 nhash = outerHash(_name);
         companyNames.push(nhash);
@@ -184,7 +184,7 @@ contract Loyalty {
             else {
                 address current_coalition = isMatch(companies[company], 
                                                     companies[tokenOwner]);
-                require(current_coalition != address(0), "Not in one coalition");
+                require(current_coalition != address(0), "Not in one ccoalition");
                 //newBonuses = roublesAmount.mul(token.inPrice());
                 //token.transfer(company, customer, newBonuses);
                 deltaMoney = bonusesAmount.mul(companies[tokenOwner].token.exchangePrice());
@@ -298,14 +298,14 @@ contract Loyalty {
         //join_request.sender = msg.sender;
         //join_request._type = RequestType.INVITE;
         companies[company].request_pool.push(join_request);
-        //companies[company].request_count++;
+        companies[company].request_count++;
     }
     
     function getRequestCount() public view
                             companyExists(msg.sender)
                             returns (uint request_count){
         
-        return companies[msg.sender].request_pool.length;
+        return companies[msg.sender].request_count;
     }
  
     function getRequestOnIndex (uint64 index) public view
@@ -473,8 +473,8 @@ contract Loyalty {
             i++){
                 companies[msg.sender].request_pool[i - 1] = companies[msg.sender].request_pool[i];
         }
-        companies[msg.sender].request_pool.length --;
-        //companies[msg.sender].request_count--;
+        companies[msg.sender].request_pool.length -= 1;
+        companies[msg.sender].request_count--;
     }
     
     
