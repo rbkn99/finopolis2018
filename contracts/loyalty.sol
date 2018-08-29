@@ -341,7 +341,21 @@ contract Loyalty {
         return companies[company].coalitionNames[index];
     }
     
+    function getCompanyNameCount() public view returns (uint256 size){
+        return companyNames.length;
+    }
     
+    function getCompanyName(uint256 index) public view returns (bytes32 nhash){
+        return companyNames[index];
+    }
+    
+    function getTokenNameCount() public view returns (uint256 size){
+        return tokenNames.length;
+    }
+    
+    function getTokenName(uint256 index) public view returns (bytes32 nhash){
+        return tokenNames[index];
+    }
     
     function placeCustomerOffer(address customer, 
                                 address sellTokenCompany,
