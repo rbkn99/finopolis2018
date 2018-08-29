@@ -9,6 +9,13 @@
     android:gravity="bottom">
 
     <TextView
+        android:id="@+id/deposit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/depositInfo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
         android:id="@+id/office_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

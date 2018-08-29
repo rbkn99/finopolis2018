@@ -17,4 +17,5 @@
     <string name="in_price">Цена при покупке</string>
     <string name="out_price">Цена при использовании</string>
     <string name="swap_price">Цена при обмене</string>
+    <string name="depositInfo">deposit:</string>
 </resources>
