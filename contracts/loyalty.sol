@@ -6,6 +6,7 @@ contract Loyalty {
     using SafeMath for uint;
     
     
+    
     struct Customer {
         bool exists;
         int phoneNumber;
