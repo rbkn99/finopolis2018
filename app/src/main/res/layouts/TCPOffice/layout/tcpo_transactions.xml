@@ -9,63 +9,55 @@
 
     <Button
         android:id="@+id/sendEth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
 
-        android:layout_marginLeft="252dp"
-        android:layout_marginStart="252dp"
-        android:layout_marginTop="24dp"
         android:background="@color/buttonBckgrnd"
         android:padding="10sp"
         android:text="Перевести"
         android:textColor="@color/backgrnd"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+        app:layout_constraintVertical_bias="0.112" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="196dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="389dp"
+        android:layout_height="217dp"
+        android:layout_marginTop="152dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/targetAddress"
-            android:layout_width="404dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="54dp"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="36dp"
             android:ems="10"
             android:hint="адрес кошелька"
             android:inputType="textPersonName"
             android:textColor="@color/textColor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addEth" />
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/targetSum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginLeft="98dp"
-            android:layout_marginRight="100dp"
-            android:layout_marginStart="98dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="36dp"
             android:ems="10"
             android:hint="сумма (в eth)"
             android:inputType="numberDecimal"
             android:textColor="@color/textColor"
-            app:layout_constraintBottom_toTopOf="@+id/sendEth"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/targetAddress" />
     </android.support.constraint.ConstraintLayout>
 

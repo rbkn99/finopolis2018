@@ -8,38 +8,37 @@
 
     <Button
         android:id="@+id/exitOfficeBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="145dp"
-        android:layout_marginEnd="42dp"
-        android:layout_marginLeft="281dp"
-        android:layout_marginRight="42dp"
-        android:layout_marginStart="281dp"
-        android:layout_marginTop="410dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:background="@color/buttonBckgrnd"
         android:text="Выйти"
+        android:textColor="#dadee5"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoBtn"
+        app:layout_constraintVertical_bias="0.143" />
 
     <Button
         android:id="@+id/infoBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="161dp"
-        android:layout_marginStart="161dp"
-        android:text="INFO"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="39dp" />
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="276dp"
+        android:background="@color/buttonBckgrnd"
+        android:text="Информация"
+        android:textColor="#dadee5"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/deployContractBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="170dp"
-        android:layout_marginStart="170dp"
         android:text="Deploy"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="233dp" />
+        tools:layout_editor_absoluteX="271dp"
+        tools:layout_editor_absoluteY="59dp" />
 </android.support.constraint.ConstraintLayout>
