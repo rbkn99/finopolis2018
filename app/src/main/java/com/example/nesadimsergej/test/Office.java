@@ -45,6 +45,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
+import static com.example.nesadimsergej.test.Utils.max;
+
 public class Office extends AppCompatActivity {
 
     protected Office context;
@@ -168,11 +170,7 @@ public class Office extends AppCompatActivity {
 
     }
 
-    protected int max(int a, int b){
-        if(a>= b)
-            return a;
-        return b;
-    }
+
 
     @SuppressLint("SetTextI18n")
     protected  void InfoPopUP(){

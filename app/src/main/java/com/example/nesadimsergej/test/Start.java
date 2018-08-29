@@ -30,7 +30,7 @@ public class Start extends AppCompatActivity {
         if(sharedPref.contains("PATH") &&
                 sharedPref.contains("NAME")){
         }else{
-            loginBtn.setVisibility(View.GONE);
+            //loginBtn.setVisibility(View.GONE);
         }
 
         registerBtn.setOnClickListener(v -> Register());

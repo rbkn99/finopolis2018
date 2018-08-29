@@ -161,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/buttonBckgrnd"
-                android:text="Посмотреть предложение"
+                android:text="Посмотреть предложения"
                 android:textColor="#dadee5" />
         </LinearLayout>
 
@@ -187,7 +187,9 @@
         <include
             layout="@layout/view_offers"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

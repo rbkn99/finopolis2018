@@ -219,4 +219,22 @@ public class Utils {
     }
 
 
+    public static int max(int a, int b){
+        if(a>= b)
+            return a;
+        return b;
+    }
+
+    public static String del18(String s){
+        int l = s.length();
+        for(int i = l; i<18;i++)
+            s = "0"+s;
+
+        String a = s.substring(max( s.length() - 18,0));
+        String b = s.substring(0,max( s.length() - 18,0));
+        if( b.equals( "") || b.equals(" "))
+            b = "0";
+        s = b+"."+a;
+        return s;
+    }
 }

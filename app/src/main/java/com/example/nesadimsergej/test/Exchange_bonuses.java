@@ -1,6 +1,8 @@
 package com.example.nesadimsergej.test;
 
 import android.annotation.SuppressLint;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
@@ -108,6 +111,8 @@ public class Exchange_bonuses extends SceneController {
             {
                 TokenWrapperWithBalance bonus =(TokenWrapperWithBalance) bonus2.getItemAtPosition(pos);
                 balance2.setText(bonus.balance.toString());
+                if(tradingInCoalitions)
+                    SetResultText();
             }
 
             public void onNothingSelected(AdapterView<?> parent)
@@ -122,6 +127,50 @@ public class Exchange_bonuses extends SceneController {
         viewOffers = new ViewOffers(offers);
         viewOffers.back.setOnClickListener(v -> DisplayExchangeWindow());
 
+        exchangeCount1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(tradingInCoalitions)
+                    SetResultText();
+            }
+        });
+
+    }
+
+    void SetResultText(){
+        String s = exchangeCount1.getText().toString();
+
+        if(s.equals("")){
+            resultBonus.setText("0");
+            return;
+        }
+        //System.out.println(s.toString());
+        TokenWrapperWithBalance token1 =(TokenWrapperWithBalance) bonus1.getSelectedItem();
+        TokenWrapperWithBalance token2 =(TokenWrapperWithBalance) bonus2.getSelectedItem();
+
+        if(token1 == null || token2 == null){
+            return;
+        }
+
+        //token1.wrapper.exchangePrice
+        double sP1 = Double.valueOf(Utils.del18(token1.wrapper.exchangePrice.toString()));
+        double sP2 = Double.valueOf(Utils.del18(token2.wrapper.exchangePrice.toString()));
+        double coef = sP1/sP2;
+        BigInteger input =new BigInteger(s);
+
+        //System.out.println(new BigDecimal(coef).multiply(new BigDecimal(input)).toBigInteger().toString());
+        String result = new BigDecimal(coef).multiply(new BigDecimal(input)).toString();
+        resultBonus.setText(result);
     }
 
     void TradeInCoalition(){
