@@ -47,7 +47,13 @@ public class Login extends AppCompatActivity {
 
         ctx = this;
 
-        loginBtn.setOnClickListener(v -> TryToLogin());
+        loginBtn.setOnClickListener(v -> {
+            try {
+                TryToLogin();
+            }catch (Exception e){
+                context.runOnUiThread(()-> Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show());
+            }
+        });
         backBtn.setOnClickListener(v -> Back());
 
     }
@@ -58,78 +64,73 @@ public class Login extends AppCompatActivity {
 
         String pathToFile = sharedPref.getString("PATH", "EC");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
+            try {
+                BigInteger phoneHash = new BigInteger(
+                        String.valueOf(phoneNumber.hashCode())
+                );
+
+                String fileName = phoneHash.toString() + ".json";
+                Credentials credentials;
+                context.runOnUiThread(() -> Toast.makeText(context, "Подождите, выполняется вход...", Toast.LENGTH_LONG).show());
                 try {
-                    BigInteger phoneHash = new BigInteger(
-                            String.valueOf(phoneNumber.hashCode())
-                    );
+                    credentials = WalletUtils.loadCredentials(" ",
+                            pathToFile + "/" + fileName);
+                } catch (Exception e) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(context, "Неверный номер телефона", Toast.LENGTH_SHORT).show();
+                        Utils.notificationManager.cancel(3);
+                    });
+                    e.printStackTrace();
+                    return;
+                }
 
-                    String fileName = phoneHash.toString() + ".json";
-                    Credentials credentials;
-                    context.runOnUiThread(() -> Toast.makeText(context, "Подождите, выполняется вход...", Toast.LENGTH_LONG).show());
-                    try {
-                        credentials = WalletUtils.loadCredentials(" ",
-                                pathToFile + "/" + fileName);
-                    } catch (Exception e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(context, "Неверный номер телефона", Toast.LENGTH_SHORT).show();
-                                Utils.notificationManager.cancel(3);
-                            }
-                        });
-                        e.printStackTrace();
-                        return;
-                    }
+                Loyalty contract = Loyalty.load(
+                        Config.contractAdress,
+                        web3,
+                        credentials,
+                        Loyalty.GAS_PRICE,
+                        Loyalty.GAS_LIMIT);
 
-                    Loyalty contract = Loyalty.load(
-                            Config.contractAdress,
-                            web3,
-                            credentials,
-                            Loyalty.GAS_PRICE,
-                            Loyalty.GAS_LIMIT);
+                Tuple2<Boolean, BigInteger> a = contract.customers(credentials.getAddress()).sendAsync().get();
 
-                    Tuple2<Boolean, BigInteger> a = contract.customers(credentials.getAddress()).sendAsync().get();
+                BigInteger targetHash = a.getValue2();
 
-                    BigInteger targetHash = a.getValue2();
+                SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("NAME", fileName);
 
-                    SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("NAME", fileName);
 
+                if (phoneHash.equals(targetHash)) {
+                    editor.putBoolean(Config.IS_TCP,false);
+                    editor.apply();
+                    // Это обычный пользователь
+                    Intent intent = new Intent(context, Office_User.class);
+                    startActivity(intent);
+                } else {
+                    Company cmp = Utils.getCompany(web3,credentials,credentials.getAddress());// new Company(contract.companies(credentials.getAddress()).sendAsync().get());
+                    System.out.println(cmp);
+                    targetHash = cmp.phoneNumber;
 
                     if (phoneHash.equals(targetHash)) {
-                        editor.putBoolean(Config.IS_TCP,false);
+                        editor.putBoolean(Config.IS_TCP,true);
                         editor.apply();
-                        // Это обычный пользователь
-                        Intent intent = new Intent(context, Office_User.class);
+                        // Это компания
+                        Intent intent = new Intent(context, Office_TCP.class);
                         startActivity(intent);
                     } else {
-                        Company cmp = Utils.getCompany(web3,credentials,credentials.getAddress());// new Company(contract.companies(credentials.getAddress()).sendAsync().get());
-                        System.out.println(cmp);
-                        targetHash = cmp.phoneNumber;
-
-                        if (phoneHash.equals(targetHash)) {
-                            editor.putBoolean(Config.IS_TCP,true);
-                            editor.apply();
-                            // Это компания
-                            Intent intent = new Intent(context, Office_TCP.class);
-                            startActivity(intent);
-                        } else {
-                            context.runOnUiThread(()-> Toast.makeText(context, "Такой номер не зарегистрирован в системе", Toast.LENGTH_SHORT).show());
-                            Utils.notificationManager.cancel(3);
-                        }
+                        context.runOnUiThread(()-> Toast.makeText(context, "Такой номер не зарегистрирован в системе", Toast.LENGTH_SHORT).show());
+                        Utils.notificationManager.cancel(3);
                     }
-                } catch (Exception e) {
-                    SharedPreferences.Editor a = sharedPref.edit();
-                    a.clear();
-                    a.apply();
-
-                    e.printStackTrace();
-                    Back();
                 }
+            } catch (Exception e) {
+                //SharedPreferences.Editor a = sharedPref.edit();
+                //a.clear();
+                //a.apply();
+
+                //e.printStackTrace();
+                context.runOnUiThread(()-> Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show());
+                Back();
             }
         }).start();
     }

@@ -280,7 +280,7 @@ public class Office extends AppCompatActivity {
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }catch (Exception e){
                 e.printStackTrace();
-                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), e.getStackTrace().toString(),
+                context.runOnUiThread(() -> Toast.makeText(getApplicationContext(), e.toString(),
                         Toast.LENGTH_SHORT).show());
 
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
@@ -472,9 +472,7 @@ public class Office extends AppCompatActivity {
                     e.printStackTrace();
                     hadError = true;
                     break;
-
                 }
-
             }
 
             if (! hadError){
