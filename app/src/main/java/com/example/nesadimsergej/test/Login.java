@@ -37,7 +37,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         context = this;
         sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
+        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
