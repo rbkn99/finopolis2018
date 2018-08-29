@@ -176,6 +176,18 @@ public class Token_settings extends SceneController {
         Web3j web3 = ((Office)page.getContext()).web3;
         Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
+        try {
+            if(!contract.tokenIsUnique(name).send()){
+                Toast.makeText(page.getContext(),"Такое имя токена уже занято",Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }catch (Exception e){
+            ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
+                    "Прозошла неизвестная человечеству ошибка",
+                    Toast.LENGTH_SHORT).show());
+            return;
+        }
+
         RemoteCall<TransactionReceipt> s =contract.setToken(name,in_price,out_price,swap_price);
 
         Runnable bonusUpdater = () -> {
