@@ -101,6 +101,7 @@ public class Login extends AppCompatActivity {
 
 
                     if (phoneHash.equals(targetHash)) {
+                        editor.putBoolean(Config.IS_TCP,false);
                         editor.apply();
                         // Это обычный пользователь
                         Intent intent = new Intent(context, Office_User.class);
@@ -111,6 +112,7 @@ public class Login extends AppCompatActivity {
                         targetHash = cmp.phoneNumber;
 
                         if (phoneHash.equals(targetHash)) {
+                            editor.putBoolean(Config.IS_TCP,true);
                             editor.apply();
                             // Это компания
                             Intent intent = new Intent(context, Office_TCP.class);

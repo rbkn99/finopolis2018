@@ -380,13 +380,31 @@ public class Office extends AppCompatActivity {
         }catch (Exception e){
 
         }
+        SetUpHeader();
     }
 
     public void AddCompanyUpdatedListener(CompanyListUpdatedListener listener){
         listUpdatedEvent.addListener(listener);
     }
 
-    //protected void Company
+    void SetUpHeader(){
+        boolean isTcp = sharedPref.getBoolean(Config.IS_TCP,false);
+        NavigationView navView = findViewById(R.id.nav_view);
+        View headerLayout = navView.getHeaderView(0);
+        System.out.println(isTcp);
+        if(isTcp){
+            Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
+            try{
+                Company c =new Company(contract.companies(credentials.getAddress()).send());
+                ((TextView)headerLayout.findViewById(R.id.office_header)).setText(c.companyName);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }else {
+
+        }
+    }
 
     protected void LoadAllCompanies(){
 

@@ -73,7 +73,6 @@ public class Office_TCP extends Office {
         addEth.setOnClickListener(v -> AddEth());
         sendEth.setOnClickListener(v -> SendEth());
         infoBtn.setOnClickListener(v -> InfoPopUP());
-        // тут все круто
 
         // Обработчик для кнопки выхода
         // Стирает всю информацию о пользователе и переходит на стартовую сцену

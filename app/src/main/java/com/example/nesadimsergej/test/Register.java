@@ -279,7 +279,7 @@ public class Register extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("NAME", newFileName);
                 editor.putString("PATH",folder.getAbsolutePath());
-                editor.putBoolean(Config.IS_TCP,false);
+                editor.putBoolean(Config.IS_TCP,true);
                 editor.apply();
 
                 Utils.sendNotification(context, String.format("Создание кошелька завершено, теперь вы можете войти!\n" +
