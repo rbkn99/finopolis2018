@@ -151,8 +151,8 @@ public class Utils {
 
     public static TokenWrapper getToken(Web3j web3,Credentials credential,String address){
 
-        if(tokens.containsKey(address))
-            return tokens.get(address);
+        //if(tokens.containsKey(address))
+        //    return tokens.get(address);
 
         Token tokenContract = Token.load(address,web3,credential,Token.GAS_PRICE,Token.GAS_LIMIT);
         String tokenName = "ERROR";

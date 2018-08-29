@@ -64,16 +64,29 @@ public class Token_settings extends SceneController {
     @Override
     void OnSelected() {
         super.OnSelected();
+        CheckTokenExists();
+    }
+
+    void CheckTokenExists(){
         Credentials credentials = ((Office)page.getContext()).credentials;
         Web3j web3 = ((Office)page.getContext()).web3;
         //Loyalty contract = Loyalty.load(Config.contractAdress,web3,credentials,Loyalty.GAS_PRICE,Loyalty.GAS_LIMIT);
 
         try {
             currentCompany = Utils.getCompany(web3,credentials,credentials.getAddress()); //new Company(contract.companies(credentials.getAddress()).send());
-
+            System.out.println(currentCompany);
             if(currentCompany.hasToken){
                 TokenWrapper companyToken = Utils.getToken(web3,credentials,currentCompany.token);
                 hasToken = true;
+                System.out.println(companyToken.name);
+                String inPrice =new BigDecimal(Utils.del18(companyToken.inPrice.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
+                String outPrice =new BigDecimal(Utils.del18(companyToken.outPrice.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
+                String exchangePrice =new BigDecimal(Utils.del18(companyToken.exchangePrice.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
+
+                tokenName.setHint(page.getResources().getString(R.string.token_name)+"("+companyToken.name+")");
+                purchasePrise.setHint(page.getResources().getString(R.string.in_price)+"("+inPrice+")");
+                price_when_using.setHint(page.getResources().getString(R.string.out_price)+"("+outPrice+")");
+                swapPrice.setHint(page.getResources().getString(R.string.swap_price)+"("+exchangePrice+")");
             }
 
         }catch (Exception e){
@@ -168,6 +181,7 @@ public class Token_settings extends SceneController {
                 ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
                         "Бонусная валюта добавлена",
                         Toast.LENGTH_SHORT).show());
+                CheckTokenExists();
             }catch (Exception e){
                 ((Office)page.getContext()).runOnUiThread(() -> Toast.makeText(page.getContext(),
                         "Недостаточно средств для создания",
