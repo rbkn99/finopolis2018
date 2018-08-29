@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -49,7 +51,7 @@ public class Office_TCP extends Office {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office_tcp);
-
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
         map.put(R.id.Settings,R.id.settingsP);
         map.put(R.id.Transaction,R.id.transactionP);
         map.put(R.id.coalitions,R.id.coalitionsP);

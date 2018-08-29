@@ -3,6 +3,8 @@ package com.example.nesadimsergej.test;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
@@ -46,6 +48,7 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
         LoadAll();
         _this = this;
         // Настраиваем список для выбора роли
