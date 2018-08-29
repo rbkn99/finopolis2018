@@ -59,7 +59,6 @@ public class Office_User extends Office {
         setContentView(R.layout.activity_office_user);
 
         map.put(R.id.Settings,R.id.settingsP);
-        map.put(R.id.Transaction,R.id.transactionP);
 
         map.put(R.id.user_bonuses,R.id.user_bonusesP);
         map.put(R.id.exchange_bonuses,R.id.exchange_bonusesP);
@@ -104,7 +103,6 @@ public class Office_User extends Office {
         pages.add(exchange_bonusesP);
         pages.add(pay_bonusesP);
         pages.add(user_bonusesP);
-        pages.add(transactionP);
         pages.add(settingsP);
 
         idToScene.put(R.id.user_bonusesP,user_bonuses);
