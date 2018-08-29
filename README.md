@@ -1,7 +1,7 @@
 # Децентрализованная программа лояльности 
-Кейс Молодёжного дня Финополис 2018
+Кейс №9 Молодёжного дня Финополис 2018
 
-- Команда: fintech bassboosted by dj BaTyaNIa bass gain 30db
+Команда: fintech bassboosted by dj BaTyaNIa bass gain 30db
 
 - Андрей Иго, ММФ НГУ, https://github.com/Andronchanskiy 
 
