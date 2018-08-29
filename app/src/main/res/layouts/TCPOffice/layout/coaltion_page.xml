@@ -21,7 +21,19 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="35dp" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Имя компании:"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="3dp" />
 
             <TextView
                 android:id="@+id/coalitionNameText"
@@ -37,6 +49,18 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Адрес кошелька:"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="3dp"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/coaltionAddressText"

@@ -73,7 +73,7 @@ public class Office_User extends Office {
         //sendEth.setOnClickListener(v -> SendEth());
         infoBtn.setOnClickListener(v -> InfoPopUP());
         exitOfficeBtn.setOnClickListener(v -> Exit());
-        deployContractBtn.setOnClickListener(v -> UploadContract());
+        //deployContractBtn.setOnClickListener(v -> UploadContract());
 
         UpdateBalance();
 

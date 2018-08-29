@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="center"
-            android:hint="Сумма"
+            android:hint="Количество бонусов"
             android:inputType="numberDecimal" />
 
         <Space
