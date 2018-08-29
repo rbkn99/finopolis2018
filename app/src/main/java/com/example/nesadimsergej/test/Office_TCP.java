@@ -7,13 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
+
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -69,7 +64,7 @@ public class Office_TCP extends Office {
 
         //Loyalty c;
 
-        updateBalanceBtn.setOnClickListener(v -> UpdateBalance());
+        //updateBalanceBtn.setOnClickListener(v -> UpdateBalance());
         addEth.setOnClickListener(v -> AddEth());
         sendEth.setOnClickListener(v -> SendEth());
         infoBtn.setOnClickListener(v -> InfoPopUP());
@@ -95,7 +90,6 @@ public class Office_TCP extends Office {
         pages.add(create_coalitionP);
         pages.add(queriesP);
         pages.add(token_settingsP);
-        pages.add(balanceP);
         pages.add(transactionP);
         pages.add(eP);
 

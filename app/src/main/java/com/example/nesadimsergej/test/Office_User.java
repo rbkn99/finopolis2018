@@ -8,9 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -71,7 +68,6 @@ public class Office_User extends Office {
         HideAllPgs();
         SetUpDrawerLayout();
 
-        updateBalanceBtn.setOnClickListener(v -> UpdateBalance());
         addEth.setOnClickListener(v -> AddEth());
         sendEth.setOnClickListener(v -> SendEth());
         infoBtn.setOnClickListener(v -> InfoPopUP());
@@ -107,7 +103,6 @@ public class Office_User extends Office {
         pages.add(exchange_bonusesP);
         pages.add(pay_bonusesP);
         pages.add(user_bonusesP);
-        pages.add(balanceP);
         pages.add(transactionP);
         pages.add(eP);
 
