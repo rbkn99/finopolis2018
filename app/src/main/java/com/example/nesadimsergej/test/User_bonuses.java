@@ -94,7 +94,7 @@ public class User_bonuses extends SceneController {
 
                 // Добавляем строчку в список бонусов
                 addCount ++;
-                BonusRow r = AddRow(c.companyName + " (" + contract.name().send() + ")");
+                BonusRow r = AddRow(c.companyName + " (" + contract.name().send() + ")  ");
                 // Записываем это число в нашу строчку
                 final BigInteger uB = userBalance;
 
