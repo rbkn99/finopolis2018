@@ -229,7 +229,7 @@ public class Register extends AppCompatActivity {
                 File crFile = new File(folder.getAbsolutePath() + "/" +str);
 
                 // Если номер это просто то 1, то текущий пользователь не регистрируется( кул хак)
-                if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
+                //if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
 
                     // Хэш номера телефона, который мы будем отправлять в блокчейн
                     BigInteger phoneHash = new BigInteger(
@@ -251,6 +251,7 @@ public class Register extends AppCompatActivity {
                     newFileName = phoneHash.toString()+".json";
                     Boolean s1 = crFile.renameTo(new File(folder.getAbsolutePath() + "/"+newFileName));
 
+                    /*
                     if(crFile.delete())
                     {
                         System.out.println("File deleted successfully");
@@ -258,7 +259,7 @@ public class Register extends AppCompatActivity {
                     else
                     {
                         System.out.println("Failed to delete the file");
-                    }
+                    }*/
 
                     System.out.println(phoneNumber);
                     System.out.println(phoneHash);
@@ -271,9 +272,9 @@ public class Register extends AppCompatActivity {
                             phoneHash
                     ).send();
 
-                }else{
-                    System.out.println("COOL HACK");
-                }
+                //}else{
+                //    System.out.println("COOL HACK");
+                //}
 
                 SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -281,6 +282,9 @@ public class Register extends AppCompatActivity {
                 editor.putString("PATH",folder.getAbsolutePath());
                 editor.putBoolean(Config.IS_TCP,true);
                 editor.apply();
+
+
+                Utils.AddEth1(web3,credentials);
 
                 Utils.sendNotification(context, String.format("Создание кошелька завершено, теперь вы можете войти!\n" +
                         "Номер телефона: %s\nНазвание: %s\nАдрес: %s", phoneNumber, companyName, credentials.getAddress()), 2);

@@ -231,24 +231,6 @@ public class Office extends AppCompatActivity {
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
-    protected void AddEth1(){
-        Runnable bonusUpdater = () -> {
-            try {
-
-                float v = Config.AddBalance;
-
-                TransactionReceipt transactionReceipt =
-                        Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
-                                BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
-                UpdateBalance();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        };
-        Thread thread = new Thread(bonusUpdater);
-        thread.setPriority(Thread.MIN_PRIORITY);
-        thread.start();
-    }
 
     protected void UpdateBalance(){
         @SuppressLint("SetTextI18n") Runnable bonusUpdater = () -> {

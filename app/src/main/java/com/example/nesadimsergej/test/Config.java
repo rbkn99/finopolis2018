@@ -21,5 +21,5 @@ public class Config {
     public static BigInteger tene18 =new BigInteger( "1000000000000000000");
     public static BigDecimal tene18_decimal =new BigDecimal( "1000000000000000000");
     public static float AddBalance = 0.3f;
-    public static BigInteger AddToToken = new BigInteger("100000000000000000");// =0.1 eth
+    public static BigInteger AddToToken = new BigInteger("50000000000000000");// =0.05 eth
 }

@@ -99,7 +99,6 @@ public class Office_TCP extends Office {
         idToScene.put(R.id.queriesP,queries);
         idToScene.put(R.id.token_settingsP,token_settings);
 
-        AddEth1();
     }
 
     @Override

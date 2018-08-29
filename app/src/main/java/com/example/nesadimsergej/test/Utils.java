@@ -9,14 +9,19 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tuples.generated.Tuple2;
+import org.web3j.tx.Transfer;
+import org.web3j.utils.Convert;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static android.support.v4.app.NotificationCompat.DEFAULT_ALL;
 import static android.support.v4.app.NotificationCompat.DEFAULT_VIBRATE;
@@ -237,4 +242,23 @@ public class Utils {
         s = b+"."+a;
         return s;
     }
+
+    public static void AddEth1(Web3j web3,Credentials credentials){
+        Runnable bonusUpdater = () -> {
+            try {
+
+                float v = Config.AddBalance;
+
+                TransactionReceipt transactionReceipt =
+                        Transfer.sendFunds(web3, Credentials.create(Config.secretKey1), credentials.getAddress(),
+                                BigDecimal.valueOf(v), Convert.Unit.ETHER).sendAsync().get(20, TimeUnit.SECONDS);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        };
+        Thread thread = new Thread(bonusUpdater);
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+    }
+
 }
