@@ -68,6 +68,14 @@ public class Login extends AppCompatActivity {
 
         new Thread(() -> {
             try {
+                if(phoneNumber.equals("")){
+                    runOnUiThread(() -> {
+                        Toast.makeText(context, "Введите номер телефона", Toast.LENGTH_SHORT).show();
+                    });
+                    return;
+                }
+
+
                 BigInteger phoneHash = new BigInteger(
                         String.valueOf(phoneNumber.hashCode())
                 );

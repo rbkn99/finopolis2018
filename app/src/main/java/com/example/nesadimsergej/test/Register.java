@@ -122,7 +122,7 @@ public class Register extends AppCompatActivity {
                     String newFileName = str;
                     File crFile = new File(folder.getAbsolutePath() + "/" +str);
 
-                    if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
+                    //if (!(phoneNumber.length() == 1 && phoneNumber.charAt(0) == '1')) {
                         Credentials bankCredentials = Credentials.create(Config.bankPrivateKey,Config.bankPublicKey);
                         Loyalty contract = Loyalty.load(
                                 Config.contractAdress,
@@ -162,9 +162,9 @@ public class Register extends AppCompatActivity {
                         a.get();
 
 
-                    }else{
+                   // }else{
                         //System.out.println("COOL HACK");
-                    }
+                    //}
                     SharedPreferences sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("NAME",newFileName);
