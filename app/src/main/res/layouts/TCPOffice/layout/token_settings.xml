@@ -7,19 +7,9 @@
     android:background="@color/backgrnd"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/helpButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/buttonBckgrnd"
-        android:text="Помощь"
-        android:textColor="@color/backgrnd"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
-        android:layout_width="312dp"
-        android:layout_height="439dp"
+        android:layout_width="299dp"
+        android:layout_height="503dp"
         android:layout_marginBottom="1dp"
         android:layout_marginEnd="80dp"
         android:layout_marginLeft="80dp"
@@ -109,6 +99,20 @@
             android:background="@color/buttonBckgrnd"
             android:text="Закинуть эфир"
             android:textColor="@color/backgrnd" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/helpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/buttonBckgrnd"
+            android:text="Помощь"
+            android:textColor="@color/backgrnd"
+            tools:layout_editor_absoluteX="161dp"
+            tools:layout_editor_absoluteY="558dp" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

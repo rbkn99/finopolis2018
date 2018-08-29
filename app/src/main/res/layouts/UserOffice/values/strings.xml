@@ -6,17 +6,17 @@
     <string name="Back">Назад</string>
     <string name="coalition_name">coalition_name</string>
     <string name="coalitionAddress">coalition_address</string>
-    <string name="inviteAddress">address</string>
-    <string name="Invite">Invite</string>
+    <string name="inviteAddress">Адрес</string>
+    <string name="Invite">Пригласить</string>
     <string name="title_activity_orders_view">OrdersViewActivity</string>
     <string name="Settings">Настройки</string>
     <string name="inPrice_help">Цена при покупке = сколько рублей стоит один бонус</string>
-    <string name="outPrice_help">Цена при использовании = хуй её знает</string>
-    <string name="swapPrice_help">Цена при обмене = какому количеству рублей эквивалентен 1 бонус</string>
+    <string name="outPrice_help">Цена при использовании = покупательная способность бонуса</string>
+    <string name="swapPrice_help">Цена при обмене = какому количеству рублей эквивалентен один бонус при обмене</string>
     <string name="token_name">Название токена</string>
     <string name="in_price">Цена при покупке</string>
     <string name="out_price">Цена при использовании</string>
     <string name="swap_price">Цена при обмене</string>
-    <string name="depositInfo">deposit:</string>
-    <string name="balanceinfo">balance:</string>
+    <string name="depositInfo">депозит:</string>
+    <string name="balanceinfo">баланс:</string>
 </resources>
