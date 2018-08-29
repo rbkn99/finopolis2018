@@ -393,13 +393,6 @@ public class Register extends AppCompatActivity {
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, R.string.back_btn_msg, Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
     }
 }
-
-
