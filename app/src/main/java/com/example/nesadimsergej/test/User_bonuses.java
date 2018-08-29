@@ -16,7 +16,7 @@ import java.math.BigInteger;
 
 import static android.content.Context.SENSOR_SERVICE;
 
-public class User_bonuses extends SceneController implements ShakeDetector.Listener {
+public class User_bonuses extends SceneController{
 
     TableLayout bonusesTable;
 
@@ -25,10 +25,6 @@ public class User_bonuses extends SceneController implements ShakeDetector.Liste
     public User_bonuses(View _page){
         super();
         page = _page;
-
-        SensorManager sensorManager = (SensorManager) page.getContext().getSystemService(SENSOR_SERVICE);
-        ShakeDetector sd = new ShakeDetector(this);
-        sd.start(sensorManager);
 
         SetUpScene();
     }
@@ -164,9 +160,7 @@ public class User_bonuses extends SceneController implements ShakeDetector.Liste
             }
         });
     }
-    @Override public void hearShake() {
-        System.exit(0);
-    }
+
 }
 
 class BonusRow {

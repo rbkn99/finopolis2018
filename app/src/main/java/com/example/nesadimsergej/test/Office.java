@@ -78,7 +78,6 @@ public class Office extends AppCompatActivity {
     protected EditText targetAddress;
     protected EditText targetSum;
     protected Button sendEth;
-    protected Button contractTest;
     protected Button deployContractBtn;
 
     protected ClipData myClip;
@@ -337,7 +336,6 @@ public class Office extends AppCompatActivity {
         transactionP = findViewById(R.id.transactionP);
         settingsP = findViewById(R.id.settingsP);
         deployContractBtn = findViewById(R.id.deployContractBtn);
-        contractTest = findViewById(R.id.contractBtn);
         infoBtn = findViewById(R.id.infoBtn);
         targetAddress = findViewById(R.id.targetAddress);
         targetSum = findViewById(R.id.targetSum);

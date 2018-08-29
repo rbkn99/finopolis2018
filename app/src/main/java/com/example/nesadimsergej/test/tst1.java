@@ -191,7 +191,6 @@ public class tst1 extends AppCompatActivity {
 
     void LoadAll(){
         deployContractBtn = findViewById(R.id.deployContractBtn);
-        contractTest = findViewById(R.id.contractBtn);
         infoBtn = findViewById(R.id.infoBtn);
         targetAddress = findViewById(R.id.targetAddress);
         targetSum = findViewById(R.id.targetSum);

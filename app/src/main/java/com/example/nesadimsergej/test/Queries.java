@@ -43,7 +43,7 @@ public class Queries extends SceneController {
         //    AddQueri(i.toString(),"ULTRANASILIE");
 
         Timer timer = new Timer();
-        timer.schedule(new QueryUpdater(), 0, 30000);// Обновлять запросы каждые 30 секунд
+        timer.schedule(new QueryUpdater(), 0, 10000);// Обновлять запросы каждые 30 секунд
         ((Office)page.getContext()).timers.add(timer);
         ifEmpty = page.findViewById(R.id.ifEmpty);
         //page.getContext().
@@ -66,7 +66,8 @@ public class Queries extends SceneController {
             queriList.addView(view);
             Queri q = new Queri(view,secreteCode,
                     qu -> OnQueriAccepted(qu),
-                    qu -> OnQueriDeclined(qu)
+                    qu -> OnQueriDeclined(qu),
+                    queriList
             );
         });
     }
@@ -225,8 +226,10 @@ class Queri{
     TextView queriText;
     Button yesBtn,noBtn;
 
+    LinearLayout parent;
+
     public void Destroy(){
-        ((ViewGroup)queri.getParent()).removeView(queri);
+        parent.removeView(queri);
     }
 
     public String getText(){
@@ -242,7 +245,9 @@ class Queri{
     public Queri(View _queri,
                 String _secreteCode,
                  QueriCallback _accept,
-                 QueriCallback _decline){
+                 QueriCallback _decline,
+                 LinearLayout _parent){
+        parent = _parent;
         secreteCode = _secreteCode;
         queri = _queri;
         accept = _accept;
