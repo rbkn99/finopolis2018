@@ -3,6 +3,8 @@ package com.example.nesadimsergej.test;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,7 +37,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         context = this;
         sharedPref = getSharedPreferences(Config.AccountInfo, MODE_PRIVATE);
-
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 

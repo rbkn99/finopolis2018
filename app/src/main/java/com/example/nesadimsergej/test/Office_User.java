@@ -6,6 +6,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -57,7 +59,7 @@ public class Office_User extends Office {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office_user);
-
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#e37222")));
         map.put(R.id.Settings,R.id.settingsP);
 
         map.put(R.id.user_bonuses,R.id.user_bonusesP);
@@ -68,7 +70,7 @@ public class Office_User extends Office {
         HideAllPgs();
         SetUpDrawerLayout();
 
-        sendEth.setOnClickListener(v -> SendEth());
+        //sendEth.setOnClickListener(v -> SendEth());
         infoBtn.setOnClickListener(v -> InfoPopUP());
         exitOfficeBtn.setOnClickListener(v -> Exit());
         deployContractBtn.setOnClickListener(v -> UploadContract());
