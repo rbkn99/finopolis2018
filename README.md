@@ -3,12 +3,12 @@
 
 Команда: fintech bassboosted by dj BaTyaNIa bass gain 30db
 
-- Андрей Иго, ММФ НГУ, https://github.com/Andronchanskiy 
+- Андрей Иго, ММФ НГУ (2 курс), https://github.com/Andronchanskiy 
 
-- Илья Гилёв, Совместный бакалавриат РЭШ ВШЭ, https://t.me/starogradskiy 
+- Илья Гилёв, Совместный бакалавриат РЭШ ВШЭ (2 курс), https://t.me/starogradskiy 
 
-- Сергей Нещадим, ММФ НГУ, https://github.com/Raser23
+- Сергей Нещадим, ММФ НГУ (2 курс), https://github.com/Raser23
 
-- Ярослав Харченко, ММФ НГУ, https://github.com/SemgTesst
+- Ярослав Харченко, ММФ НГУ (2 курс), https://github.com/SemgTesst
 
-- Константин Рыбкин, КТ ИТМО, https://github.com/rbkn99
+- Константин Рыбкин, КТ ИТМО (2 курс), https://github.com/rbkn99
