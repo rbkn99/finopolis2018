@@ -83,10 +83,10 @@ public class Token_settings extends SceneController {
                 String outPrice =new BigDecimal(Utils.del18(companyToken.outPrice.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
                 String exchangePrice =new BigDecimal(Utils.del18(companyToken.exchangePrice.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
 
-                tokenName.setHint(page.getResources().getString(R.string.token_name)+"("+companyToken.name+")");
-                purchasePrise.setHint(page.getResources().getString(R.string.in_price)+"("+inPrice+")");
-                price_when_using.setHint(page.getResources().getString(R.string.out_price)+"("+outPrice+")");
-                swapPrice.setHint(page.getResources().getString(R.string.swap_price)+"("+exchangePrice+")");
+                tokenName.setHint(page.getResources().getString(R.string.token_name)+" ("+companyToken.name+")");
+                purchasePrise.setHint(page.getResources().getString(R.string.in_price)+" ("+inPrice+")");
+                price_when_using.setHint(page.getResources().getString(R.string.out_price)+" ("+outPrice+")");
+                swapPrice.setHint(page.getResources().getString(R.string.swap_price)+" ("+exchangePrice+")");
             }
 
         }catch (Exception e){
