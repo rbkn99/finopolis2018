@@ -80,12 +80,11 @@ public class ViewOffers extends SceneController {
                   Credentials credentials,Loyalty contract){
 
         View view = View.inflate(page.getContext(),R.layout.offer,null);
-        ((Office)page.getContext()).runOnUiThread(() -> offerList.addView(view));
 
         Offer offer = new Offer(view, _data, offer1 -> OnOffer(offer1), offer12 -> OnDecline(offer12),offerList);
         offer.LoadTokenData(web3,credentials,contract);
-
         ((Office)page.getContext()).runOnUiThread(() -> {
+            offerList.addView(view);
 
             if(credentials.getAddress().equals(offer.sellerAddress)){
                 offer.Decline();
