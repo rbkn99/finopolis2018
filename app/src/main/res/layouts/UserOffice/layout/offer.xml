@@ -125,13 +125,21 @@
             android:id="@+id/acceptOffer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Принять" />
+            android:background="@color/buttonBckgrnd"
+            android:text="Принять"
+            android:textColor="#dadee5" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="6dp" />
 
         <Button
             android:id="@+id/declineOffer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Отозвать" />
+            android:background="@color/buttonBckgrnd"
+            android:text="Отозвать"
+            android:textColor="#dadee5" />
 
     </LinearLayout>
 

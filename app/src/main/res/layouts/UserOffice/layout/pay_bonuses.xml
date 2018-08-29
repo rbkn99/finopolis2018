@@ -22,19 +22,29 @@
             android:layout_width="match_parent"
             android:layout_height="40dp" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/softBckgrnd">
         <Spinner
             android:id="@+id/companySelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        </RelativeLayout>
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="40dp" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/softBckgrnd">
         <Spinner
             android:id="@+id/tokenSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        </RelativeLayout>
 
         <TextView
 

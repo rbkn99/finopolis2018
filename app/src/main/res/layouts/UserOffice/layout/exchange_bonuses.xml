@@ -37,15 +37,22 @@
                     android:hint="0"
                     android:inputType="number"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/bonus2" />
+                    app:layout_constraintTop_toBottomOf="@id/bonus2_wrapper" />
 
-                <Spinner
-                    android:id="@+id/bonus2"
+                <RelativeLayout
+                    android:id="@+id/bonus2_wrapper"
+                    android:background="@color/softBckgrnd"
                     android:layout_width="150dp"
                     android:layout_height="62dp"
                     android:layout_marginTop="17dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/balance2" />
+                    app:layout_constraintTop_toBottomOf="@+id/balance2">
+
+                    <Spinner
+                        android:id="@+id/bonus2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/balance2"
@@ -71,7 +78,7 @@
                     android:text=""
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/bonus2" />
+                    app:layout_constraintTop_toBottomOf="@+id/bonus2_wrapper" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -83,13 +90,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <Spinner
-                    android:id="@+id/bonus1"
+                <RelativeLayout
+                    android:id="@+id/bonus1_wrapper"
+                    android:background="@color/softBckgrnd"
                     android:layout_width="150dp"
                     android:layout_height="62dp"
                     android:layout_marginTop="18dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/balance1" />
+                    app:layout_constraintTop_toBottomOf="@+id/balance1">
+                <Spinner
+                    android:id="@+id/bonus1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/balance1"
@@ -116,7 +130,7 @@
                     android:hint="0"
                     android:inputType="number"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/bonus1" />
+                    app:layout_constraintTop_toBottomOf="@+id/bonus1_wrapper" />
 
             </android.support.constraint.ConstraintLayout>
         </android.support.constraint.ConstraintLayout>
@@ -187,9 +201,7 @@
         <include
             layout="@layout/view_offers"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            android:layout_height="fill_parent"/>
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
