@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgrnd"
+    tools:context=".Login">
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="128dp"
+        android:background="@color/buttonBckgrnd"
+        android:text="Войти"
+        android:textColor="#dadee5"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/numberLogin" />
+
+    <EditText
+        android:id="@+id/numberLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:ems="10"
+        android:hint="Номер телефона"
+        android:inputType="phone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/backBtn"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/buttonBckgrnd"
+        android:text="Назад"
+        android:textColor="#dadee5"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginBtn" />
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/backgrnd"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="299dp"
+        android:layout_height="503dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="1dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.545">
+
+        <EditText
+            android:id="@+id/tokenName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/token_name"
+            android:inputType="textPersonName"
+            tools:layout_editor_absoluteX="98dp"
+            tools:layout_editor_absoluteY="74dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+        <EditText
+            android:id="@+id/purchasePrise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/in_price"
+            android:inputType="numberDecimal"
+            tools:layout_editor_absoluteX="98dp"
+            tools:layout_editor_absoluteY="74dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+        <EditText
+            android:id="@+id/price_when_using"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/out_price"
+            android:inputType="numberDecimal"
+            tools:layout_editor_absoluteX="98dp"
+            tools:layout_editor_absoluteY="74dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+        <EditText
+            android:id="@+id/swapPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/swap_price"
+            android:inputType="numberDecimal"
+            tools:layout_editor_absoluteX="98dp"
+            tools:layout_editor_absoluteY="74dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/createTokenBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/buttonBckgrnd"
+            android:text="Создать"
+            android:textColor="@color/backgrnd" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/payForToken"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/buttonBckgrnd"
+            android:text="Пополнить депозит"
+            android:textColor="@color/backgrnd" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/helpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/buttonBckgrnd"
+            android:text="Помощь"
+            android:textColor="@color/backgrnd"
+            tools:layout_editor_absoluteX="161dp"
+            tools:layout_editor_absoluteY="558dp" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

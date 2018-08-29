@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgrnd"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    tools:context=".Register">
+
+    <TextView
+
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Страница Регистрации"
+        android:textColor="@color/textColor"
+        android:textSize="25dp"
+        app:fontFamily="@font/cairo_bold"
+        app:layout_constrainedHeight="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@color/softBckgrnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <Spinner
+            android:id="@+id/userSelector"
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center_horizontal|center" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/back_btn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="450dp"
+        android:background="@color/buttonBckgrnd"
+        android:text="Назад"
+        android:textColor="@color/backgrnd"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/TCP"
+        android:layout_width="fill_parent"
+        android:layout_height="380dp"
+        android:layout_marginTop="90dp"
+        android:background="@color/backgrnd"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <EditText
+            android:id="@+id/phoneTCP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:ems="10"
+            android:hint="Телефон"
+            android:inputType="phone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/nameTCP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:ems="10"
+            android:hint="Название"
+            android:inputType="textPersonName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneTCP" />
+
+        <Button
+            android:id="@+id/tcpRegisterButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="130dp"
+            android:background="@color/buttonBckgrnd"
+            android:padding="10sp"
+            android:text="Зарегистрироваться"
+            android:textColor="@color/backgrnd"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneTCP" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/User"
+        android:layout_width="fill_parent"
+        android:layout_height="380dp"
+        android:layout_marginTop="90dp"
+        android:background="@color/backgrnd"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <EditText
+            android:id="@+id/phoneUSER"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:ems="10"
+            android:hint="Телефон"
+            android:inputType="phone"
+            android:singleLine="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/userRegisterButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="130dp"
+            android:background="@color/buttonBckgrnd"
+            android:padding="10sp"
+            android:text="Зарегистрироваться"
+            android:textColor="@color/backgrnd"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneUSER" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

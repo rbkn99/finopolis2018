@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgrnd">
+
+    <LinearLayout
+        android:layout_width="290dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="61dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="61dp"
+        android:layout_marginStart="60dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/softBckgrnd">
+
+            <Spinner
+                android:id="@+id/companySelector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/softBckgrnd">
+
+            <Spinner
+                android:id="@+id/tokenSelector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <TextView
+
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="100"
+            android:visibility="invisible" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <EditText
+            android:id="@+id/paySum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Количество рублей"
+            android:inputType="numberDecimal" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <EditText
+            android:id="@+id/bonusesSum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Количество бонусов"
+            android:inputType="numberDecimal" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <Button
+            android:id="@+id/payBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/buttonBckgrnd"
+            android:text="Оплатить"
+            android:textColor="@color/backgrnd" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

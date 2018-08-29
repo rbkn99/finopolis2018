@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Blockchain Loyalty</string>
+    <string name="text_favorites">Favourites</string>
+    <string name="text_schedules">Schedules</string>
+    <string name="text_music">music</string>
+    <string name="Balance">Баланс</string>
+    <string name="Transaction">Перевести</string>
+    <string name="Shieet">E</string>
+</resources>

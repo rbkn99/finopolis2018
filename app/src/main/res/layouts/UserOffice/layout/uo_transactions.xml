@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/backgrnd"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/addEth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="252dp"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/buttonBckgrnd"
+        android:padding="10sp"
+        android:text="Пополнить"
+        android:textColor="@color/backgrnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+    <Button
+        android:id="@+id/sendEth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="252dp"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/buttonBckgrnd"
+        android:padding="10sp"
+        android:text="Перевести"
+        android:textColor="@color/backgrnd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
+        <EditText
+            android:id="@+id/targetAddress"
+            android:layout_width="404dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="54dp"
+            android:ems="10"
+            android:hint="address"
+            android:inputType="textPersonName"
+            android:textColor="@color/textColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addEth" />
+
+        <EditText
+            android:id="@+id/targetSum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginLeft="98dp"
+            android:layout_marginRight="100dp"
+            android:layout_marginStart="98dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:textColor="@color/textColor"
+            app:layout_constraintBottom_toTopOf="@+id/sendEth"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/targetAddress" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/balanceCheater"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginEnd="99dp"
+            android:layout_marginLeft="99dp"
+            android:layout_marginRight="99dp"
+            android:layout_marginStart="99dp"
+            android:layout_marginTop="84dp"
+            android:ems="10"
+            android:textColor="@color/textColor"
+            android:inputType="numberDecimal"
+
+            app:layout_constraintBottom_toTopOf="@+id/addEth"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

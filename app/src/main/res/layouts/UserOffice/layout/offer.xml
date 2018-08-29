@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/queri"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="39dp"
+    android:visibility="visible"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#D1DDDB"
+
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:orientation="vertical">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#85B8CB">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="   Продает: "
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/sellToken"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="amount1"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#7bc5ae">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Получает: "
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/buyToken"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="amount2"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#85B8CB">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="                id: "
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/offerId"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#7bc5ae">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Продавец:"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/offer_seller"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="customer"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <Button
+            android:id="@+id/acceptOffer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/buttonBckgrnd"
+            android:text="Принять"
+            android:textColor="#dadee5" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="6dp" />
+
+        <Button
+            android:id="@+id/declineOffer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/buttonBckgrnd"
+            android:text="Отозвать"
+            android:textColor="#dadee5" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

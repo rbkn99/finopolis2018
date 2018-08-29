@@ -1,0 +1,23 @@
+<resources>
+    <string name="token_settings">Настройка токена</string>
+    <string name="create_coalition">Создать коалицию</string>
+    <string name="queries">Запросы</string>
+    <string name="coalitions">Мои коалиции</string>
+    <string name="Back">Назад</string>
+    <string name="coalition_name">coalition_name</string>
+    <string name="coalitionAddress">coalition_address</string>
+    <string name="inviteAddress">Адрес</string>
+    <string name="Invite">Пригласить</string>
+    <string name="title_activity_orders_view">OrdersViewActivity</string>
+    <string name="Settings">Настройки</string>
+    <string name="inPrice_help">Цена при покупке = сколько рублей стоит один бонус</string>
+    <string name="outPrice_help">Цена при использовании = покупательная способность бонуса</string>
+    <string name="swapPrice_help">Цена при обмене = какому количеству рублей эквивалентен один бонус при обмене</string>
+    <string name="token_name">Название токена</string>
+    <string name="in_price">Цена при покупке</string>
+    <string name="out_price">Цена при оплате</string>
+    <string name="swap_price">Цена при обмене</string>
+    <string name="depositInfo">депозит:</string>
+    <string name="balanceinfo">баланс:</string>
+    <string name="back_btn_msg">Нажмите НАЗАД ещё раз, чтобы выйти</string>
+</resources>

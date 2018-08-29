@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/Transaction"
+            android:title="@string/Transaction" />
+        <item
+            android:id="@+id/token_settings"
+            android:title="@string/token_settings" />
+        <item
+            android:id="@+id/create_coalition"
+            android:title="@string/create_coalition" />
+        <item
+            android:id="@+id/queries"
+            android:title="@string/queries" />
+        <item
+            android:id="@+id/coalitions"
+            android:title="@string/coalitions" />
+        <item
+            android:id="@+id/Settings"
+            android:title="@string/Settings" />
+
+    </group>
+</menu>
