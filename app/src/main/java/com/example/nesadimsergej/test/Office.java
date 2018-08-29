@@ -54,7 +54,7 @@ public class Office extends AppCompatActivity {
 
     View headerLayout;
     TextView balanceHeader;
-    protected View transactionP,eP;
+    protected View transactionP,settingsP;
 
     public ArrayList<View> pages = new ArrayList<>();
 
@@ -129,8 +129,8 @@ public class Office extends AppCompatActivity {
 
                     return true;
                 });
-        navigationView.setCheckedItem(R.id.YE);
-        navigationView.getMenu().performIdentifierAction(R.id.YE,0);
+        navigationView.setCheckedItem(R.id.Settings);
+        navigationView.getMenu().performIdentifierAction(R.id.Settings,0);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         ActionBar actionbar = getSupportActionBar();
@@ -353,7 +353,7 @@ public class Office extends AppCompatActivity {
 
     protected void LoadAll(){
         transactionP = findViewById(R.id.transactionP);
-        eP = findViewById(R.id.eP);
+        settingsP = findViewById(R.id.settingsP);
         deployContractBtn = findViewById(R.id.deployContractBtn);
         contractTest = findViewById(R.id.contractBtn);
         infoBtn = findViewById(R.id.infoBtn);

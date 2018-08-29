@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -57,9 +58,9 @@ public class Office_User extends Office {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office_user);
 
-        map.put(R.id.Balance,R.id.balanceP);
+        map.put(R.id.Settings,R.id.settingsP);
         map.put(R.id.Transaction,R.id.transactionP);
-        map.put(R.id.YE,R.id.eP);
+
         map.put(R.id.user_bonuses,R.id.user_bonusesP);
         map.put(R.id.exchange_bonuses,R.id.exchange_bonusesP);
         map.put(R.id.pay_bonuses,R.id.pay_bonusesP);
@@ -104,7 +105,7 @@ public class Office_User extends Office {
         pages.add(pay_bonusesP);
         pages.add(user_bonusesP);
         pages.add(transactionP);
-        pages.add(eP);
+        pages.add(settingsP);
 
         idToScene.put(R.id.user_bonusesP,user_bonuses);
         idToScene.put(R.id.exchange_bonusesP,exchange_bonuses);

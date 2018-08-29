@@ -17,7 +17,7 @@
             android:id="@+id/coalitions"
             android:title="@string/coalitions" />
         <item
-            android:id="@+id/YE"
+            android:id="@+id/Settings"
             android:title="@string/Settings" />
 
     </group>

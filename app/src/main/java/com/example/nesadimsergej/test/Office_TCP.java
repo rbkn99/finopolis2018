@@ -50,9 +50,8 @@ public class Office_TCP extends Office {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_office_tcp);
 
-        map.put(R.id.Balance,R.id.balanceP);
+        map.put(R.id.Settings,R.id.settingsP);
         map.put(R.id.Transaction,R.id.transactionP);
-        map.put(R.id.YE,R.id.eP);
         map.put(R.id.coalitions,R.id.coalitionsP);
         map.put(R.id.create_coalition,R.id.create_coalitionP);
         map.put(R.id.queries,R.id.queriesP);
@@ -88,7 +87,7 @@ public class Office_TCP extends Office {
         pages.add(queriesP);
         pages.add(token_settingsP);
         pages.add(transactionP);
-        pages.add(eP);
+        pages.add(settingsP);
 
         create_coalition = new Create_coalition(create_coalitionP);
         coalitions = new Coalitions(coalitionsP);

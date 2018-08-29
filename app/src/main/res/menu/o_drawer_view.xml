@@ -15,7 +15,7 @@
             android:id="@+id/pay_bonuses"
             android:title="Оплатить" />
         <item
-            android:id="@+id/YE"
+            android:id="@+id/Settings"
             android:title="@string/Settings" />
     </group>
 </menu>
