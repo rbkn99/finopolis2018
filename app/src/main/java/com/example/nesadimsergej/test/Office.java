@@ -53,6 +53,7 @@ public class Office extends AppCompatActivity {
     protected Office context;
 
     View headerLayout;
+    TextView balanceHeader;
     protected View balanceP,transactionP,eP;
 
     public ArrayList<View> pages = new ArrayList<>();
@@ -257,7 +258,7 @@ public class Office extends AppCompatActivity {
     }
 
     protected void UpdateBalance(){
-        Runnable bonusUpdater = () -> {
+        @SuppressLint("SetTextI18n") Runnable bonusUpdater = () -> {
             context.runOnUiThread(() -> updateBalanceBtn.setEnabled(false));
 
             try {
@@ -267,9 +268,14 @@ public class Office extends AppCompatActivity {
 
                 BigInteger wei = ethGetBalance.getBalance();
                 String result = wei.toString();
-                result = divideString(result);
+                //result = divideString(result);
 
-                money.setText(result);
+                String balance =new BigDecimal(Utils.del18(result.toString())).setScale(5,BigDecimal.ROUND_HALF_DOWN).toString();
+
+                balanceHeader.setText(
+                        context.getResources().getString(R.string.balanceinfo)+" "+balance +" eth"
+                );
+                //money.setText(result);
 
                 context.runOnUiThread(() -> updateBalanceBtn.setEnabled(true));
             }catch (Exception e){
@@ -368,6 +374,7 @@ public class Office extends AppCompatActivity {
         web3 = Web3jFactory.build(new HttpService(Config.web3Address));
         NavigationView navView = findViewById(R.id.nav_view);
         headerLayout = navView.getHeaderView(0);
+        balanceHeader = headerLayout.findViewById(R.id.balanceHeader);
         try {
             Web3ClientVersion web3ClientVersion = web3.web3ClientVersion().send();
             String clientVersion = web3ClientVersion.getWeb3ClientVersion();
@@ -395,11 +402,18 @@ public class Office extends AppCompatActivity {
 
         if(isTcp){
 
-
-
             Timer timer = new Timer();
             timer.schedule(new CompanyInfoUpdater(), 0, 10000);
             timers.add(timer);
+            Timer timer2 = new Timer();
+            timer2.schedule(new TimerTask() {
+                @Override
+                public void run() {
+
+                    UpdateBalance();
+                }
+            }, 0, 10000);
+            timers.add(timer2);
 
         }else {
 
@@ -414,11 +428,11 @@ public class Office extends AppCompatActivity {
 
                 Company c =new Company(contract.companies(credentials.getAddress()).send());
                 ((TextView)headerLayout.findViewById(R.id.office_header)).setText(c.companyName);
-                String deposit =new BigDecimal(Utils.del18(c.deposit.toString())).setScale(2,BigDecimal.ROUND_HALF_DOWN).toString();
+                String deposit =new BigDecimal(Utils.del18(c.deposit.toString())).setScale(4,BigDecimal.ROUND_HALF_DOWN).toString();
 
                 ((TextView)headerLayout.findViewById(R.id.deposit)).setText(
 
-                        context.getResources().getString(R.string.depositInfo)+" "+deposit
+                        context.getResources().getString(R.string.depositInfo)+" "+deposit+" eth"
                 );
             }catch (Exception e){
                 e.printStackTrace();
