@@ -12,3 +12,5 @@
 - Ярослав Харченко, ММФ НГУ (2 курс), https://github.com/SemgTesst
 
 - Константин Рыбкин, КТ ИТМО (2 курс), https://github.com/rbkn99
+
+UPD: Project description is [here](https://drive.google.com/file/d/14kNxZLkp68jmedzMvmaHA-P5TH7MnCgW/view?usp=sharing)
